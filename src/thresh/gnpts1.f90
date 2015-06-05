@@ -1,0 +1,166 @@
+! PURPOSE:
+! 	  writes rainfall threshold parameters to individual time-series plot file per station
+!
+!
+	
+	subroutine gnpts1(ulog,uout,n,stationNumber,ctrHolder,&
+	year,month,day,hour,minute,anteced,&
+	recent,intensity,duration,precip,runningIntens,deficit,&
+	intensityDuration,avgIntensity,outputFolder,&
+	plotFile,in2mm,rph,pt,nlo20,xid,AWI,minTStormGap,&
+	TavgIntensity,Tantecedent,Trecent,lowLim,upLim)
+	implicit none
+	
+	
+! FORMAL ARGUMENTS
+	character, intent(in)    :: outputFolder*(*),plotFile*(*),stationNumber*(*)
+	character, intent(inout) :: xid*(*)
+	real, intent(in)         :: anteced(n),recent(n),intensity(n),in2mm
+	real, intent(in)         :: duration(n),runningIntens(n),AWI(n)
+	real, intent(in)         :: deficit(n),intensityDuration(n),avgIntensity(n)
+	real, intent(in)			 :: lowLim, upLim
+	integer, intent(in)      :: n,year(n),minTStormGap,TavgIntensity,Tantecedent,Trecent
+	integer, intent(in)      :: month(n),day(n),hour(n),minute(n),precip(n)
+	integer, intent(in)      :: uout,ulog,ctrHolder,rph,nlo20,pt(nlo20)
+	
+! LOCAL VARIABLES
+	character (len=255) :: outputFile,mdurflag
+	character (len=22)  :: header
+	character (len=10)  :: date,manteced,mrecent,mintensity,mduration
+	character (len=10)  :: mrunningIntens,mprecip,mdeficit,mavgIntensity
+	character (len=10)  :: mintensityDuration,mAWI
+	character (len=10)  :: mmIntensity,logmmIntensity 
+	character (len=5)   :: time,hrly
+	character 	    :: pd = char(35),tb = char(9)
+	real            :: floatPrecip
+	logical         :: intensLogic1, intensLogic2, durLow, durHigh, runningIntensLogic
+	integer		    :: j,tptr,tptrm1
+
+!------------------------------	
+! Create output files for stationNumber
+	outputFile=trim(adjustl(stationNumber))//'.txt'
+  	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//outputFile
+
+! Create file header to identify rainfall threshold type.  	
+   write(hrly,'(i5)') TavgIntensity
+   hrly=adjustl(hrly)
+   select case (trim(adjustl(xid)))
+   case('Ex315'); header='Recent & Antecedent'
+   case('ExID_'); header='Intensity-duration'
+   case('ExIDA'); header='Int.-Dur. & Ant. Water'
+   case('ExIR_'); header=trim(hrly)//'-hour Intensity'
+   case('ExI3_'); header='Intensity & Cumulative'
+   end select
+   open(uout,file=outputFile,status='unknown',position='rewind',err=125)
+	
+! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
+   write(uout,*) pd,' Times of exceedence for rainfall threshold: '//header
+   write(uout,*) pd,' Station ',trim(stationNumber)
+   write(uout,*) pd,' Time & date',tb,&
+                 'Hourly Precip.',tb,&
+                 Tantecedent,'-hour precip.',tb,&
+                 Trecent,'-hour precip.',tb,&
+                 'Intensity(in/hour)',tb,&
+                 'Intensity(mm/hour)',tb,&
+                 'Duration',tb,&
+                 'Log10(Intensity(mm/hour))',tb,&
+                 trim(hrly)//'-hour Intensity (in/hour)',tb,&
+                 '3-/15-day Index',tb,&
+                 'Intensity-Duration Index',tb,&
+                 TavgIntensity,'-hour Intensity Index',tb,&
+                 'Antecedent Water Index',tb,&
+                 'Duration Descripton'
+
+!!!!!!!!!!COMMENT NEEDED!!!!!!!!!!
+   tptrm1=pt(1)-1
+   do j=1,ctrHolder
+      !initialize mdurflag, intensLogic, durLow, durHigh
+      mdurflag            = ""
+      intensLogic1        = intensity(tptr)<0
+      intensLogic2        = intensity(tptr)*in2mm<1.d-1
+      durLow              = duration(tptr) < lowLim
+      durHigh             = duration(tptr) > upLim
+      runningIntensLogic  = runningIntens(tptr)<0
+      
+      tptr=pt(j)
+      if(tptr-tptrm1>rph*minTStormGap) then
+         write(uout,*) ''
+      end if
+      write(time,'(i2.2,a1,i2.2)') hour(tptr), ':',minute(tptr)
+      write(date,'(i2.2,a1,i2.2,a1,i4)')month(tptr),'/',day(tptr),'/',year(tptr)
+     
+!  Write data to text strings and trim blank spaces to reduce file size      
+      floatPrecip=float(precip(tptr))/100.
+      write(mprecip,             '(f10.2)')     floatPrecip
+      write(manteced,            '(f10.2)')     anteced(tptr)
+      write(mrecent,             '(f10.2)')     recent(tptr)
+      write(mintensity,          '(f10.3)')     intensity(tptr)
+      if(intensLogic1) then
+         write(mmIntensity,      '(f10.3)')     intensity(tptr)
+      else
+         write(mmIntensity,      '(f10.3)')     intensity(tptr)*in2mm
+      end if
+      if(intensLogic2) then
+         write(logmmIntensity,   '(f10.3)')     -99.
+      else 
+         write(logmmIntensity,   '(f10.3)')     log10(intensity(tptr)*in2mm)
+      end if
+      write(mduration,           '(f10.1)')     duration(tptr)
+      if(durLow) then 
+         write(mdurflag,         '(A)'    )     "duration below minimum defined duration"
+      else if(durHigh) then 
+         write(mdurflag,         '(A)'    )     "duration above maximum defined duration" 
+      end if
+      if(runningIntensLogic) then
+         write(mrunningIntens,   '(f10.3)')     runningIntens(tptr)
+      else
+         write(mrunningIntens,   '(f10.3)')     runningIntens(tptr) !*in2mm
+      end if
+      write(mdeficit,            '(f10.3)')     deficit(tptr)
+      write(mintensityDuration,  '(f10.3)')     intensityDuration(tptr)
+      write(mavgIntensity,       '(f10.3)')     avgIntensity(tptr)
+      write(mAWI,                '(f10.3)')     AWI(tptr)
+	  
+      manteced            = trim(adjustl(manteced))
+      mrecent             = trim(adjustl(mrecent))
+      mintensity          = trim(adjustl(mintensity))
+      mmIntensity         = trim(adjustl(mmIntensity))
+      logmmIntensity      = trim(adjustl(logmmIntensity))
+      mduration           = trim(adjustl(mduration))
+      mdurflag            = trim(adjustl(mdurflag))
+      mrunningIntens      = trim(adjustl(mrunningIntens))
+      mprecip             = trim(adjustl(mprecip))
+      mdeficit            = trim(adjustl(mdeficit))
+      mavgIntensity       = trim(adjustl(mavgIntensity))
+      mintensityDuration  = trim(adjustl(mintensityDuration))
+      mAWI                = trim(adjustl(mAWI))
+	  
+!Writing values of local variables to file	  
+      write(uout,*)time,' ',date,tb,&
+                   mprecip,tb,&
+                   manteced,tb,&
+                   mrecent,tb,&
+                   mintensity,tb,&
+                   mmIntensity,tb,&
+                   mduration,tb,&
+                   logmmIntensity,tb,&
+                   mrunningIntens,tb,&
+                   mdeficit,tb,&
+                   mintensityDuration,tb,&
+                   mavgIntensity,tb,&
+                   mAWI,tb,&
+                   mdurflag
+      tptrm1=tptr
+   end do
+   close(uout)
+   write(*,*) xid,' time-series plot file finished'
+   return
+
+! DISPLAY ERROR MESSAGE
+   125  write(*,*) 'Error opening file ',outputFile	
+        write(*,*) 'Press Enter key to exit program.'
+        read(*,*)
+        write(ulog,*) 'Error opening file ',outputFile		
+        close (ulog)
+        stop
+   end subroutine gnpts1
