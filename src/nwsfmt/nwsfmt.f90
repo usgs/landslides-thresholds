@@ -24,7 +24,7 @@
 	logical:: match,lsfil,lapnd,leap
 ! initialize variables	
 	call date_and_time(thdate,thtime)
-	vrsn='0.1.03'; vdate='03Mar2010' ! previous revision 17Nov2006
+	vrsn='0.1.04'; vdate='21Jul2015' ! previous revision 2010
 	u=(/11,12,13,14,15,16/)
 	lasday=(/31,28,31,30,31,30,31,31,30,31,30,31/)
 ! code that uses lasday needs a way to check for leap year *****************	
@@ -156,8 +156,8 @@
 ! save data in fixed-width format for program 'thresh'     	  
 	  if(dtim(i)>(dltim(j)+0.5d0/24.d0)) then
 	    if(dtim(i)>dtimax) dtimax=dtim(i)
-	    write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i3.3)',err=30)&
-     	       & sta(j),year(i),mon(i),da(i),hr(i),ippt(i)
+	    write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
+     	       & sta(j),year(i),mon(i),da(i),hr(i),ippt(i) ! Changed to 4-digit precip 7/21/2015, RLB
 ! check for gaps and fill in with zeros
 	    dif=0.d0
 	    if(dtim(i+1)>0.d0)then     	       
@@ -185,10 +185,10 @@
 	            end if
 	          end if
 	        end if
-	        write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i3.3)',err=30)&
-     	          & sta(j),tyear,tmon,tda,thr,0
-	        write (u(1),'(i2.2,i4.4,i2.2,i2.2,i2.2,i3.3)')&
-     	          & sta(j),tyear,tmon,tda,thr,0
+	        write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
+     	          & sta(j),tyear,tmon,tda,thr,0  ! Changed to 4-digit precip 7/21/2015, RLB
+	        write (u(1),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)')&
+     	          & sta(j),tyear,tmon,tda,thr,0  ! Changed to 4-digit precip 7/21/2015, RLB
   	      end do
 	    end if
 	  end if
