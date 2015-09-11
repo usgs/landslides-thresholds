@@ -42,7 +42,7 @@
   	   pn = 'rewind'
   	end if
         
-	open(uout,file=outputFile,status='new',position=pn,err=125)
+	open(uout,file=outputFile,status='unknown',position=pn,err=125)
 	
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
      	if(pn=='rewind') then
