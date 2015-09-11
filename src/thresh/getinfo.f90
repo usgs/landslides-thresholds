@@ -18,7 +18,7 @@ contains
 	   fieldCap,fcUnit,drainConst,evapConst,resetAntMonth,resetAntDay,&
 	   timezoneOffset,year,lgyr,midnightVal,plotFormat,stats,outputFolder,&
 	   dataLocation,stationLocation,stationNumber,sysYear,upLim,lowLim,&
-	   interSwitch,intervals,polySwitch) !{{{
+	   interSwitch,intervals,polySwitch,precipUnit,forecast) !{{{
 	   use data_analysis !contains check_SAT, check_AWI, check_switches,
 	                     !check_antMonth_antDay,set_power_limits,set_poly_limits
 	                     !error1, and error2
@@ -29,7 +29,7 @@ contains
 	      character (len=*), allocatable,intent(out) :: stationLocation(:)
 	      character (len=*), allocatable,intent(out) :: stationNumber(:)
 	      character (len=*),intent(out) :: outputFolder
-	      character (len=*),intent(out) :: powerUnit,fcUnit
+	      character (len=*),intent(out) :: powerUnit,fcUnit,precipUnit
 	      character (len=*),intent(out) :: plotFormat
 	      real,intent(out)		:: slope,intercept,powerCoeff
 	      real,intent(out)     :: polynomArr(6),runningIntens,AWIThresh
@@ -44,7 +44,7 @@ contains
 	      integer,intent(out)  :: timezoneOffset,year,midnightVal
 	      integer,intent(out)	:: intervals
 	      logical,intent(out)  :: powerSwitch,polySwitch,interSwitch
-	      logical,intent(out)	:: lgyr,stats
+	      logical,intent(out)	:: lgyr,stats,forecast
 
    ! LOCAL VARIABLES
 	      character(1) :: junk
@@ -73,55 +73,58 @@ contains
 	   !Line 3 Readings per hour
 	      read(thresh_in,*,err=115) junk, rph
 	      lineCtr = lineCtr + 1
-	   !Line 4 Hours of recent precip
+	   !Line 4 Units of input precipitation data
+	      read(thresh_in,*,err=115) junk, precipUnit
+	      lineCtr = lineCtr + 1
+	   !Line 5 Hours of recent precip
 	      read(thresh_in,*,err=115) junk, Trecent
 	      lineCtr = lineCtr + 1
-	   !Line 5 Hours of antecedent precip
+	   !Line 6 Hours of antecedent precip
 	      read(thresh_in,*,err=115) junk, Tantecedent
 	      lineCtr = lineCtr + 1
-	   !Line 6 Number of hours for intensity. If 0, compute average intensity since
+	   !Line 7 Number of hours for intensity. If 0, compute average intensity since
 	   !beginning of storm
 	      read(thresh_in,*,err=115) junk, Tintensity
 	      lineCtr = lineCtr + 1
-	   !Line 7 Minimum number of hours between storms
+	   !Line 8 Minimum number of hours between storms
 	      read(thresh_in,*,err=115) junk, minTstormGap
 	      lineCtr = lineCtr + 1
-	   !Line 8 Hours for running average intensity
+	   !Line 9 Hours for running average intensity
 	      read(thresh_in,*,err=115) junk, TavgIntensity
 	      lineCtr = lineCtr + 1
-	   !Line 9 Number of lines allowed for data gaps
+	   !Line 10 Number of lines allowed for data gaps
 	      read(thresh_in,*,err=115) junk, maxDataGap
 	      lineCtr = lineCtr + 1
-	   !Line 10 Time window, hours for time-series plots, negative or zero value
+	   !Line 11 Time window, hours for time-series plots, negative or zero value
 	   !suppresses output
 	      read(thresh_in,*,err=115) junk, numPlotPoints
 	      lineCtr = lineCtr + 1
-	   !Line 11 Time window, hours for short-term time-series plots. Negative or
+	   !Line 12 Time window, hours for short-term time-series plots. Negative or
 	   !zero value suppresses output
 	      read(thresh_in,*,err=115) junk, numPlotPoints2
 	      lineCtr = lineCtr + 1
-	   !Line 12 Slope of recent/antecedent threshold
+	   !Line 13 Slope of recent/antecedent threshold
 	      read(thresh_in,*,err=115) junk, slope
 	      lineCtr = lineCtr + 1
-	   !Line 13 Intercept of recent/antecedent threshold
+	   !Line 14 Intercept of recent/antecedent threshold
 	      read(thresh_in,*,err=115) junk, intercept
 	      lineCtr = lineCtr + 1
-	   !Line 14 Flag for whether or not power law definition is used
+	   !Line 15 Flag for whether or not power law definition is used
 	      read(thresh_in,*,err=115) junk, powerSwitch
 	      lineCtr = lineCtr + 1
 	   !If power law is used, get necessary information
 	   	if(powerSwitch) then !{{{
-	   		!Line 15 Coefficient for power law
+	   		!Line 16 Coefficient for power law
 	   			read(thresh_in,*,err=115) junk, powerCoeff
 	   			lineCtr = lineCtr + 1
-	   		!Line 16 Exponent for power law
+	   		!Line 17 Exponent for power law
 	   			read(thresh_in,*,err=115) junk, powerExp
 	   			lineCtr = lineCtr + 1
-	   		!Line 17 Interval for power law
+	   		!Line 18 Interval for power law
 	   			read(thresh_in,*,err=115) junk, lowLim, upLim
 	   			lineCtr = lineCtr + 1 !}}}
 	   	else !{{{
-	   		!Lines 15, 16, 17 are all irrelevant. Information sent to junk
+	   		!Lines 16, 17, 18 are all irrelevant. Information sent to junk
 	   			read(thresh_in,*,err=115) junk
 	   			read(thresh_in,*,err=115) junk
 	   			read(thresh_in,*,err=115) junk
@@ -131,19 +134,19 @@ contains
 	   			upLim = 0
 	   			lineCtr = lineCtr + 3 !}}}
 	   	end if 
-	   !Line 18 Polynomial defined ID flag
+	   !Line 19 Polynomial defined ID flag
 	   	read(thresh_in,*,err=115) junk, polySwitch
 	   	lineCtr = lineCtr + 1
 	   !If polynomial is used, get necessary information
 	   	if(polySwitch) then !{{{
-	   		!Line 19 coefficents for polynomial
+	   		!Line 20 coefficents for polynomial
 	   			read(thresh_in,*,err=115) junk, (polynomArr(i), i = 1,6)
 	   			lineCtr = lineCtr + 1
-	   		!Line 20 Interval for polynomial
+	   		!Line 21 Interval for polynomial
 	   			read(thresh_in,*,err=115) junk, lowLim, upLim
 	   			lineCtr = lineCtr + 1 !}}}
 	   	else !{{{
-	   		!Lines 19, 20 are irrelevant. Information sent to junk
+	   		!Lines 20, 21 are irrelevant. Information sent to junk
 	   	   read(thresh_in,*,err=115) junk
 	   	   read(thresh_in,*,err=115) junk
 	   		polynomArr = 0
@@ -151,63 +154,66 @@ contains
 	   		upLim = 0
 	   		lineCtr = lineCtr + 2 !}}}
 	   	end if
-	   !line 21 Linear interpolation ID flag
+	   !line 22 Linear interpolation ID flag
 	   	read(thresh_in,*,err=115) junk, interSwitch
 	   	lineCtr = lineCtr + 1
 	   !if linear interpolation is used, get necessary information
 	   	if(interSwitch) then !{{{
-	   	   !Line 22 number of linear intervals
+	   	   !Line 23 number of linear intervals
 	   		read(thresh_in,*,err=115) junk, intervals
 	   		lineCtr = lineCtr + 1 !}}}
 	   	else !{{{
-	   		!Line 22 is irrelevant. Information sent to junk 
+	   		!Line 23 is irrelevant. Information sent to junk 
 	   		read(thresh_in,*,err=115) junk
 	   		intervals = 0
 	   		lineCtr = lineCtr + 1 !}}}
 	   	end if
-	   !Line 23 Threshold Unit, historically and currently called powerUnit, for 
+	   !Line 24 Threshold Unit, historically and currently called powerUnit, for 
 	   !the sake of not having to rewrite code. The author should make not of this.
 	      read(thresh_in,*,err=115) junk, powerUnit
-	   !Line 24 Day and month to start annual antecedent rainfall running
+	   !Line 25 Day and month to start annual antecedent rainfall running
 	   !total
 	      read(thresh_in,*,err=115) junk, resetAntMonth, resetAntDay
 	      lineCtr = lineCtr + 1
-	   !Line 25 Seasonal antecedent threshold
+	   !Line 26 Seasonal antecedent threshold
 	      read(thresh_in,*,err=115) junk, seasonalAntThresh, SATunit
-	   !Line 26 Value of running average intensity threshold
+	   !Line 27 Value of running average intensity threshold
 	      read(thresh_in,*,err=115) junk, runningIntens
 	      lineCtr = lineCtr + 1
-	   !Line 27 Threshold value of antecedent water index
+	   !Line 28 Threshold value of antecedent water index
 	      read(thresh_in,*,err=115) junk, AWIThresh
 	      lineCtr = lineCtr + 1
-	   !Line 28 Field capacity for antecedent water index
+	   !Line 29 Field capacity for antecedent water index
 	      read(thresh_in,*,err=115) junk, fieldCap, fcUnit
 	      lineCtr = lineCtr + 1
-	   !Line 29 Drainage constant for antecedent water index
+	   !Line 30 Drainage constant for antecedent water index
 	      read(thresh_in,*,err=115) junk, drainConst
 	      lineCtr = lineCtr + 1
-	   !Line 30 Monthly evaporation constants for antecedent water index
+	   !Line 31 Monthly evaporation constants for antecedent water index
 	      read(thresh_in,*,err=115) junk, (evapConst(i), i = 1,12)
 	      lineCtr = lineCtr + 1
-	   !Line 31 Time-zone offset, hours
+	   !Line 32 Time-zone offset, hours
 	      read(thresh_in,*,err=115) junk, timezoneOffset
 	      lineCtr = lineCtr + 1
-	   !Line 32 Year, if using archival data for one year
+	   !Line 33 Year, if using archival data for one year
 	      read(thresh_in,*,err=115) junk, year
 	      lineCtr = lineCtr + 1
-	   !Line 33 Midnight = 2400 or 0000?
+	   !Line 34 Midnight = 2400 or 0000?
 	      read(thresh_in,*,err=115) junk, midnightVal
 	      lineCtr = lineCtr + 1
-	   !Line 34 Plot file format for analyzed conditions
+	   !Line 35 Plot file format for analyzed conditions
 	      read(thresh_in,*,err=115) junk, plotFormat
 	      lineCtr = lineCtr + 1
-	   !Line 35 Record statistics?
+	   !Line 36 Record statistics?
 	      read(thresh_in,*,err=115) junk, stats
 	      lineCtr = lineCtr + 1
-	   !Line 36 Folder to store output
+	   !Line 37 Forecasting?
+	   	  read(thresh_in,*,err=115) junk, forecast
+	   	  lineCtr = lineCtr + 1
+	   !Line 38 Folder to store output
 	      read(thresh_in,*,err=115) junk, outputFolder
 	      lineCtr = lineCtr + 1
-	   !Line 37 is irrelevant
+	   !Line 39 is irrelevant
 	      read(thresh_in,*,err=115) junk
 	      lineCtr = lineCtr + 1
 	      
@@ -215,7 +221,7 @@ contains
 	   !dataLocation arays
 	      allocate (dataLocation(numStations),stationLocation(numStations),&
 	                stationNumber(numStations))
-	   !Line 38+ Fill in dataLocation, stationLocation, stationNumber arrays
+	   !Line 40+ Fill in dataLocation, stationLocation, stationNumber arrays
               i = 1
               read(thresh_in,*,err = 115,iostat=iostatus) &
               tempStatNum, tempStatLoc, tempDataLoc
@@ -381,7 +387,7 @@ contains
 
 	      end if
 	      
-	   !Verifying that fcUnit is implemented in thresh
+	   !Verifying that fcUnit and precipUnit are implemented in thresh
 	      if(fcUnit /= 'mt' .and. fcUnit /= 'ft') then 
 	         write(*,*) "The field capacity unit must be either 'ft' or 'mt'."
 	         write(*,*) "Edit thresh_in.txt to ensure this is so."
@@ -390,6 +396,14 @@ contains
 	         write(uout,*) "The field capacity unit must be either 'ft' or 'mt'."
 	         write(uout,*) "edit thresh_in.txt to ensure this is so."
 	         write(*,*) "Thresh exited due to this error."
+	      	 read(*,*)
+	      	 stop
+	      end if
+	      if(precipUnit /= 'mm' .and. precipUnit /= 'in') then
+	      	 write(*,*) "The precipitation input unit must be either 'in' or 'mm'."
+	      	 write(*,*) "Edit thresh_in.txt to ensure this is so."
+	      	 write(*,*) "Press Enter key to exit program."
+	      	 read(*,*)
 	         stop
 	      end if
 	   
@@ -404,6 +418,7 @@ contains
 	      write(uout,"(A19,I2)")                  'Number of stations ',numStations
 	      write(uout,"(A29,I6)")                  'Maximum number of data lines ',maxLines
 	      write(uout,"(A,I2)")                    'Readings per  hour ',rph
+	      write(uout,"(A,A2)")					  'Precipitation data units ', precipUnit
 	      write(uout,"(A,I3)")                    'Length of recent time ',Trecent
 	      write(uout,"(A,I3)")                    'Length of antecedent time ',Tantecedent
 	      write(uout,"(A,I2)")                    'Intensity hours ',Tintensity
@@ -436,6 +451,7 @@ contains
 	      write(uout,"(A,I4)")                    'Midnight hour is ',midnightVal
 	      write(uout,"(A,A5)")                    'Plot format ',plotformat
 	      write(uout,"(A,L3)")                    'Output statistics? ',stats
+	      write(uout,"(A,L3)")					  'Forecasting? ',forecast
 	      write(uout,"(A,A)")                     'Name of output folder ',outputfolder
 
 	      write(uout,*)'Station number ','File location ','Station Location'
@@ -636,7 +652,7 @@ contains
 	sysDay, sysHour, sysMinute, stationPtr, year, minute, uout, ctrHolder,&
 	sumTrecent, sumTantecedent, intensity, sum3s, sum15s, intsys, def315s,&
 	sthreshIntensityDuration, sthreshAvgIntensity, latestMonth, latestDay,&
-	latestHour, latestMinute)!{{{
+	latestHour, latestMinute,forecast)!{{{
 	implicit none
 
 	! FORMAL ARGUMENTS
@@ -645,6 +661,7 @@ contains
 	   integer, intent(in)  :: sysMinute, year, maxLines, uout
 	   integer, intent(out) :: tyear(maxLines),month(maxLines),day(maxLines),hour(maxLines)
 	   integer, intent(out) :: precip(maxLines),ctr,minute(maxLines),stationPtr
+	   logical, intent(in)  :: forecast
 	   logical :: lgyr
 	   ! Arguments associated only with error statement
 	   real, intent(out)    :: sumTrecent(*), sumTantecedent(*),intensity(*)
@@ -660,42 +677,47 @@ contains
 	   open (file,file=trim(dataLocation),status='old',err=150)
 
 	   if(rph==1) then ! read hourly data
-	      if(lgyr) then ! read file format that includes year data
-	         do i=1,maxLines
+	      if(lgyr) then ! read file format that includes year data	      	
+	         do i=1,maxLines	         
 	            read (file,'(i2,i4,3i2,i4)',err=140,end=120)&
 	            st,tyear(i),month(i),day(i),hour(i),precip(i)
-	            ctr=i
-	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
-	               if (tyear(i)==sysYear) stationPtr=i
-	            end if
+	            ctr=i    
+	            if (forecast .eqv. .TRUE.) then
+	            	 stationPtr=i    
+	            else if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
+	                 if (tyear(i)==sysYear) stationPtr=i
+	            end if   
 	         end do
-	         
-	      else ! read file format that excludes year data
-	         do i=1,maxLines
+
+	      else ! read file format that excludes year data    
+	         do i=1,maxLines	         
 	            read (file,'(4i2,i4)',err=140,end=120) &
 	            &st,month(i),day(i),hour(i),precip(i)
-	            ctr=i
-	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
-	               if(year==sysYear) stationPtr=i
-	            end if
+	            ctr=i		            
+	            if (forecast .eqv. .TRUE.) then
+	            	 stationPtr=i    
+	            else if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
+	                 if (tyear(i)==sysYear) stationPtr=i
+	            end if          
 	         end do
 	      end if
 	      
-	   else if (rph>1 .and. rph<=60) then ! read xx-minute data
+	   else if (rph>1 .and. rph<=60) then ! read xx-minute data   
 	      if(lgyr) then ! read file format that includes year data
-	         do i=1,maxLines
+	         do i=1,maxLines	         
 	            read (file,'(i2,i4,4i2,i4)',err=140,end=120) &
 	            &st,tyear(i),month(i),day(i),hour(i),minute(i),precip(i)
 	            ctr=i
+	!**** Revise for forecast case
 	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
 	               difference=(sysMinute-minute(i))
 	               if (tyear(i)==sysYear .and. difference<(60/rph) .and. &
 	                   difference>=0) stationPtr=i
-	            end if
+	            end if           
 	         end do
 	         
-	      else ! read file format that excludes year data
-	         do i=1,maxLines
+	      else ! read file format that excludes year data      
+	         do i=1,maxLines  
 	            read (file,'(5i2,i4)',err=140,end=120) &
 	            &st,month(i),day(i),hour(i),minute(i),precip(i)
 	            ctr=i
@@ -703,10 +725,11 @@ contains
 	               difference=(sysMinute-minute(i))
 	               if(year==sysYear .and. difference<(60/rph) &
 	                  .and. difference>=0) stationPtr=i
-	            end if
+	            end if          
 	         end do
 	      end if
 	   end if
+
            120 return
 
 	   140 write(*,*) 'Error reading file ', fileName
@@ -749,15 +772,28 @@ contains
    ! LOCAL VARIABLES
    character(len=23), parameter :: FILENAME="interpolatingPoints.txt"
    real 		:: m, b
-   integer  :: unit=666, i
+   integer  :: unit=666, i, xycounter
 
    !------------------------------
 
       open(unit,file=FILENAME,err=100,status="old")
       
+      xycounter = 0
+      
       do i=1,intervals+1
-         read(unit,*) xVal(i), yVal(i)
+         read(unit,*,err=110) xVal(i), yVal(i)
+         xycounter = xycounter + 1
       end do
+      
+      if (intervals+1 /= xycounter) then
+      		write(*,*) "The file ", FILENAME, " has the incorrect number of points."
+      		write(*,*) "The number of data points should be equal to"
+      		write(*,*) "the number of intervals+1."
+      		write(*,*) "Press Enter key to exit program."
+      		read(*,*)
+      		stop
+      end if
+      
       !Extending lower bound.
 	     	m = (yVal(2) - yVal(1)) / (xVal(2) - xVal(1))
 	     	b = yVal(2) - m * xVal(2)
@@ -771,6 +807,7 @@ contains
 	     	xVal(intervals+1) = 1.15 * xVal(intervals+1)
 	     	yVal(intervals+1) = m* xVal(intervals+1) + b
       return
+	! Error statement needed for incorrect number of intervals in interpolatingPoints.txt
       
       100 write(*,*)"The file ", FILENAME, " could not be opened."
       	 write(*,*)"Ensure that the file exists in the same directory as"
@@ -778,6 +815,10 @@ contains
       	 write(*,*)'Press Enter key to exit program.'
       	 read(*,*)
       	 stop
+      110 write(*,*) "Error reading ", FILENAME, "at line ", xycounter
+      	  write(*,*)"Press Enter key to exit program."
+      	  read(*,*)
+      	  stop
    end subroutine read_interpolating_points !}}}
  			
 end module

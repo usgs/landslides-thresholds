@@ -10,7 +10,7 @@ contains
 	drainConst,fieldCap,da,hr,TavgIntensity,rph,runIntensity,sumTintensity,&
 	minTStormGap,TstormGap,tRainfallBegan,trfbeg,eachDate1904,tstormBeg1904,&
 	tRainfallEnd,trfend,tstormEnd1904,dgap,xptr,intensity,dur,numStations,&
-	maxLines,Tintensity) !{{{
+	maxLines,Tintensity,precipUnit) !{{{
 	implicit none
 	integer,parameter :: double=kind(1d0)
 	
@@ -31,6 +31,7 @@ contains
 	   integer, intent(in)  	:: timestampMonth(maxLines), Tintensity
 	   integer, intent(out) 	:: tRainfallBegan, tRainfallEnd, sumTintensity
 	   integer, intent(out) 	:: TstormGap, xptr
+	   character (len=2), intent(in) :: precipUnit
 
    ! LOCAL VARIABLES
 	   real :: floatPrecip
@@ -39,9 +40,13 @@ contains
    !-----------------------------
 	   ! compute antecedent water balance
 	   do i = (1 + diffPtrOffset), stationPtr
-	      
-	      floatPrecip = float(precip(i))
 	   
+		if (precipUnit == 'mm') then
+			floatPrecip = float(precip(i))/254.
+		else if (precipUnit == 'in') then
+			floatPrecip = float(precip(i))/100.
+		end if
+		
               ! Compute either antecedent Water Index (AWI) or Cumulative precipitation	   
 	      if(resetAntMonth * resetAntDay <= 0) then ! Reset date not given, so compute (AWI)
 	         if(AWI(i - 1) < 0.) then ! below field capacity

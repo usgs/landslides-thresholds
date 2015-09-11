@@ -8,13 +8,14 @@
 	recent,intensity,duration,precip,runningIntens,deficit,&
 	intensityDuration,avgIntensity,outputFolder,&
 	plotFile,in2mm,rph,pt,nlo20,xid,AWI,minTStormGap,&
-	TavgIntensity,Tantecedent,Trecent,lowLim,upLim)
+	TavgIntensity,Tantecedent,Trecent,lowLim,upLim,precipUnit)
 	implicit none
 	
 	
 ! FORMAL ARGUMENTS
 	character, intent(in)    :: outputFolder*(*),plotFile*(*),stationNumber*(*)
 	character, intent(inout) :: xid*(*)
+	character (len=2), intent(in) :: precipUnit
 	real, intent(in)         :: anteced(n),recent(n),intensity(n),in2mm
 	real, intent(in)         :: duration(n),runningIntens(n),AWI(n)
 	real, intent(in)         :: deficit(n),intensityDuration(n),avgIntensity(n)
@@ -46,32 +47,32 @@
    hrly=adjustl(hrly)
    select case (trim(adjustl(xid)))
    case('Ex315'); header='Recent & Antecedent'
-   case('ExID_'); header='Intensity-duration'
+   case('ExID_'); header='Intensity-Duration'
    case('ExIDA'); header='Int.-Dur. & Ant. Water'
-   case('ExIR_'); header=trim(hrly)//'-hour Intensity'
+   case('ExIR_'); header=trim(hrly)//'-hr Intensity'
    case('ExI3_'); header='Intensity & Cumulative'
    end select
-   open(uout,file=outputFile,status='unknown',position='rewind',err=125)
+   open(uout,file=outputFile,status='new',position='rewind',err=125)
 	
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
-   write(uout,*) pd,' Times of exceedence for rainfall threshold: '//header
+   write(uout,*) pd,' Times of exceedance for rainfall threshold: '//header
    write(uout,*) pd,' Station ',trim(stationNumber)
-   write(uout,*) pd,' Time & date',tb,&
+   write(uout,*) pd,' Time & Date',tb,&
                  'Hourly Precip.',tb,&
-                 Tantecedent,'-hour precip.',tb,&
-                 Trecent,'-hour precip.',tb,&
+                 Tantecedent,'-hr Precip.',tb,&
+                 Trecent,'-hr Precip.',tb,&
                  'Intensity(in/hour)',tb,&
                  'Intensity(mm/hour)',tb,&
                  'Duration',tb,&
                  'Log10(Intensity(mm/hour))',tb,&
-                 trim(hrly)//'-hour Intensity (in/hour)',tb,&
+                 trim(hrly)//'-hr Intensity (in/hour)',tb,&
                  '3-/15-day Index',tb,&
                  'Intensity-Duration Index',tb,&
-                 TavgIntensity,'-hour Intensity Index',tb,&
+                 TavgIntensity,'-hr Intensity Index',tb,&
                  'Antecedent Water Index',tb,&
                  'Duration Descripton'
 
-!!!!!!!!!!COMMENT NEEDED!!!!!!!!!!
+! Read data and write time-series plot file
    tptrm1=pt(1)-1
    do j=1,ctrHolder
       !initialize mdurflag, intensLogic, durLow, durHigh
@@ -88,9 +89,15 @@
       end if
       write(time,'(i2.2,a1,i2.2)') hour(tptr), ':',minute(tptr)
       write(date,'(i2.2,a1,i2.2,a1,i4)')month(tptr),'/',day(tptr),'/',year(tptr)
+      
      
 !  Write data to text strings and trim blank spaces to reduce file size      
-      floatPrecip=float(precip(tptr))/100.
+		if (precipUnit == 'mm') then
+			floatPrecip = float(precip(tptr))/254.
+		else if (precipUnit == 'in') then
+			floatPrecip = float(precip(tptr))/100.
+		end if
+		
       write(mprecip,             '(f10.2)')     floatPrecip
       write(manteced,            '(f10.2)')     anteced(tptr)
       write(mrecent,             '(f10.2)')     recent(tptr)
@@ -98,12 +105,12 @@
       if(intensLogic1) then
          write(mmIntensity,      '(f10.3)')     intensity(tptr)
       else
-         write(mmIntensity,      '(f10.3)')     intensity(tptr)*in2mm
+         write(mmIntensity,      '(f10.3)')     intensity(tptr)*25.4
       end if
       if(intensLogic2) then
          write(logmmIntensity,   '(f10.3)')     -99.
       else 
-         write(logmmIntensity,   '(f10.3)')     log10(intensity(tptr)*in2mm)
+         write(logmmIntensity,   '(f10.3)')     log10(intensity(tptr)*25.4)
       end if
       write(mduration,           '(f10.1)')     duration(tptr)
       if(durLow) then 

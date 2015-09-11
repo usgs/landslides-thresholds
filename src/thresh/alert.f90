@@ -1,3 +1,8 @@
+! PURPOSE:
+!	 Writes the ThAlert.txt file. The data is composed in a table and
+!	colors are used to indicate alert levels.
+!
+!
 	subroutine alert(numStations,outputFolder,ulog,unitNumber,datim,&
 	 stationNumber,deficit,intensity,runningIntens,avgIntensity,&
 	 antecedPrecip,in2mm,duration,TavgIntensity)
@@ -65,9 +70,9 @@
 	
 ! tab-delimited file listing most recent alert conditions at all stations
   	outputFile=trim(outputFolder)//trim(outputFile)
-  	open(unitNumber,file=outputFile,status='unknown',&
+  	open(unitNumber,file=outputFile,status='new',&
   	position='rewind',err=125)
-	write (unitNumber,*) ' Current alert levels by station and threshold'
+	write (unitNumber,*) ' Current Alert Levels by Station and Threshold'
 	write (unitNumber,*) tb,'Rain gauge',&
 	                     tb,'Time and Date',&
 	                     tb,'Recent/Antecedent',&

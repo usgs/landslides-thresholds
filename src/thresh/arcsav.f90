@@ -6,11 +6,12 @@
 	subroutine arcsav(ulog,uout,n,stationNumber,ctrHolder,&
 	stationPtr,year,month,day,hour,minute,sumAnteced,&
 	sumRecent,intensity,stormDuration,precip,runIntensity,AWI,outputFolder,&
-	archiveFile,TavgIntensity,Tantecedent,Trecent)
+	archiveFile,TavgIntensity,Tantecedent,Trecent,precipUnit)
 	implicit none
 	
 ! FORMAL ARGUMENTS
 	character, intent(in) :: outputFolder*(*),archiveFile*(*),stationNumber*(*)
+	character (len=2), intent(in) :: precipUnit
 	real, intent(in)      :: sumAnteced(n),sumRecent(n),intensity(n)
 	real, intent(in)      :: stormDuration(n),AWI(n),runIntensity(n)
 	integer, intent(in)   :: n,TavgIntensity
@@ -31,7 +32,7 @@
 	logical             :: exists
 
 !------------------------------	
-	sNumber = adjustl(trim(stationNumber))//'.txt'
+	sNumber = adjustl(trim(stationNumber))// '.txt'
   	outputFile=trim(outputFolder)//trim(archiveFile)//trim(sNumber)
   	
   	inquire(file=outputFile,exist=exists)
@@ -41,19 +42,19 @@
   	   pn = 'rewind'
   	end if
         
-	open(uout,file=outputFile,status='unknown',position=pn,err=125)
+	open(uout,file=outputFile,status='new',position=pn,err=125)
 	
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
      	if(pn=='rewind') then
-	  write(uout,*) pd,' Archive of rainfall totals for comparison with thresholds'
+	  write(uout,*) pd,' Archive of Rainfall Totals for Comparison with Thresholds'
 	  write(uout,*) pd,' Station ',sNumber
 	  write(uout,*) pd,' Time & Date',&
                    tb,'Hourly Precip.',&
-                   tb,Tantecedent,'-hour antecedent precip.',&
-                   tb,Trecent,'-hour precip.',&
+                   tb,Tantecedent,'-hr Antecedent Precip.',&
+                   tb,Trecent,'-hr Precip.',&
                    tb,'Intensity',&
                    tb,'Duration',&
-                   tb,TavgIntensity,'-hour Intensity',&
+                   tb,TavgIntensity,'-hr Intensity',&
                    tb,'Antecedent Water Index'
      	end if
 
@@ -61,7 +62,11 @@
 	do j=(1+stationPtr-ctrHolder),stationPtr
       
 	   !Initializing floatPrecip variable
-      floatPrecip=float(precip(j))/100.
+		if (precipUnit == 'mm') then
+			floatPrecip = float(precip(j))/254.
+		else if (precipUnit == 'in') then
+			floatPrecip = float(precip(j))/100.
+		end if
 
      !Writing values to string variables
 	  write(time,'(i2.2,a1,i2.2)') hour(j), ':',minute(j)

@@ -7,11 +7,12 @@
 	stationPtr,year,month,day,hour,minute,sumTantecedent,&
 	sumTrecent,intensity,duration,precip,runningIntens,AWI,deficit,&
 	intensityDuration,avgIntensity,outputFolder,&
-	timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent)
+	timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
 	implicit none
 	
 ! FORMAL ARGUMENTS
 	character, intent(in) :: outputFolder*(*),timeSeriesPlotFile*(*),stationNumber*(*)
+	character (len=2), intent(in) :: precipUnit
 	real, intent(in)      :: sumTantecedent(n),sumTrecent(n),intensity(n),in2mm
 	real, intent(in)      :: duration(n),runningIntens(n),AWI(n)
 	real, intent(in)      :: deficit(n),intensityDuration(n),avgIntensity(n)
@@ -41,30 +42,34 @@
    outputFile=trim(stationNumber)//'.txt'
   	outputFile=trim(outputFolder)//trim(timeSeriesPlotFile)//trim(adjustl(mhour))//outputFile
   	
-	open(uout,file=outputFile,status='unknown',position='rewind',err=125)
+	open(uout,file=outputFile,status='new',position='rewind',err=125)
 	
    ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
-	write(uout,*) pd,' Time-series Plot file for rainfall thresholds'
+	write(uout,*) pd,' Time-Series Plot File for Rainfall Thresholds'
 	write(uout,*) pd,' Station ',trim(stationNumber)
-	write(uout,*) pd,' Time & date',tb,&
+	write(uout,*) pd,' Time & Date',tb,&
 	              'Hourly Precip.',tb,&
-	              Tantecedent,'-hour precip.',tb,&
-	              Trecent,'-hour precip.',tb,&
+	              Tantecedent,'-hr Precip.',tb,&
+	              Trecent,'-hr Precip.',tb,&
 	              'Intensity(in/hour)',tb,&
 	              'Intensity(mm/hour)',tb,&
 	              'Duration',tb,&
 	              'Log10(Intensity(mm/hour))',tb,&
-	              TavgIntensity,'-hour Intensity',tb,&
+	              TavgIntensity,'-hr Intensity',tb,&
 	              'Recent/Antecedent Index',tb,&
 	              'Intensity-Duration Index',tb,&
-	              TavgIntensity,'-hour Intensity Index',tb,&
+	              TavgIntensity,'-hr Intensity Index',tb,&
 	              'Antecedent Water Index'
-
 	  
 	do j=(1+stationPtr-ctrHolder*rph),stationPtr
 	   write(time,'(i2.2,a1,i2.2)') hour(j),':',minute(j)
 	   write(date,'(i2.2,a1,i2.2,a1,i4)')month(j),'/',day(j),'/',year(j)
-	   floatPrecip = float(precip(j))/100.
+	   
+		if (precipUnit == 'mm') then
+			floatPrecip = float(precip(j))/254.
+		else if (precipUnit == 'in') then
+			floatPrecip = float(precip(j))/100.
+		end if
 	  
 !  Write data to text strings and trim blank spaces to reduce file size      
 	   write(mprecip,             '(f10.2)')     floatPrecip

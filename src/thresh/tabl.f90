@@ -1,5 +1,6 @@
 ! PURPOSE:
-!
+!	tabl creates a ThCurrTabl.txt file that organizes the data analyzed
+!	in the program
 !
 !
 	subroutine tabl(unitNumber,u1,outputFolder,numStations,&
@@ -27,7 +28,7 @@
 	
 ! Create output file
   	outputFile=trim(outputFolder)//outputFile
-  	open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
+  	open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
   	
 ! Write to file
 	write(unitNumber,'(a10,12x,i3,a14,12x,i2,a10,12x,a9,12x,a8,12x,a11)')&

@@ -93,6 +93,7 @@
 	use external_files 	!contains read_init, read_thlast, read_station_file, read_interpolating_points
 	use plotting 		   !contains gnp1, gnp2, dgrs
 	use data_analysis 	!contains track_storm, track_intensity, count_events
+	use tablhtm_colors	!contains tablhtm, read_colors
 	implicit none
 	integer,parameter :: double=kind(1d0)
 	
@@ -124,6 +125,7 @@
 	integer :: ctr315,ctrid,ctria,cum15dRainfallCtr,ctra
 	integer :: ctri,AWIExceedCtr,AWIIntensCtr
 	integer :: ctri3,diffPtrOffset
+	integer :: ndiv
 
 
 	character (len=255),allocatable:: dataLocation(:)
@@ -131,26 +133,28 @@
 	character (len=20), allocatable:: datimb(:)
 	character (len=17), allocatable:: datim(:)	
 	character (len=8), allocatable:: stationNumber(:)
+	character (len=6), allocatable :: colors(:)
+	character (len=22), allocatable :: hexColors(:)
 
 	character (len=255) :: outputFile,pathThlast
 	character (len=255) :: outputFolder
 	character (len=31) :: archiveFile='ThArchive'
-	character (len=31) :: defaultOutputFile='threshout.txt'
-	character (len=31) :: dgOutputfile='dgthresh.txt'
+	character (len=31) :: defaultOutputFile='ThCurr.txt'
+	character (len=31) :: dgOutputfile='ThCTpairs.txt'
 	character (len=31) :: updateFile='ThUpdate.txt'
 	character (len=11) :: latestDate,revdate
 	character (len=10) :: fdat,sysTime
-	character (len=8) :: timeSeriesPlotFile='ThTSplot'
+	character (len=8) :: timeSeriesPlotFile='ThTSplothr.txt'
 	character (len=8) :: sysDate,vrsn
 	character (len=6) :: psn(2)
-	character (len=6) :: timeSeriesExceedFile='ThTime'
+	character (len=6) :: timeSeriesExceedFile='ThTime.txt'
 	character (len=5) :: latestTime
 	character (len=4) :: plotFormat
 	character (len=3) :: month(12)
-	character (len=2) :: fcUnit,powerUnit
+	character (len=2) :: fcUnit,powerUnit, precipUnit
 	character (len=1) :: pd,cm
 	
-	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch
+	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch,forecast
 
 	real,allocatable :: threshIntensityDuration(:),threshAvgExceed(:)
 	real,allocatable :: AWI(:),AWI_0(:), xVals(:), yVals(:)
@@ -161,6 +165,7 @@
 	real,allocatable :: srunIntensity(:),def315s(:)
 	real,allocatable :: sthreshIntensityDuration(:)
 	real,allocatable :: sthreshAvgIntensity(:)
+	real, allocatable:: div(:)
 	
  	real :: slope,intercept,in2mm
  	real :: powerCoeff,powerExp,runningIntens,drainConst,fieldCap,decayFactor
@@ -222,13 +227,13 @@
 	AWIThresh,fieldCap,fcUnit,drainConst,evapConsts,resetAntMonth,resetAntDay,&
 	timezoneOffset,year,lgyr,midnightVal,plotFormat,stats,outputFolder,&
 	dataLocation,stationLocation,stationNumber,sysYear,upLim,lowLim,&
-	interSwitch,intervals,polySwitch)
-  		
-! precipitation input data stored as hundredths of an inch  
-  	select case (fcUnit)
-  	   case ('mt'); AWIconversion=25.4/100000.
-  	   case ('in'); AWIconversion=1./100.
-  	   case default; AWIconversion=1.
+	interSwitch,intervals,polySwitch,precipUnit,forecast)
+	
+! precipitation input data stored as hundredths of an inch
+	select case (fcUnit)
+  		case ('mt'); AWIconversion=25.4/100000.
+  	   	case ('in'); AWIconversion=1./100.
+  	   	case default; AWIconversion=1.
 	end select
 	write(unitNumber(1),*) 'Conversion factor for AWI', AWIconversion
   	select case (powerUnit)
@@ -244,6 +249,7 @@
 	   lowLim = xVals(1)
 	   upLim = xVals(intervals+1)
 	end if
+	
 	
 ! allocate and initialize arrays 
 	allocate (timestampMonth(maxLines),da(maxLines),hr(maxLines),precip(maxLines))
@@ -346,7 +352,6 @@
 	   else
 	      mins=0
 	   end if
-
 ! Read individual station files in dataLocation(i) and find the most recent
 ! data collected.	
 	   call read_station_file(unitNumber(3),dataLocation(i), rph, lgyr,&
@@ -355,8 +360,9 @@
 	   stationPtr(i), year, mins, unitNumber(1),ctrHolder(i),sumTrecent,&
 	   sumTantecedent, intensity, sum3s(i), sum15s(i), intsys(i),&
 	   def315s(i),sthreshIntensityDuration(i), sthreshAvgIntensity(i),&
-	   latestMonth(i), latestDay(i), latestHour(i), latestMinute(i))   
- 	
+	   latestMonth(i), latestDay(i), latestHour(i), latestMinute(i),forecast)  
+	
+
 ! set pointer to end of file if no times match the current system time	
 	   if(stationPtr(i)==0) stationPtr(i)=ctr
 	   
@@ -397,7 +403,6 @@
 	      write (unitNumber(1),*) 'End date earlier than start date--check input file for blank lines'
 	      cycle
 	   end if
-
 	   write (*,*) i,'Processing station ', stationNumber(i)
 	   if(tstormBeg1904(i)==0.) then
 	      tRainfallBegan=1
@@ -424,7 +429,6 @@
 	   if(AWICompOffset<1 .or. AWICompOffset>stationPtr(i))then
 	     AWICompOffset=stationPtr(i)
 	   end if
-
 	   if(tlenx(i)<2*numPlotPoints*rph .and. numPlotPoints>0) then ! tlenx shorter than 2 x
 	   							       											! moving window for plotting
 	      if((1+stationPtr(i)-2*numPlotPoints*rph)>0) then ! longer history than 2 x moving
@@ -456,7 +460,7 @@
 	   drainConst,fieldCap,da,hr,TavgIntensity,rph,runIntensity,sumTintensity,&
 	   minTStormGap,TstormGap,tRainfallBegan,trfbeg,eachDate1904,tstormBeg1904(i),&
 	   tRainfallEnd,trfend,tstormEnd1904(i),dgap,xptr,intensity,dur,numStations,&
-	   maxLines,Tintensity)
+	   maxLines,Tintensity,precipUnit)
 
 	   ! compute intensity & duration at beginning of record
 	   if(precip(1)>0 .and. last1904(i)==0.d0) then 
@@ -490,19 +494,19 @@
  	      write (unitNumber(1),*) 'Recent/antecedent                 ',cum15dRainfallCtr, ctr315	 
  	      write (unitNumber(1),*) 'Recent/antecedent & ',TavgIntensity,'-hr Intensity',cum15dRainfallCtr, ctri3	 
  	      write (unitNumber(1),*) 'Intensity-Duration           ',ctri, ctrid	 
- 	      write (unitNumber(1),*) 'Maximum intensity, ',sum3mx,', ',Trecent,'-hour Duration (Trecent)' 
- 	      write (unitNumber(1),*) 'Maximum intensity, ',rntsymx,', ',TavgIntensity,'-hour Duration (TavgIntensity)' 
- 	      write (unitNumber(1),*) 'Antecedent water index       ','-- ',AWIExceedCtr
- 	      write (unitNumber(1),*) 'Antecedent water index & Intensity-Duration ',AWIIntensCtr
+ 	      write (unitNumber(1),*) 'Maximum Intensity, ',sum3mx,', ',Trecent,'-hour Duration (Trecent)' 
+ 	      write (unitNumber(1),*) 'Maximum Intensity, ',rntsymx,', ',TavgIntensity,'-hour Duration (TavgIntensity)' 
+ 	      write (unitNumber(1),*) 'Antecedent Water Index       ','-- ',AWIExceedCtr
+ 	      write (unitNumber(1),*) 'Antecedent Water Index & Intensity-Duration ',AWIIntensCtr
  	      write (unitNumber(1),*) TavgIntensity,'-hr Intensity        ',ctra, ctria
- 	      write (unitNumber(1),*) '** Number of continuous periods above threshold **' 
- 	      write (unitNumber(1),*) '3-day/15-day                             ',ev315	 
+ 	      write (unitNumber(1),*) '** Number of Continuous Periods Above Threshold **' 
+ 	      write (unitNumber(1),*) '3-Day/15-Day                             ',ev315	 
  	      write (unitNumber(1),*) 'Intensity-Duration                       ',evid	 
- 	      write (unitNumber(1),*) 'Intensity-Duration & antecedent water    ',evawid	 
+ 	      write (unitNumber(1),*) 'Intensity-Duration & Antecedent Water    ',evawid	 
  	      write (unitNumber(1),*) TavgIntensity,'-hr Intensity                    ',evia
- 	      write (unitNumber(1),*) '3-day/15-day & ',TavgIntensity,'-hr Intensity  ',evi3
+ 	      write (unitNumber(1),*) '3-Day/15-Day & ',TavgIntensity,'-hr Intensity  ',evi3
  	      write (unitNumber(1),*) '' 
- 	      write (unitNumber(1),*) 'Max. Antecedent water index ',awimx
+ 	      write (unitNumber(1),*) 'Max. Antecedent Water Index ',awimx
  	      write (unitNumber(1),*) '--------------- ********************* ---------------' 
  	      write (unitNumber(1),*) '' 
  	   end if	!}}} 
@@ -537,48 +541,51 @@
 	      write(datimb(i),'(i2.2,a1,i2.2,a4,i2.2,1x,a3,1x,i4)') &
 	      latestHour(i),':',latestMinute(i),'<br>',latestDay(i),month(latestMonth(i)),latestYear(i)
 	   end if
+!if (stationPtr(i)-numPlotPoints*rph <= 0) numPlotPoints = stationPtr(i)/rph
+! Create or update time-series plot file for each station
 
-! Create or update time-series plot file for each station	
- 	   if(stationPtr(i)>=(numPlotPoints*rph) .and. numPlotPoints>0) then
+ 	   if(stationPtr(i)>=numPlotPoints*rph .and. numPlotPoints>0) then
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),numPlotPoints,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
- 	      TavgIntensity,Tantecedent,Trecent)
-	   else if (stationPtr(i)>=(numPlotPoints2*rph) .and. numPlotPoints>0) then
-	      numPlotPoints3=stationPtr(i)/rph   ! replaced ctrHolder(i) with numPlotPoints3 7/29/2015, RLB
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit)
+	   else if (stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints>0) then
+	   	  numPlotPoints3=stationPtr(i)/rph   ! replaced ctrHolder(i) with numPlotPoints3 7/29/2015, RLB
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),numPlotPoints3,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
- 	      TavgIntensity,Tantecedent,Trecent)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit)
 	   end if
 	   
 ! Create or update short-term time-series plot file for each station	
  	   if(flagRealtime) then
- 	      if(stationPtr(i)>=(numPlotPoints2*rph) .and. numPlotPoints2>0) then
+ 	      if(stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints2>0) then
  	         call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	         stationNumber(i),numPlotPoints2,stationPtr(i),timestampYear,&
  	         timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	         dur,precip,runIntensity,AWI,def315,&
  	         threshIntensityDuration,threshAvgExceed,outputFolder,&
- 	         timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent)
+ 	         timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
  	      end if
 	   end if
 	   
 ! Create or update time-series archive file for each station	 
  	   if (abs(newest1904(i)-last1904(i))<(0.1/(24.*rph))) cycle 
+ 	  if(forecast .eqv. .FALSE.) then
  	   if(stationPtr(i)>0) then 
-	      numPlotPoints3=stationPtr(i)/rph
+ 	   	  numPlotPoints3=stationPtr(i)/rph
  	      call arcsav(unitNumber(1),unitNumber(5),&
- 	      maxLines,stationNumber(i),numPlotPoints3,&  ! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB
+ 	      maxLines,stationNumber(i),numPlotPoints3,&	! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
  	      sumTantecedent,sumTrecent,intensity,dur,precip,&
  	      runIntensity,AWI,outputFolder,archiveFile,TavgIntensity,Tantecedent&
- 	      ,Trecent)
+ 	      ,Trecent,precipUnit)
  	   end if
+ 	  end if
  	   
 ! Create time series listings of threshold exceedance values
 	   if(stats) then	  
@@ -588,28 +595,28 @@
  	      dur,precip,runIntensity,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
  	      rph,pt315,maxLines,'Ex315',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrid,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
  	      rph,ptid,nlo20,'ExID_',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),AWIIntensCtr,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
  	      rph,ptawid,nlo20,'ExIDA',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctri3,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
  	      rph,pti3,nlo20,'ExI3_',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call tindm(unitNumber(1),unitNumber(5),unitNumber(10),maxLines,&
  	      stationNumber(i),stationPtr(i),timestampYear,timestampMonth,&
  	      da,hr,sumTantecedent,sumTrecent,intensity,dur,&
@@ -644,13 +651,16 @@
 	   unitNumber(8),datimb,stationNumber,def315s,&
 	   sthreshIntensityDuration,sthreshAvgIntensity,runningIntens,&
 	   srunIntensity,in2mm,durs,stationLocation,TavgIntensity)
+	 if(forecast .eqv. .FALSE.) then
  	   call tabl(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datim,durs,sum15s,&
  	   sum3s,intsys,Tantecedent,Trecent)
+	   call read_colors(hexColors,colors,div,ndiv)
  	   call tablhtm(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datimb,durs,&
  	   sum15s,sum3s,intsys,srunIntensity,stationLocation,&
- 	   Tantecedent,Trecent)
+ 	   Tantecedent,Trecent,hexColors,colors,div,ndiv)
+ 	 end if
 	end if
 	
 	outputFile=trim(outputFolder)//trim(updateFile)

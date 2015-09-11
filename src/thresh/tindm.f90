@@ -37,7 +37,7 @@
 	
 	outputFile=trim(adjustl(stationNumber))//'.txt'
   	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//outputFile
-	open(uout,file=outputFile,status='unknown',position='rewind',err=125)
+	open(uout,file=outputFile,status='new',position='rewind',err=125)
 	
 	outputFile=trim(adjustl(stationNumber))//'.txt'
   	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//'Ex'//outputFile
@@ -46,14 +46,14 @@
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.
 	un(1) = uout; un(2) = uout2
 	  do k=1,2
-	  write(un(k),*) pd,' Maximum daily values for thresholds '
+	  write(un(k),*) pd,' Maximum Daily Values for Thresholds '
 	  write(un(k),*) pd,' Station ',trim(stationNumber)
-	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-hour precip.',&
-            tb,Trecent,'-hour precip.',tb,'Rec./Antec. Index',tb,&
+	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-hr Precip.',&
+            tb,Trecent,'-hr Precip.',tb,'Rec./Antec. Index',tb,&
 	    'Intensity(in/hour)',tb,'Intensity(mm/hour)',tb,&
 	    'Duration',tb,'Intensity-Duration Index',tb,&
-	    'Antecedent Water Index',tb,TavgIntensity,'-hour Intensity',tb,&
-	    'Combined REc./Antec. & Intensity Index'
+	    'Antecedent Water Index',tb,TavgIntensity,'-hr Intensity',tb,&
+	    'Combined Rec./Antec. & Intensity Index'
 	  end do
 	  
 ! find maximum daily value of threshold index & associated values	

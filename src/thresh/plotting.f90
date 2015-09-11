@@ -26,10 +26,10 @@ contains
 	
     !------------------------------	
   	   outputFile=trim(outputFolder)//trim(dgOutputfile)
-  	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
+  	   open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
   	   write(unitNumber,*)& 
-     	     (tb,'Recent conditons at station',trim(stationNumber(i)),&
-     	     tb,Trecent,'-hour precip. at station',trim(stationNumber(i)), i=1,numStations)
+     	     (tb,'Recent Conditons at Station',trim(stationNumber(i)),&
+     	     tb,Trecent,'-hr Precip. at Station',trim(stationNumber(i)), i=1,numStations)
  	   write(unitNumber,'(100(a1,f7.2,a1,f7.2):)')(tb,sumAnteced(i),tb,sumRecent(i), i=1,numStations)
  	   close(unitNumber)	
 	   return
@@ -76,7 +76,7 @@ contains
   	   outputFile=trim(outputFolder)//trim(defaultOutputFile)
   	
     ! Open outputFile and write its data
-  	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
+  	   open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
 	   write (unitNumber,*) pd,time,' ',date
 	   if (Tintensity>0) then
 	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,'Recent',tb,&
@@ -155,19 +155,19 @@ contains
  	   do i=1,numStations
     ! Create an output file for each station
   	     outputFile=trim(outputFolder)//'ThSta'//trim(stationNumber(i))//'.txt'
-  	     open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
+  	     open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
  	     write (unitNumber,*) pd,time,' ',date
  	  
  	     if(Tintensity>0) then
  	       write (unitNumber,*) pd,tb,' Station',tb,&
- 	       Tantecedent,'-hr previous total',tb,Trecent,'-hr total',tb,&
+ 	       Tantecedent,'-hr Previous Total',tb,Trecent,'-hr Total',tb,&
  	       Tintensity,'-hr Intensity (in)',tb,&
  	       Tintensity,'-hr Intensity (mm)',tb,'Duration (hrs)',tb,&
  	       TavgIntensity,'-hr Running Ave. Intensity (in)',tb,&
  	       'Log10 ',Tintensity,'-hr Intensity (mm)'
  	     else
  	       write (unitNumber,*) pd,tb,' Station',tb,&
- 	       Tantecedent,'-hr previous total',tb,Trecent,'-hr total',tb,&
+ 	       Tantecedent,'-hr Previous Total',tb,Trecent,'-hr Total',tb,&
  	       'Average Intensity (in)',tb,'Average Intensity (mm)',tb,&
 	       'Duration (hrs)',tb,TavgIntensity,'-hr Running Ave. Intensity (in)',&
 	       tb,'Log10 Average Intensity (mm)'
