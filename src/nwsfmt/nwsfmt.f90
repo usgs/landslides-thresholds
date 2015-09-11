@@ -24,7 +24,7 @@
 	logical:: match,lsfil,lapnd,leap
 ! initialize variables	
 	call date_and_time(thdate,thtime)
-	vrsn='0.1.04'; vdate='21Jul2015' ! previous revision 2010
+	vrsn='0.1.05'; vdate='22Jul2015' ! previous revision 21 July 2015
 	u=(/11,12,13,14,15,16/)
 	lasday=(/31,28,31,30,31,30,31,31,30,31,30,31/)
 ! code that uses lasday needs a way to check for leap year *****************	
@@ -84,8 +84,8 @@
 	      write(u(1),*) 'No match for station ',snx
 	      write(u(1),*) 'Check station numbers in initialization file&
 	      &and in "nwslast.dat" file'
-	      pause 'Press <return/enter> key to exit'
-	      stop
+!	      pause 'Press <return/enter> key to exit'
+	      stop 'Station mismatch, Line 88'
 	    end if
    	  end do
  	else
@@ -98,7 +98,7 @@
   	close(u(6))
 ! open & read associated date file
 	open(u(4),file='date.txt',status='old')
-	read(u(4),*) wkday,mnth,day,hms,tz,yr
+	read(u(4),*) wkday,mnth,day,hms,yr,tz  !	read(u(4),*) wkday,mnth,day,hms,tz,yr
 	close(u(4))
 ! open & read inut file, recent data
 	file_loop: do j=1,nsta
@@ -108,7 +108,7 @@
 	open(u(3),file=trim(filin),status='old')
 	lcnt=0
 	do i=1,lines
-	  read(u(3),*,err=10) da(i),hr(i),mnt(i),ppt(i)
+	  read(u(3),*,err=10, end=10) da(i),hr(i),mnt(i),ppt(i)
 	  lcnt=lcnt+1
 	end do
    10	continue
@@ -160,7 +160,7 @@
      	       & sta(j),year(i),mon(i),da(i),hr(i),ippt(i) ! Changed to 4-digit precip 7/21/2015, RLB
 ! check for gaps and fill in with zeros
 	    dif=0.d0
-	    if(dtim(i+1)>0.d0)then     	       
+	    if(dtim(i+1)>0.d0 .and. i>1)then     	       
 	      dif=dtim(i-1)-dtim(i)
 !	      write(*,*) i, dif
 	    end if

@@ -119,7 +119,7 @@
 	integer :: evawid,resetAntMonth,resetAntDay
 	integer :: tRainfallBegan,tRainfallEnd
 	integer :: TstormGap,minTStormGap
-	integer :: TavgIntensity,numPlotPoints,numPlotPoints2
+	integer :: TavgIntensity,numPlotPoints,numPlotPoints2,numPlotPoints3
 	integer :: AWICompOffset,intervals
 	integer :: ctr315,ctrid,ctria,cum15dRainfallCtr,ctra
 	integer :: ctri,AWIExceedCtr,AWIIntensCtr
@@ -539,16 +539,17 @@
 	   end if
 
 ! Create or update time-series plot file for each station	
- 	   if(stationPtr(i)>=numPlotPoints*rph .and. numPlotPoints>0) then
+ 	   if(stationPtr(i)>=(numPlotPoints*rph) .and. numPlotPoints>0) then
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),numPlotPoints,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
  	      TavgIntensity,Tantecedent,Trecent)
-	   else if (stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints>0) then
+	   else if (stationPtr(i)>=(numPlotPoints2*rph) .and. numPlotPoints>0) then
+	      numPlotPoints3=stationPtr(i)/rph   ! replaced ctrHolder(i) with numPlotPoints3 7/29/2015, RLB
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
- 	      stationNumber(i),stationPtr(i),stationPtr(i),timestampYear,&
+ 	      stationNumber(i),numPlotPoints3,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,def315,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
@@ -557,7 +558,7 @@
 	   
 ! Create or update short-term time-series plot file for each station	
  	   if(flagRealtime) then
- 	      if(stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints2>0) then
+ 	      if(stationPtr(i)>=(numPlotPoints2*rph) .and. numPlotPoints2>0) then
  	         call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	         stationNumber(i),numPlotPoints2,stationPtr(i),timestampYear,&
  	         timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
@@ -570,8 +571,9 @@
 ! Create or update time-series archive file for each station	 
  	   if (abs(newest1904(i)-last1904(i))<(0.1/(24.*rph))) cycle 
  	   if(stationPtr(i)>0) then 
+	      numPlotPoints3=stationPtr(i)/rph
  	      call arcsav(unitNumber(1),unitNumber(5),&
- 	      maxLines,stationNumber(i),ctrHolder(i),&
+ 	      maxLines,stationNumber(i),numPlotPoints3,&  ! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
  	      sumTantecedent,sumTrecent,intensity,dur,precip,&
  	      runIntensity,AWI,outputFolder,archiveFile,TavgIntensity,Tantecedent&

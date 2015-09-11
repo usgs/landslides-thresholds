@@ -662,7 +662,7 @@ contains
 	   if(rph==1) then ! read hourly data
 	      if(lgyr) then ! read file format that includes year data
 	         do i=1,maxLines
-	            read (file,'(i2,i4,3i2,i3)',err=140,end=120)&
+	            read (file,'(i2,i4,3i2,i4)',err=140,end=120)&
 	            st,tyear(i),month(i),day(i),hour(i),precip(i)
 	            ctr=i
 	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
@@ -672,7 +672,7 @@ contains
 	         
 	      else ! read file format that excludes year data
 	         do i=1,maxLines
-	            read (file,'(4i2,i3)',err=140,end=120) &
+	            read (file,'(4i2,i4)',err=140,end=120) &
 	            &st,month(i),day(i),hour(i),precip(i)
 	            ctr=i
 	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
@@ -684,7 +684,7 @@ contains
 	   else if (rph>1 .and. rph<=60) then ! read xx-minute data
 	      if(lgyr) then ! read file format that includes year data
 	         do i=1,maxLines
-	            read (file,'(i2,i4,4i2,i3)',err=140,end=120) &
+	            read (file,'(i2,i4,4i2,i4)',err=140,end=120) &
 	            &st,tyear(i),month(i),day(i),hour(i),minute(i),precip(i)
 	            ctr=i
 	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
@@ -696,7 +696,7 @@ contains
 	         
 	      else ! read file format that excludes year data
 	         do i=1,maxLines
-	            read (file,'(5i2,i3)',err=140,end=120) &
+	            read (file,'(5i2,i4)',err=140,end=120) &
 	            &st,month(i),day(i),hour(i),minute(i),precip(i)
 	            ctr=i
 	            if(month(i)==sysMonth .and. day(i)==sysDay .and. hour(i)==sysHour) then
