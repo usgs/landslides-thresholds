@@ -7,7 +7,7 @@
 	real, allocatable:: ppt(:)
 	real (double), allocatable::dtim(:),dltim(:),dltimnu(:)
 	real (double):: dltm,dtimax,dif,dhr
-	integer:: mo,day,yr,i,lcnt,lines,momi1,yrmi1,nsta,nd
+                integer:: mo,day,yr,i,lcnt,lines,momi1,yrmi1,nsta,nd
 	integer:: j,k,snx,tyear,tmon,tda,thr,hrcnt
 	integer:: u(6),lasday(12)
 	integer, allocatable::da(:),hr(:),mnt(:),mon(:),year(:),ippt(:)
@@ -69,7 +69,7 @@
 	open(u(6),file='nwslast.txt',status='old',err=20)
    	  do j=1,nsta
 	    match=.false.
-   	    read(u(6),*) snx,dltm
+   	    read(u(6),*,err=21,end=21) snx,dltm
 !   use station number to match data to correct memory location   	  
    	    do k=1,nsta
    	      if(snx==sta(j)) then
@@ -224,5 +224,14 @@
    	  write(*,*) 'lastfile created, restart program nwsfmt'
    	close(u(6))
    	close(u(1))
+   	stop
+  21   continue
+   	  write(u(1),*) 'Program terminated, error reading "nwslast.txt" '
+   	  write(u(1),*) 'delete "nwslast.txt", restart program nwsfmt'
+   	  write(*,*) 'Program terminated, error reading "nwslast.txt" '
+   	  write(*,*) 'delete "nwslast.txt", restart program nwsfmt''
+   	close(u(6))
+   	close(u(1))
+
 	end program nwsfmt
  

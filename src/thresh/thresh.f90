@@ -1,77 +1,14 @@
 ! PURPOSE:
-!	  Program to compute rainfall totals for analysis of cumulative 
-!	  precipitation and rainfall intensity-duration thresholds for landslide
-!         occurrence.  Program uses input data files from rain us.
-!	  Originally written by Rex Baum, U.S. Geological Survey, 
-!         January 3 & 4, 2002 with subsequent revisions through 2008.
-!         Updated and revised by Jacob Vigil and Rex Baum, 2013 & 2014.
-		  
-		  
- ! 23-24 Jan 2002, Added time corrections
-
- ! 31 Jan 2002, Added formatted text file output
-
- ! 01 & 02 Feb 2002 Added error trapping for empty files, switches for 
- !                  output format and code to handle linear files in addition to the 
- !                  wrap-around ".che" files.
-
- ! 02 Dec 2002, Added x-hour rainfall intensity computations and converted to
- !              Fortran 90
-
- ! 2-10 Dec 2002, Changed archive file output, added tracking of most recent data
- !                and capability to fill in gaps after interupted transmission.  
- !                Added banner, improved initialization file, improved program 
- !                organization to reduce use of labeled statements.
-
- ! 11-13 Dec 2002, Added computation of duration, pre-storm antecedent precipitation, 
- !                 percent of threshold parameters and output of time-series plot files
-
- ! 14-30 Dec. Added html file output, debugged threshold deficit/surplus computations, extended 
- !            intensity to average storm intensity, other enhancements
-
- ! 2-6 Jan 2003, Added statistical counters, minute data, improved handling of muti-year data
-
- ! 28 Apr 2003, Change station number, sta() from an integer to a character variable
-  
- ! 21 Nov 2003, Improved output for statistical analysis of threshold data
-
- ! 15 Mar 2004, Added antecedent water index, and saving of input data to the log file
-
- ! 17 Mar 2004, Revised some variable names to eliminate confusion with intrinsic function names
-
- ! 17 Jul 2005, Added error handling code (err=140) for errors reading rainfall data files
-
- ! 15 Feb 2006, Changed name of "last.dat" to "Thlast.txt" and modified current html table content,
- !              and added unit selection (in/hr or mm/hr) for intensity duration threshold.
-
- ! 18 May 2006, Added version number to banner & log file
-
- ! 19 May 2006, Automatically generate Thlast.txt" file on first run with new dataset.
-
- ! 1 Aug 2006, Generalized 3-day/15-day text to Recent/antecedent and nhrr-hr, nhra-hr, added
- !             statistic for maximum intensities computed from "nhrr" total and "stanhr" running totals.
-
- ! 16 Feb 2007, Added output for awi in time-series plot files from subroutine gnpts().
-
- ! 04-07 Jan 2008, Corrected computations of the awi, old code had time offset error
- !                 also corrected header output in subroutine gnpts()
-
- ! 19-20 Jun 2008, Added code to compute running total rainfall for Oregon Antecedent rainfall amount.
- !                 also added 5th degree polynomial fit for intensity-duration threshold.
-
- ! 1 Jul 2008, Added logical variable retim to switch real-time output on and off.  It is off 
- !             when statistics are enabled, but on by default.
-
- ! 22 Jul 2008, Corrected memory allocations for pointers used in threshold exceedance statistics.
-
- ! May 2013 - April 2014, Created new variable naming structure, formatted source 
- !            files for readability, created new subroutines. Corrected segmentation
- !            faults that occurred when there were no station files inputted. Added
- !            seasonal antecedent threshold calculations, added a linear interpolation 
- !            defined threshold.
-		  
-		  
-		  
+!  Program to compute rainfall totals for analysis of cumulative 
+!  precipitation and rainfall intensity-duration thresholds for landslide
+!  occurrence.  Program uses input data files with fixed width fields for station
+! number, date, time and rainfall increment.
+!
+! Originally written by Rex Baum, U.S. Geological Survey, 
+!  January 3 & 4, 2002 with subsequent revisions through 2008.
+! Updated and revised by Jacob Vigil and Rex Baum, 2013 & 2014.
+! Additional revisions by Sarah Fischer and Rex Baum, summer 2015.
+! 		  
 ! VARIABLE NAMING CONVENTIONS
 !	These conventions are consistent throughout all files related to 
 !	program thresh. 
@@ -249,7 +186,9 @@
 	   lowLim = xVals(1)
 	   upLim = xVals(intervals+1)
 	end if
-	
+
+! Output mode-cancel output of files used in continuous operations when analyzing statistics
+        if(stats) flagRealtime=.false.
 	
 ! allocate and initialize arrays 
 	allocate (timestampMonth(maxLines),da(maxLines),hr(maxLines),precip(maxLines))
@@ -429,10 +368,9 @@
 	   if(AWICompOffset<1 .or. AWICompOffset>stationPtr(i))then
 	     AWICompOffset=stationPtr(i)
 	   end if
-	   if(tlenx(i)<2*numPlotPoints*rph .and. numPlotPoints>0) then ! tlenx shorter than 2 x
-	   							       											! moving window for plotting
-	      if((1+stationPtr(i)-2*numPlotPoints*rph)>0) then ! longer history than 2 x moving
-	      	 tlenx(i)=2*numPlotPoints*rph		       		 ! window for plotting
+	   if(tlenx(i)<2*numPlotPoints*rph .and. numPlotPoints>0) then ! tlenx shorter than 2 x moving window for plotting
+	      if((1+stationPtr(i)-2*numPlotPoints*rph)>0) then ! longer history than 2 x moving window for plotting
+	      	 tlenx(i)=2*numPlotPoints*rph	
 	      else
 	         tlenx(i)=stationPtr(i) 	! set beginning at beginning of data if shorter
 	      end if                    	! than 2 x plotting window
@@ -577,7 +515,7 @@
  	   if (abs(newest1904(i)-last1904(i))<(0.1/(24.*rph))) cycle 
  	  if(forecast .eqv. .FALSE.) then
  	   if(stationPtr(i)>0) then 
- 	   	  numPlotPoints3=stationPtr(i)/rph
+ 	        numPlotPoints3=stationPtr(i)/rph
  	      call arcsav(unitNumber(1),unitNumber(5),&
  	      maxLines,stationNumber(i),numPlotPoints3,&	! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
