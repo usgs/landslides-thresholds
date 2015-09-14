@@ -37,7 +37,7 @@
 	
 	outputFile=trim(adjustl(stationNumber))//'.txt'
   	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//outputFile
-	open(uout,file=outputFile,status='new',position='rewind',err=125)
+	open(uout,file=outputFile,status='unknown',position='rewind',err=125)
 	
 	outputFile=trim(adjustl(stationNumber))//'.txt'
   	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//'Ex'//outputFile

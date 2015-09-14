@@ -44,7 +44,7 @@ contains
   	outputFile=trim(outputFolder)//outputFile
   	
 ! Open file
-  	open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
+  	open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
 
 !Writing HTML headers and column names
      	write (unitNumber,*) '<center><table border=1 width=90%>'

@@ -26,7 +26,7 @@ contains
 	
     !------------------------------	
   	   outputFile=trim(outputFolder)//trim(dgOutputfile)
-  	   open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
+  	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
   	   write(unitNumber,*)& 
      	     (tb,'Recent Conditons at Station',trim(stationNumber(i)),&
      	     tb,Trecent,'-hr Precip. at Station',trim(stationNumber(i)), i=1,numStations)
@@ -76,7 +76,7 @@ contains
   	   outputFile=trim(outputFolder)//trim(defaultOutputFile)
   	
     ! Open outputFile and write its data
-  	   open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
+  	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
 	   write (unitNumber,*) pd,time,' ',date
 	   if (Tintensity>0) then
 	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,'Recent',tb,&
@@ -155,7 +155,7 @@ contains
  	   do i=1,numStations
     ! Create an output file for each station
   	     outputFile=trim(outputFolder)//'ThSta'//trim(stationNumber(i))//'.txt'
-  	     open(unitNumber,file=outputFile,status='new',position='rewind',err=125)
+  	     open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
  	     write (unitNumber,*) pd,time,' ',date
  	  
  	     if(Tintensity>0) then

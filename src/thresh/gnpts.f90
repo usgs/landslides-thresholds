@@ -42,7 +42,7 @@
    outputFile=trim(stationNumber)//'.txt'
   	outputFile=trim(outputFolder)//trim(timeSeriesPlotFile)//trim(adjustl(mhour))//outputFile
   	
-	open(uout,file=outputFile,status='new',position='rewind',err=125)
+	open(uout,file=outputFile,status='unknown',position='rewind',err=125)
 	
    ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
 	write(uout,*) pd,' Time-Series Plot File for Rainfall Thresholds'

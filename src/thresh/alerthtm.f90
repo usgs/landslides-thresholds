@@ -76,7 +76,7 @@
 	
 ! file in html-table format listing most recent alert conditions at all stations
   	outputFile=trim(outputFolder)//trim(outputFile)
-  	open(unitNumber,file=outputFile,status='new',&
+  	open(unitNumber,file=outputFile,status='unknown',&
      	position='rewind',err=125)
      	write (unitNumber,*) '<center><table border=1 width=90%>'
 	write (unitNumber,*) '<caption>',&

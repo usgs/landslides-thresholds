@@ -70,7 +70,7 @@
 	
 ! tab-delimited file listing most recent alert conditions at all stations
   	outputFile=trim(outputFolder)//trim(outputFile)
-  	open(unitNumber,file=outputFile,status='new',&
+  	open(unitNumber,file=outputFile,status='unknown',&
   	position='rewind',err=125)
 	write (unitNumber,*) ' Current Alert Levels by Station and Threshold'
 	write (unitNumber,*) tb,'Rain gauge',&
