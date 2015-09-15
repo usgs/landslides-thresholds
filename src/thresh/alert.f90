@@ -5,7 +5,7 @@
 !
 	subroutine alert(numStations,outputFolder,ulog,unitNumber,datim,&
 	 stationNumber,deficit,intensity,runningIntens,avgIntensity,&
-	 antecedPrecip,in2mm,duration,TavgIntensity)
+	 antecedPrecip,in2mm,duration,TavgIntensity,sAWI)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -15,12 +15,12 @@
 	real, intent(in) 	       :: antecedPrecip(numStations),duration(numStations),in2mm
 	real, intent(in) 	       :: deficit(numStations),runningIntens
 	real, intent(in) 	       :: intensity(numStations)
-	real, intent(in) 	       :: avgIntensity(numStations)
+	real, intent(in) 	       :: avgIntensity(numStations),sAWI(numStations)
 	integer, intent(in) 	    :: numStations,unitNumber,ulog,TavgIntensity
 	
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile='ThAlert.txt'
-	character (len=7)   :: color(4)
+	character (len=7)   :: alert_lev(4)
 	character 	    :: tb = char(9)
 	real		    :: avgToRunning
 	integer 	    :: i,alertCondition3d15d(numStations)
@@ -28,27 +28,27 @@
 	integer 	    :: alertConditionIA(numStations)
 
 !------------------------------	
-! alert levels 0="not applicable", 1="green", 2="yellow", 3="red"	
-	color=(/'--N/A--',' Green ','Yellow ','  Red  '/)
+! alert levels 0="Null", 1="Outlook", 2="Watch", 3="Warning"	
+       alert_lev=(/' Null  ','Outlook',' Watch ','Warning'/)
 	
 ! determine alert condition for 3-day/15-day threshold
 	do i=1,numStations	
-	  alertCondition3d15d(i)=1
+	  alertCondition3d15d(i)=0
 	  if(deficit(i) > -0.5 .and. deficit(i) < 0.d0) then
-	    alertCondition3d15d(i)=2
+	    alertCondition3d15d(i)=0
 	  else if (deficit(i) >=0.) then
-	    alertCondition3d15d(i)=3
+	    alertCondition3d15d(i)=1
 	  end if
 	end do
 	
-! determine alert condition for Intensity-Duration Threshold
+! determine alert condition for Intensity-Duration Threshold & AWI
 	do i = 1, numStations
 	  alertConditionID(i)=0
-	  if(duration(i)>0) then  ! threshold applicable only if duration>0
+	  if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
 	    alertConditionID(i)=1
-	    if(intensity(i) >0.9 .and. intensity(i) <1.0) then
+	    if(intensity(i) >1.0 .and. sAWI(i) >-0.1) then
 	      alertConditionID(i)=2
-	    else if(intensity(i) >=1.0) then
+	    else if(intensity(i) >=1.0 .and. sAWI(i) >0.02) then
 	      alertConditionID(i)=3
 	    end if
 	  end if
@@ -82,9 +82,9 @@
 	do i=1,numStations
 	  write(unitNumber,*) tb,trim(stationNumber(i)),&
 	                      tb,datim(i),&
-	                      tb,color(1+alertCondition3d15d(i)),&
-	                      tb,color(1+alertConditionID(i)),&
-	                      tb,color(1+alertConditionIA(i))
+	                      tb,alert_lev(1+alertCondition3d15d(i)),&
+	                      tb,alert_lev(1+alertConditionID(i)),&
+	                      tb,alert_lev(1+alertConditionIA(i))
 	end do
 	
   	close(unitNumber)

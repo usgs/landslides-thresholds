@@ -4,7 +4,7 @@
 
 	subroutine alerthtm(numStations,outputFolder,ulog,unitNumber,&
  	 datimb,stationNumber,deficit,intensity,avgIntensity,runningIntens,&
- 	 antecedRainfall,in2mm,duration,stationLocation,TavgIntensity)
+ 	 antecedRainfall,in2mm,duration,stationLocation,TavgIntensity,sAWI)
  	 
 ! FORMAL ARGUMENTS
 	character, intent(in) 	       :: outputFolder*(*)
@@ -14,12 +14,12 @@
 	real, intent(in) 	       :: antecedRainfall(numStations)
 	real, intent(in) 	       :: duration(numStations),in2mm
 	real, intent(in) 	       :: deficit(numStations),runningIntens
-	real, intent(in)	       :: intensity(numStations),avgIntensity(numStations)
+	real, intent(in)	       :: intensity(numStations),avgIntensity(numStations),sAWI(numStations)
 	integer, intent(in) 	       :: numStations,unitNumber,ulog,TavgIntensity
 	
 ! LOCAL VARIABLES
 	character (len=22)	     :: hexColor(4)
-	character (len=7) 	     :: color(4)
+	character (len=7) 	     :: alert_lev(4) !,color(4) 
 	character 		     :: tb = char(9)
 	character (len=255) 	     :: outputFile='ThAlert.htm'
 	character (len=17),parameter :: r1='<tr align=center>'
@@ -31,35 +31,36 @@
 	integer 		     :: alertConditionIA(numStations)
 	
 !------------------------------	
-! alert levels 0="not applicable", 1="green", 2="yellow", 3="red"	
-	color=(/'--N/A--',' Green ','Yellow ','  Red  '/)
-	hexColor=(/'<td bgcolor=#cccccc>','<td bgcolor=#33ff33>',&
-	&'<td bgcolor=#ffff33>','<td bgcolor=#ff0000>'/)
+! alert levels 0="Null", 1="Outlook", 2="Watch", 3="Warning"	
+! Color names corresponding to hexColor: color=(/'Grey',' Yellow ','Orange ','  Red  '/)
+       alert_lev=(/' Null  ','Outlook',' Watch ','Warning'/)
+	hexColor=(/'<td bgcolor=#cccccc>','<td bgcolor=#ffff33>',&
+	&'<td bgcolor=#ff6600>','<td bgcolor=#ff0000>'/)
 	
 
 ! determine alert condition for 3-day/15-day threshold
 	do i=1,numStations	
-	  alertCondition3d15d(i)=1
+	  alertCondition3d15d(i)=0
 	  if(deficit(i) >-0.5 .and. deficit(i) <0.d0) then
-	    alertCondition3d15d(i)=2
+	    alertCondition3d15d(i)=0
 	  else if (deficit(i) >=0.) then
-	    alertCondition3d15d(i)=3
+	    alertCondition3d15d(i)=1
 	  end if
 	end do
 	
-! determine alert condition for Intensity-Duration Threshold
-	do i = 1, numStations	
+! determine alert condition for Intensity-Duration Threshold & AWI
+	do i = 1, numStations
 	  alertConditionID(i)=0
-	  if(duration(i)>0) then  ! threshold applicable only if duration>0
+	  if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
 	    alertConditionID(i)=1
-	    if(intensity(i) >0.9 .and. intensity(i) <1.0) then
+	    if(intensity(i) >1.0 .and. sAWI(i) >-0.1) then
 	      alertConditionID(i)=2
-	    else if(intensity(i) >=1.0) then
+	    else if(intensity(i) >=1.0 .and. sAWI(i) >0.02) then
 	      alertConditionID(i)=3
 	    end if
 	  end if
 	end do
-	
+		
 ! determine alert condition for Intensity-Antecedent Precipitation Threshold
 	do i = 1, numStations
 	  alertConditionIA(i)=0
@@ -89,9 +90,9 @@
 	  write(unitNumber,*) &
           r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
           d1,datimb(i),d2,hexColor(1+alertCondition3d15d(i)),&
-          color(1+alertCondition3d15d(i)),d2,&
-          hexColor(1+alertConditionID(i)),color(1+alertConditionID(i)),&
-          d2,hexColor(1+alertConditionIA(i)),color(1+alertConditionIA(i)),d2,r2
+          alert_lev(1+alertCondition3d15d(i)),d2,&
+          hexColor(1+alertConditionID(i)),alert_lev(1+alertConditionID(i)),&
+          d2,hexColor(1+alertConditionIA(i)),alert_lev(1+alertConditionIA(i)),d2,r2
 	end do
 	write (unitNumber,*) '</table></center>'
   	close(unitNumber)

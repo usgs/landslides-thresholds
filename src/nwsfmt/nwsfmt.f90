@@ -24,7 +24,7 @@
 	logical:: match,lsfil,lapnd,leap
 ! initialize variables	
 	call date_and_time(thdate,thtime)
-	vrsn='0.1.05'; vdate='22Jul2015' ! previous revision 21 July 2015
+	vrsn='0.1.06'; vdate='15Sep2015' ! previous revision 22 July 2015
 	u=(/11,12,13,14,15,16/)
 	lasday=(/31,28,31,30,31,30,31,31,30,31,30,31/)
 ! code that uses lasday needs a way to check for leap year *****************	
@@ -33,11 +33,11 @@
 	dhr=1.98d0/24.d0
 !  open log file
 	open(u(1),file='nwsfmtLog.txt',status='unknown')
-	write (u(1),*) 'Starting nwsfmt ver.',vrsn,vdate
+	write (*,*) 'Starting nwsfmt ver.',vrsn,' ',vdate
+	write (u(1),*) 'Starting nwsfmt ver.',vrsn,' ',vdate
      	write (u(1),*) 'Date ',thdate(5:6),'/',thdate(7:8),'/',thdate(1:4)
 	write (u(1),*) 'Time ',thtime(1:2),':',thtime(3:4),':',thtime(5:6)
 ! open initialization file & read data
-!	open(u(2),file='nwsfmt.ini',status='old')
 	open(u(2),file='nwsfmt_in.txt',status='old') !renamed 3/3/2010
 	write(u(1),*) 'Listing of initialization file:'
 	read(u(2),*) junk,nsta
@@ -210,7 +210,8 @@
    	  end do	  
 	close(u(6))
 	close(u(5))
-	write(u(1),*) 'Program ended normally'
+	write(u(1),*) 'Program nwsfmt ended normally'
+	write(*,*) 'Program nwsfmt ended normally'
    	close(u(1))
 	stop
    20	continue
@@ -229,7 +230,7 @@
    	  write(u(1),*) 'Program terminated, error reading "nwslast.txt" '
    	  write(u(1),*) 'delete "nwslast.txt", restart program nwsfmt'
    	  write(*,*) 'Program terminated, error reading "nwslast.txt" '
-   	  write(*,*) 'delete "nwslast.txt", restart program nwsfmt''
+   	  write(*,*) 'delete "nwslast.txt", restart program nwsfmt'
    	close(u(6))
    	close(u(1))
 

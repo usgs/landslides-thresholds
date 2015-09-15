@@ -94,7 +94,7 @@
 	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch,forecast
 
 	real,allocatable :: threshIntensityDuration(:),threshAvgExceed(:)
-	real,allocatable :: AWI(:),AWI_0(:), xVals(:), yVals(:)
+	real,allocatable :: AWI(:),AWI_0(:),sAWI(:), xVals(:), yVals(:)
 	real,allocatable :: sumTrecent(:),sumTantecedent(:)
 	real,allocatable :: intensity(:),dur(:)
 	real,allocatable :: runIntensity(:),def315(:)
@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='12 Jun 2014'; vrsn='01.0.001'
+     	revdate='16 Sep 2015'; vrsn=' 1.0.002'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -205,6 +205,7 @@
 	allocate (def315s(numStations),sthreshIntensityDuration(numStations),sthreshAvgIntensity(numStations))
 	allocate (timestampYear(maxLines),latestYear(numStations),datim(numStations),datimb(numStations))
 	allocate (AWI(maxLines),AWI_0(numStations),tlenx(numStations),numTimestampsHolder(numStations))
+	allocate (sAWI(numStations))
  	allocate (mins(maxLines),latestMinute(numStations)) ! assumes that hourly data are summed on the hour
  	! next line assumes that threshold exceedences will occur less than 20% of time
  	nlo20=maxLines/5
@@ -469,6 +470,7 @@
 	   sthreshIntensityDuration(i)=threshIntensityDuration(stationPtr(i))
 	   AWI_0(i)=AWI(1 + stationPtr(i)-tlenx(i))+fieldCap !Corrected 6/18/2013
 	   sthreshAvgIntensity(i)=threshAvgExceed(stationPtr(i))
+	   sAWI(i)=AWI(stationPtr(i))
 	   
 	   if(latestMonth(i)==-99) then
 	      write(datim(i),*) '--------'
@@ -584,11 +586,11 @@
 	   call alert(numStations,outputFolder,unitNumber(1),&
 	   unitNumber(8),datim,stationNumber,def315s,&
 	   sthreshIntensityDuration,runningIntens,sthreshAvgIntensity,&
-	   srunIntensity,in2mm,durs,TavgIntensity)
+	   srunIntensity,in2mm,durs,TavgIntensity,sAWI)
 	   call alerthtm(numStations,outputFolder,unitNumber(1),&
 	   unitNumber(8),datimb,stationNumber,def315s,&
 	   sthreshIntensityDuration,sthreshAvgIntensity,runningIntens,&
-	   srunIntensity,in2mm,durs,stationLocation,TavgIntensity)
+	   srunIntensity,in2mm,durs,stationLocation,TavgIntensity,sAWI)
 	 if(forecast .eqv. .FALSE.) then
  	   call tabl(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datim,durs,sum15s,&
