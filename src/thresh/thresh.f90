@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='16 Sep 2015'; vrsn=' 1.0.002'
+     	revdate='18 Sep 2015'; vrsn=' 1.0.003'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -604,14 +604,14 @@
 	end if
 	
 	outputFile=trim(outputFolder)//trim(updateFile)
-	open(unitNumber(9),file=outputFile,err=125)
+	open(unitNumber(9),file=outputFile,status='unknown',position='rewind',err=125)
 	write(unitNumber(9),'(a18)',advance='no') 'Data last updated:'
-	write(unitNumber(9),'(1x,a11,a1,1x,a5,a1)') latestDate,',',latestTime,'\'
+	write(unitNumber(9),'(1x,a11,a1,1x,a5,a1)') latestDate,',',latestTime,'.'
 	close(unitNumber(9))
 
 ! Write "Thlast.txt" file, compare new and old end values and update as needed
 	pathThlast=trim(outputFolder)//'Thlast.txt'
-	open(unitNumber(7),file=pathThlast,err=130)
+	open(unitNumber(7),file=pathThlast,status='unknown',position='rewind',err=130)
 	do i=1,numStations
 	   if(newest1904(i)>last1904(i)) last1904(i)=newest1904(i)
 	   write (unitNumber(7),*) stationNumber(i),cm,last1904(i),cm,&

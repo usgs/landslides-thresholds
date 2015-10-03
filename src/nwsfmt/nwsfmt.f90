@@ -98,7 +98,7 @@
   	close(u(6))
 ! open & read associated date file
 	open(u(4),file='date.txt',status='old')
-	read(u(4),*) wkday,mnth,day,hms,yr,tz  !	read(u(4),*) wkday,mnth,day,hms,tz,yr
+	read(u(4),*) wkday,mnth,day,hms,yr !,tz  !	read(u(4),*) wkday,mnth,day,hms,tz,yr
 	close(u(4))
 ! open & read inut file, recent data
 	file_loop: do j=1,nsta

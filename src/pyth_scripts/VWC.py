@@ -6,6 +6,7 @@ import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
+# Copy and reformat TA05 data to tab-delimted text file
 def skip_first(seq,n):
     for i, item in enumerate(seq):
         if i >= n:
