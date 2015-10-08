@@ -7,8 +7,8 @@
 	real, allocatable:: ppt(:)
 	real (double), allocatable::dtim(:),dltim(:),dltimnu(:)
 	real (double):: dltm,dtimax,dif,dhr
-                integer:: mo,day,yr,i,lcnt,lines,momi1,yrmi1,nsta,nd
-	integer:: j,k,snx,tyear,tmon,tda,thr,hrcnt
+    integer:: mo,day,yr,i,lcnt,lines,momi1,yrmi1,nsta,nd
+	integer:: j,k,snx,tyear,tmon,tda,thr,tmn,hrcnt,rph
 	integer:: u(6),lasday(12)
 	integer, allocatable::da(:),hr(:),mnt(:),mon(:),year(:),ippt(:)
 	integer, allocatable::sta(:)
@@ -24,7 +24,7 @@
 	logical:: match,lsfil,lapnd,leap
 ! initialize variables	
 	call date_and_time(thdate,thtime)
-	vrsn='0.1.06'; vdate='15Sep2015' ! previous revision 22 July 2015
+	vrsn='0.1.07'; vdate='06Oct2015' ! previous revision 15 Sep 2015
 	u=(/11,12,13,14,15,16/)
 	lasday=(/31,28,31,30,31,30,31,31,30,31,30,31/)
 ! code that uses lasday needs a way to check for leap year *****************	
@@ -58,6 +58,8 @@
 	else
 	  opsn='rewind'
 	end if
+	read(u(2),*) junk,rph
+	write(u(1),*) junk,rph
 	close(u(2))
 ! allocate arrays
 	allocate (ppt(lines),da(lines),hr(lines),mnt(lines))
@@ -107,12 +109,24 @@
 	write(u(1),*) 'Opening ', filin
 	open(u(3),file=trim(filin),status='old')
 	lcnt=0
+if(rph==1) then
 	do i=1,lines
 	  read(u(3),*,err=10, end=10) da(i),hr(i),mnt(i),ppt(i)
 	  lcnt=lcnt+1
 	end do
+else
+	do i=1,lines
+	  read(u(3),*,err=10, end=10) year(i),mon(i),da(i),hr(i),mnt(i),ppt(i)
+	  lcnt=lcnt+1
+	end do
+end if
+!	do i=1,lines
+!	  read(u(3),*,err=10, end=10) da(i),hr(i),mnt(i),ppt(i)
+!	  lcnt=lcnt+1
+!	end do
    10	continue
    	close(u(3))
+if(rph==1) then
 ! numeric month	
 	do i=1,12
 	  if(mnth==month(i)) mo=i
@@ -134,6 +148,7 @@
 	    year(i)=yrmi1
 	  end if
 	end do
+end if
 	call s1904t(dtim,year,mon,da,hr,mnt,lcnt,lines)
 ! save data to file in format usable by thresh, and remove any redundant lines
 	infilt=adjustl(infil(j))
@@ -142,7 +157,7 @@
 	open (u(5),file=trim(outfile),position=opsn,err=31)
 	dtimax=dltim(j)
 !
-! *** Decide what to do about stations that have readings on intervals shorter than one hour.
+! *** Decide what to do about stations that have readings on intervals shorter than one hour
 	do i=lcnt,1,-1
 ! check for leap year	
 	  leap=.false.
@@ -156,13 +171,13 @@
 ! save data in fixed-width format for program 'thresh'     	  
 	  if(dtim(i)>(dltim(j)+0.5d0/24.d0)) then
 	    if(dtim(i)>dtimax) dtimax=dtim(i)
-	    write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
+	    if(rph==1)write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
      	       & sta(j),year(i),mon(i),da(i),hr(i),ippt(i) ! Changed to 4-digit precip 7/21/2015, RLB
 ! check for gaps and fill in with zeros
 	    dif=0.d0
 	    if(dtim(i+1)>0.d0 .and. i>1)then     	       
 	      dif=dtim(i-1)-dtim(i)
-!	      write(*,*) i, dif
+	      if(dif>=dhr) write(*,*) i, dif
 	    end if
 	    if(dif>=dhr) then
 	      hrcnt=int(0.5+dif*24.d0)-1
@@ -173,6 +188,7 @@
 	        tmon=mon(i)
 	        tda=da(i)
 	        thr=hr(i)+k
+	        tmn=0
 	        if(thr>23) then !assumes 24 hr clock with 12:00 a.m. (midnight) at 0:00
 	          thr=thr-24
 	          tda=tda+1
@@ -185,7 +201,7 @@
 	            end if
 	          end if
 	        end if
-	        write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
+	        if(rph==1) write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
      	          & sta(j),tyear,tmon,tda,thr,0  ! Changed to 4-digit precip 7/21/2015, RLB
 	        write (u(1),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)')&
      	          & sta(j),tyear,tmon,tda,thr,0  ! Changed to 4-digit precip 7/21/2015, RLB
@@ -194,6 +210,16 @@
 	  end if
 	end do
 	dltimnu(j)=dtimax
+if(rph>1) then
+	do i=1,lcnt
+	  if(dtim(i)>(dltim(j)+0.5d0/(float(rph)*24.d0))) then
+	      if(dtim(i)>dtimax) dtimax=dtim(i)
+	      ippt(i)=int(ppt(i)*100.)
+                       write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i2.2,i4.4)',err=30)&
+                          & sta(j),year(i),mon(i),da(i),hr(i),mnt(i),ippt(i) ! Changed to 4-digit precip 7/21/2015, RLB
+	  end if
+	end do
+end if
 	cycle
    30	continue ! error trapping added November 17, 2006
    	  write(u(1),*) 'Unable to append data to file ', trim(outfile)

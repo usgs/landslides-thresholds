@@ -6,31 +6,31 @@ import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
-def skip_first(seq,n):
-    for i, item in enumerate(seq):
-        if i >= n:
-            yield item
-g = open('soundTransit1_remote_rawMeasurements_15m.txt', 'w')
-with open('soundTransit1_remote_rawMeasurements_15m.dat', 'rb') as f:
-    csvreader = csv.reader(f)
-    for row in skip_first(csvreader,4):
-        for row in csv.reader(f,delimiter=',',skipinitialspace=True):
-            print >>g, "\t".join(row)
-g.close()
+#def skip_first(seq,n):
+#    for i, item in enumerate(seq):
+#        if i >= n:
+#            yield item
+#g = open('soundTransit1_remote_rawMeasurements_15m.txt', 'w')
+#with open('soundTransit1_remote_rawMeasurements_15m.dat', 'rb') as f:
+#    csvreader = csv.reader(f)
+#    for row in skip_first(csvreader,4):
+#        for row in csv.reader(f,delimiter=',',skipinitialspace=True):
+#            print >>g, "\t".join(row)
+#g.close()
 
-def readfiles(file_list):
+def readfiles(file_list,c1,c2,c3):
     data = []
     for fname in file_list:
         data.append(
                     np.loadtxt(fname,
-                               usecols=(0,11,12,13),
+                               usecols=(0,c1,c2,c3),
                                comments='#',    # skip comment lines
                                delimiter='\t',
                                converters = { 0 : strpdate2num('%Y-%m-%d %H:%M:%S') },
                                dtype=None))
     return data
 
-data = readfiles(['soundTransit1_remote_rawMeasurements_15m.txt'])
+data = readfiles(['waMVD116_14d.txt'],11,12,13) #11,12,13
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
 column_0 = np.array(data_1)[0][:,0]
@@ -68,7 +68,7 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
 xtext = ('Date & Time')
 ytext = ('Pressure, kPa')
 
-init_plot('Tensiometer Pressure')
+init_plot('Tensiometer Pressure at Marine View Drive & 116 St. SW')
 
 plt.plot(column_0, corrTensPres_kPa_1, linestyle='-', color='b', label='Tensiometer 1')
 plt.plot(column_0, corrTensPres_kPa_2, linestyle='-', color='r', label='Tensiometer 2')
@@ -79,4 +79,64 @@ plt.gca().xaxis.set_major_locator(mdates.HourLocator())
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
-end_plot(name='py_Tensiometer_Press.png')
+end_plot(name='MVD116_Tensiometer_Press.png')
+
+# ------------------------
+
+data = readfiles(['waWatertonA_14d.txt'],12,13,14) #12,13,14
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+corrTensPres_V_1 = np.array(data_1)[0][:,1]
+corrTensPres_V_2 = np.array(data_1)[0][:,2]
+corrTensPres_V_3 = np.array(data_1)[0][:,3]
+
+tensMult = -0.1
+tensOffs = -100
+
+corrTensPres_kPa_1 = corrTensPres_V_1 * tensMult + tensOffs
+corrTensPres_kPa_2 = corrTensPres_V_2 * tensMult + tensOffs
+corrTensPres_kPa_3 = corrTensPres_V_3 * tensMult + tensOffs
+
+init_plot('Tensiometer Pressure at Waterton Circle Station A')
+
+plt.plot(column_0, corrTensPres_kPa_1, linestyle='-', color='b', label='Tensiometer 1')
+plt.plot(column_0, corrTensPres_kPa_2, linestyle='-', color='r', label='Tensiometer 2')
+plt.plot(column_0, corrTensPres_kPa_3, linestyle='-', color='g', label='Tensiometer 3')
+
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
+plt.gca().xaxis.set_major_locator(mdates.HourLocator())
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+
+end_plot(name='MWatA_Tensiometer_Press.png')
+
+# ------------------------
+
+data = readfiles(['waWatertonB_14d.txt'],11,12,13) #11,12,13
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+corrTensPres_V_1 = np.array(data_1)[0][:,1]
+corrTensPres_V_2 = np.array(data_1)[0][:,2]
+corrTensPres_V_3 = np.array(data_1)[0][:,3]
+
+tensMult = -0.1
+tensOffs = -100
+
+corrTensPres_kPa_1 = corrTensPres_V_1 * tensMult + tensOffs
+corrTensPres_kPa_2 = corrTensPres_V_2 * tensMult + tensOffs
+corrTensPres_kPa_3 = corrTensPres_V_3 * tensMult + tensOffs
+
+init_plot('Tensiometer Pressure at Waterton Circle Station B')
+
+plt.plot(column_0, corrTensPres_kPa_1, linestyle='-', color='b', label='Tensiometer 1')
+plt.plot(column_0, corrTensPres_kPa_2, linestyle='-', color='r', label='Tensiometer 2')
+plt.plot(column_0, corrTensPres_kPa_3, linestyle='-', color='g', label='Tensiometer 3')
+
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
+plt.gca().xaxis.set_major_locator(mdates.HourLocator())
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+
+end_plot(name='MWatB_Tensiometer_Press.png')
