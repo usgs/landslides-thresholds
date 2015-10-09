@@ -32,11 +32,15 @@ PATH=~/anaconda/bin:$PATH
 
 # Run plotting routines (These should be grouped and renamed according to station)
 python airTemp.py
+python barom.py
+python battery.py
 python lvl_m.py
-python rain_mm.py
-python RALS.py
+#python rain_mm.py
+python rain_in.py
+python RALHS.py
 python TensiometerPres.py
-python TensiometerTemp.py
+#python TensiometerTemp_C.py
+python TensiometerTemp_F.py
 python VWC.py
 
 # Copy plots to folder for web server
