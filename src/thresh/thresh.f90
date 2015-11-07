@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='18 Sep 2015'; vrsn=' 1.0.003'
+     	revdate='06 Nov 2015'; vrsn=' 1.0.005'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -517,9 +517,9 @@
  	   if (abs(newest1904(i)-last1904(i))<(0.1/(24.*rph))) cycle 
  	  if(forecast .eqv. .FALSE.) then
  	   if(stationPtr(i)>0) then 
- 	        numPlotPoints3=stationPtr(i)/rph
+! 	        numPlotPoints3=stationPtr(i)/rph
  	      call arcsav(unitNumber(1),unitNumber(5),&
- 	      maxLines,stationNumber(i),numPlotPoints3,&	! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB
+ 	      maxLines,stationNumber(i),ctrHolder(i),&	! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB, undo 6Nov2015
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
  	      sumTantecedent,sumTrecent,intensity,dur,precip,&
  	      runIntensity,AWI,outputFolder,archiveFile,TavgIntensity,Tantecedent&

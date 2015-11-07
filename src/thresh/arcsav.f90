@@ -59,6 +59,7 @@
      	end if
 
 ! Fill file with data
+write(*,*) '!## stationPtr, ctrHolder ##! ', stationPtr,ctrHolder 
 	do j=(1+stationPtr-ctrHolder),stationPtr
       
 	   !Initializing floatPrecip variable

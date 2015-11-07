@@ -14,7 +14,7 @@
 	integer, allocatable::sta(:)
 	character (len=10):: thtime, vdate
 	character (len=8):: thdate,hms
-	character (len=3):: wkday,mnth,tz,month(12)
+	character (len=3):: wkday,mnth,month(12) ! ,tz
 	character (len=31):: filin, outfile,infilt
 	character (len=31), allocatable:: infil(:),stlo(:)
 !	character (len=2), allocatable:: sta(:)
@@ -24,7 +24,7 @@
 	logical:: match,lsfil,lapnd,leap
 ! initialize variables	
 	call date_and_time(thdate,thtime)
-	vrsn='0.1.07'; vdate='06Oct2015' ! previous revision 15 Sep 2015
+	vrsn='0.1.08'; vdate='06Nov2015' ! previous revision 15 Sep 2015
 	u=(/11,12,13,14,15,16/)
 	lasday=(/31,28,31,30,31,30,31,31,30,31,30,31/)
 ! code that uses lasday needs a way to check for leap year *****************	
@@ -169,7 +169,7 @@ end if
      	    lasday(2)=28
      	  end if
 ! save data in fixed-width format for program 'thresh'     	  
-	  if(dtim(i)>(dltim(j)+0.5d0/24.d0)) then
+	  if(dtim(i)>(dltim(j)+0.5d0/(rph*24.d0))) then !Added rph* 11/6/2015, RLB
 	    if(dtim(i)>dtimax) dtimax=dtim(i)
 	    if(rph==1)write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
      	       & sta(j),year(i),mon(i),da(i),hr(i),ippt(i) ! Changed to 4-digit precip 7/21/2015, RLB

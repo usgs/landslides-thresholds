@@ -41,11 +41,12 @@ contains
 	   ! compute antecedent water balance
 	   do i = (1 + diffPtrOffset), stationPtr
 	   
-		if (precipUnit == 'mm') then
-			floatPrecip = float(precip(i))/254.
-		else if (precipUnit == 'in') then
-			floatPrecip = float(precip(i))/100.
-		end if
+!		if (precipUnit == 'mm') then  !Deleted 30 Oct 2015 RLB
+!			floatPrecip = float(precip(i))/254.
+!		else if (precipUnit == 'in') then
+!			floatPrecip = float(precip(i))/100.
+!		end if
+			floatPrecip = float(precip(i))
 		
               ! Compute either antecedent Water Index (AWI) or Cumulative precipitation	   
 	      if(resetAntMonth * resetAntDay <= 0) then ! Reset date not given, so compute (AWI)
@@ -66,7 +67,7 @@ contains
 	            end if
 	         end if
 	      end if
-	      
+!	      write(*,*) i,AWI(i),floatPrecip
 	      ! Set no-data value for cells too close to beginning of file to 
 	      ! compute running average antecedent precip.
 	      if((i - TavgIntensity * rph)<0) runIntensity(i) = -99. 

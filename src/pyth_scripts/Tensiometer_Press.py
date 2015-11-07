@@ -39,7 +39,7 @@ corrTensPres_V_2 = np.array(data_1)[0][:,2]
 corrTensPres_V_3 = np.array(data_1)[0][:,3]
 
 tensMult = -0.1
-tensOffs = -100
+tensOffs = 100
 
 corrTensPres_kPa_1 = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2 = corrTensPres_V_2 * tensMult + tensOffs
@@ -91,9 +91,6 @@ corrTensPres_V_1 = np.array(data_1)[0][:,1]
 corrTensPres_V_2 = np.array(data_1)[0][:,2]
 corrTensPres_V_3 = np.array(data_1)[0][:,3]
 
-tensMult = -0.1
-tensOffs = -100
-
 corrTensPres_kPa_1 = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2 = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3 = corrTensPres_V_3 * tensMult + tensOffs
@@ -120,9 +117,6 @@ column_0 = np.array(data_1)[0][:,0]
 corrTensPres_V_1 = np.array(data_1)[0][:,1]
 corrTensPres_V_2 = np.array(data_1)[0][:,2]
 corrTensPres_V_3 = np.array(data_1)[0][:,3]
-
-tensMult = -0.1
-tensOffs = -100
 
 corrTensPres_kPa_1 = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2 = corrTensPres_V_2 * tensMult + tensOffs

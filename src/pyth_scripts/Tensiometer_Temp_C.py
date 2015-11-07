@@ -90,9 +90,6 @@ corrTensTemp_V_1 = np.array(data_1)[0][:,1]
 corrTensTemp_V_2 = np.array(data_1)[0][:,2]
 corrTensTemp_V_3 = np.array(data_1)[0][:,3]
 
-tensMult = 0.05
-tensOffs = -30
-
 corrTensTemp_kPa_1 = corrTensTemp_V_1 * tensMult + tensOffs
 corrTensTemp_kPa_2 = corrTensTemp_V_2 * tensMult + tensOffs
 corrTensTemp_kPa_3 = corrTensTemp_V_3 * tensMult + tensOffs
