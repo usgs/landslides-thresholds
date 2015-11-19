@@ -18,6 +18,31 @@ from matplotlib.dates import strpdate2num
 #            print >>g, "\t".join(row)
 #g.close()
 
+# ------------------------
+def readfiles1(file_list,c1):
+    """ read <TAB> delemited files as strings
+        ignoring '# Comment' lines """
+    data = []
+    for fname in file_list:
+        data.append(
+                    np.loadtxt(fname,
+                               usecols=(0,c1),
+                               comments='#',    # skip comment lines
+                               delimiter='\t',
+                               converters = { 0 : strpdate2num('%Y-%m-%d %H:%M:%S') },
+                               dtype=None))
+    return data
+
+data = readfiles1(['waWatertonA_14d.txt'],5)
+
+column_0 = np.array(data)[0][:,0]
+barometricPressure_raw = np.array(data)[0][:,1]
+
+#Compute Barometric pressure
+barometricPressure_kPa=(barometricPressure_raw*0.240+500)*0.1
+
+#-------------------------
+
 def readfiles(file_list,c1,c2,c3,c4):
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
@@ -72,8 +97,10 @@ thermTemp1_degC = thermTemp1_degC-273.15+tempOffset1
 pHead1_kpa=(C1_A*freq1**2)+(C1_B*freq1)+(C1_C)
 #        'Apply temperature corrections
 pHead1_kpa = pHead1_kpa +((tempCal1-thermTemp1_degC)*tempCoeff1_m)+(tempCoeff1_b)
-#        'Convert 'pHead' from kpa to m
-lvl1_m= pHead1_kpa*0.1019977334
+#     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
+pHead1_kpa = pHead1_kpa - (barometricPressure_kPa -101.3)
+#        'Convert 'pHead' from kpa to m, and shift by small offset
+lvl1_m= pHead1_kpa*0.1019977334 + 0.1
 #
 
 #		'Calculate thermistor temperature 'ThermTemp'
@@ -85,8 +112,10 @@ thermTemp2_degC=thermTemp2_degC-273.15+tempOffset2
 pHead2_kpa =(C2_A*freq2**2)+(C2_B*freq2)+(C2_C)
 #		'Apply temperature corrections
 pHead2_kpa = pHead2_kpa +((tempCal2-thermTemp2_degC)*tempCoeff2_m)+(tempCoeff2_b)
-#		'Convert pressureKPA to m
-lvl2_m = pHead2_kpa*0.1019977334
+#     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
+pHead2_kpa = pHead2_kpa - (barometricPressure_kPa -101.3)
+#		'Convert pressureKPA to m, and shift by small offset
+lvl2_m = pHead2_kpa*0.1019977334 - 0.2
 
 def init_plot(title, yMin=0, yMax=3):
     plt.figure(figsize=(24, 12))
@@ -158,9 +187,13 @@ lvl1_m = (C1_0 + (C1_1*freq1) + (C1_2*thermTemp1_degC) + (C1_3*(freq1**2)) + (C1
 thermTemp2_degC = 1/(1.401E-3 + 2.377E-4*np.log(thermRes2) + 9.730E-8*np.log(thermRes2)**3)-273.15
 lvl2_m = (C2_0 + (C2_1*freq2) + (C2_2*thermTemp2_degC) + (C2_3*(freq2**2)) + (C2_4*freq2*thermTemp2_degC) + (C2_5*(thermTemp2_degC**2))) * 0.70432
 
-#'Convert water level from PSI to meters
-lvl1_m = lvl1_m*0.1019977334
-lvl2_m = lvl2_m*0.1019977334
+#     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
+lvl1_m = lvl1_m - (barometricPressure_kPa -101.3)/6.895
+lvl2_m = lvl2_m - (barometricPressure_kPa -101.3)/6.895
+
+#'Convert water level from PSI to meters and shift by small offset.
+lvl1_m = lvl1_m*0.1019977334 - 1.1
+lvl2_m = lvl2_m*0.1019977334 + 1.5
 
 init_plot('Water Level at Waterton Circle Station A')
 
@@ -214,7 +247,9 @@ thermTemp1_degC = thermTemp1_degC+tempOffset1
 pHead1_kpa=(C1_A*freq1**2)+(C1_B*freq1)+(C1_C)
 #        'Apply temperature corrections
 pHead1_kpa = pHead1_kpa +((tempCal1-thermTemp1_degC)*tempCoeff1_m)+(tempCoeff1_b)
-#        'Convert 'pHead' from kpa to m
+#     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
+pHead1_kpa = pHead1_kpa - (barometricPressure_kPa -101.3)
+#        'Convert 'pHead' from kpa to m, and shift by small offset
 lvl1_m= pHead1_kpa*0.1019977334
 #
 #    'Calculate thermistor temperature 'ThermTemp'
@@ -225,7 +260,9 @@ thermTemp2_degC=thermTemp2_degC+tempOffset2
 pHead2_kpa =(C2_A*freq2**2)+(C2_B*freq2)+(C2_C)
 #    'Apply temperature corrections
 pHead2_kpa = pHead2_kpa +((tempCal2-thermTemp2_degC)*tempCoeff2_m)+(tempCoeff2_b)
-#    'Convert pressureKPA to m
+#     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
+pHead2_kpa = pHead2_kpa - (barometricPressure_kPa -101.3)
+#    'Convert pressureKPA to m, and shift by small offset
 lvl2_m = pHead2_kpa*0.1019977334
 #
 

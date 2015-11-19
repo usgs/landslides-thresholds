@@ -46,7 +46,7 @@ corrTensPres_kPa_2 = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3 = corrTensPres_V_3 * tensMult + tensOffs
 
 
-def init_plot(title, yMin=0, yMax=-500):
+def init_plot(title, yMin=-100, yMax=100):
     plt.figure(figsize=(24, 12))
     plt.title(title + disclamers)
     plt.xlabel(xtext)

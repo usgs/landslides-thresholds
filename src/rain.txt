@@ -9,8 +9,8 @@ PATH=~/anaconda/bin:$PATH  # Mac OS  PATH=? on Linux
 cd ~/Desktop/LandslideThresholds # Folder location on MacOS
 # On Linux, the LoggerNet user, lhp, stores the LandslideThresholds folder at /home/lhp/LandslideThresholds (~/LandslideThresholds)
 # 
-rm ../rain_log.txt
-date > ../rain_log.txt  #Edit path if this script is moved to a different folder
+#rm ./rain_log.txt
+date > ./rain_log.txt  #Edit path if this script is moved to a different folder
 cd data/NWS
 # rm *.xml
 
