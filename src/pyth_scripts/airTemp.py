@@ -1,3 +1,6 @@
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -46,8 +49,8 @@ airTemp_degF = 9.*airTemp_degC/5. +32.
 
 #def init_plot(title, yMin=-10, yMax=40):
 def init_plot(title, yMin=-10, yMax=100):
-    plt.figure(figsize=(24, 12))
-    plt.title(title + disclamers)
+    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
+    plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
     #plt.xlim(xMin,xMax)
@@ -56,7 +59,7 @@ def init_plot(title, yMin=-10, yMax=100):
     #plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot(name=None, cols=5):
-    plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=8, ncol=cols,
+    plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10,
                mode="expand", borderaxespad=-1.,  scatterpoints=1)
     if name:
         plt.savefig(name, bbox_inches='tight')
@@ -67,6 +70,14 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
 xtext = ('Date & Time')
 ytext = ('Air Temperature, deg F')
 #ytext = ('Air Temperature, deg C')
+
+# Set fontsize for plot
+
+font = {'family' : 'monospace',
+    'weight' : 'normal',
+        'size'   : '10'}
+
+matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 init_plot('Air Temperature at Marine View Dr. & 116 St. SW')
 

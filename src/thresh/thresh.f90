@@ -104,7 +104,7 @@
 	real,allocatable :: sthreshAvgIntensity(:)
 	real, allocatable:: div(:)
 	
- 	real :: slope,intercept,in2mm
+ 	real :: slope,intercept,in2mm,id_index_factor
  	real :: powerCoeff,powerExp,runningIntens,drainConst,fieldCap,decayFactor
  	real :: AWIconversion,evapConsts(12),AWIThresh,seasonalAntThresh
  	real :: awimx,sum3mx,rntsymx
@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='06 Nov 2015'; vrsn=' 1.0.005'
+     	revdate='09 Dec 2015'; vrsn=' 1.0.006'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -173,10 +173,26 @@
   	   	case default; AWIconversion=1.
 	end select
 	write(unitNumber(1),*) 'Conversion factor for AWI', AWIconversion
-  	select case (powerUnit)
-  	   case ('mm'); in2mm=25.4
-  	   case default; in2mm=1.
+! unit conversion factor for plot files
+ 	select case (precipUnit)
+  	   case ('mm'); in2mm=1.
+  	   case default; in2mm=25.4
 	end select
+! unit Conversion factor for threshold index
+        select case (precipUnit)
+          case ('in');
+  	select case (powerUnit)
+  	   case ('mm'); id_index_factor=25.4
+  	   case ('in'); id_index_factor=1.
+  	   case default; id_index_factor=1.
+	end select
+          case ('mm');
+  	select case (powerUnit)
+  	   case ('mm'); id_index_factor=1.
+  	   case ('in'); id_index_factor=1./25.4
+  	   case default; id_index_factor=1.
+	end select
+        end select 
 	write(unitNumber(1),*) 'Conversion factor for average intensity', in2mm
 	
 ! if using linearly interpolated defined threshold, perform relevant tasks.
@@ -415,7 +431,7 @@
 	   pt315,ctri3,pti3,awimx,AWI,AWIExceedCtr,powerSwitch,polySwitch,&
 	   interSwitch,intervals,xVals,yVals,threshIntensityDuration,in2mm,&
 	   powerCoeff,dur,powerExp,polynomArr,ctrid,ptid,AWIThresh,AWIIntensCtr,&
-	   ptawid,threshAvgExceed,ctria,nlo20,ptia)
+	   ptawid,threshAvgExceed,ctria,nlo20,ptia,id_index_factor)
 
 	   write (unitNumber(1),*) i, ' Completed station ', stationNumber(i) 
 	   

@@ -1,3 +1,6 @@
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -5,6 +8,14 @@ import matplotlib.dates as mdates
 #import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
+
+# Set fontsize for plot
+
+font = {'family' : 'monospace',
+    'weight' : 'normal',
+        'size'   : '10'}
+
+matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 #def skip_first(seq,n):
 #    for i, item in enumerate(seq):
@@ -100,7 +111,7 @@ pHead1_kpa = pHead1_kpa +((tempCal1-thermTemp1_degC)*tempCoeff1_m)+(tempCoeff1_b
 #     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
 pHead1_kpa = pHead1_kpa - (barometricPressure_kPa -101.3)
 #        'Convert 'pHead' from kpa to m, and shift by small offset
-lvl1_m= pHead1_kpa*0.1019977334 + 0.1
+lvl1_m_mvd= pHead1_kpa*0.1019977334 + 0.1
 #
 
 #		'Calculate thermistor temperature 'ThermTemp'
@@ -115,11 +126,11 @@ pHead2_kpa = pHead2_kpa +((tempCal2-thermTemp2_degC)*tempCoeff2_m)+(tempCoeff2_b
 #     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
 pHead2_kpa = pHead2_kpa - (barometricPressure_kPa -101.3)
 #		'Convert pressureKPA to m, and shift by small offset
-lvl2_m = pHead2_kpa*0.1019977334 - 0.2
+lvl2_m_mvd = pHead2_kpa*0.1019977334 - 0.2
 
 def init_plot(title, yMin=0, yMax=3):
-    plt.figure(figsize=(24, 12))
-    plt.title(title + disclamers)
+    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
+    plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
     #plt.xlim(xMin,xMax)
@@ -128,7 +139,7 @@ def init_plot(title, yMin=0, yMax=3):
     #plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot(name=None, cols=5):
-    plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=8, ncol=cols,
+    plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10, 
                mode="expand", borderaxespad=-1.,  scatterpoints=1)
     if name:
         plt.savefig(name, bbox_inches='tight')
@@ -141,8 +152,8 @@ ytext = ('Water Level, m')
 
 init_plot('Water Level at Marine View Drive & 116 St. SW')
 
-plt.plot(column_0, lvl1_m, linestyle='-', color='b', label='Water Level 1')
-plt.plot(column_0, lvl2_m, linestyle='-', color='r', label='Water Level 2')
+plt.plot(column_0, lvl1_m_mvd, linestyle='-', color='b', label='Water Level 1')
+plt.plot(column_0, lvl2_m_mvd, linestyle='-', color='r', label='Water Level 2')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
@@ -192,13 +203,13 @@ lvl1_m = lvl1_m - (barometricPressure_kPa -101.3)/6.895
 lvl2_m = lvl2_m - (barometricPressure_kPa -101.3)/6.895
 
 #'Convert water level from PSI to meters and shift by small offset.
-lvl1_m = lvl1_m*0.1019977334 - 1.1
-lvl2_m = lvl2_m*0.1019977334 + 1.5
+lvl1_m_wca = lvl1_m*0.1019977334 - 1.1
+lvl2_m_wca = lvl2_m*0.1019977334 + 1.5
 
 init_plot('Water Level at Waterton Circle Station A')
 
-plt.plot(column_0, lvl1_m, linestyle='-', color='b', label='Water Level 4')
-plt.plot(column_0, lvl2_m, linestyle='-', color='r', label='Water Level 3')
+plt.plot(column_0, lvl1_m_wca, linestyle='-', color='b', label='Water Level 3')
+plt.plot(column_0, lvl2_m_wca, linestyle='-', color='r', label='Water Level 4')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
@@ -250,7 +261,7 @@ pHead1_kpa = pHead1_kpa +((tempCal1-thermTemp1_degC)*tempCoeff1_m)+(tempCoeff1_b
 #     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
 pHead1_kpa = pHead1_kpa - (barometricPressure_kPa -101.3)
 #        'Convert 'pHead' from kpa to m, and shift by small offset
-lvl1_m= pHead1_kpa*0.1019977334
+lvl1_m_wcb= pHead1_kpa*0.1019977334
 #
 #    'Calculate thermistor temperature 'ThermTemp'
 thermTemp2_degC = (-23.50833439*((thermRes2/1000)**2)) + (227.625007*(thermRes2/1000))+(-341.217356417)
@@ -263,13 +274,13 @@ pHead2_kpa = pHead2_kpa +((tempCal2-thermTemp2_degC)*tempCoeff2_m)+(tempCoeff2_b
 #     Apply barometric pressure correction, 1 standard atmosphere = 101.3 kPa
 pHead2_kpa = pHead2_kpa - (barometricPressure_kPa -101.3)
 #    'Convert pressureKPA to m, and shift by small offset
-lvl2_m = pHead2_kpa*0.1019977334
+lvl2_m_wcb = pHead2_kpa*0.1019977334
 #
 
 init_plot('Water Level at Waterton Circle Station B')
 
-plt.plot(column_0, lvl1_m, linestyle='-', color='b', label='Water Level 5')
-plt.plot(column_0, lvl2_m, linestyle='-', color='r', label='Water Level 6')
+plt.plot(column_0, lvl1_m_wcb, linestyle='-', color='b', label='Water Level 5')
+plt.plot(column_0, lvl2_m_wcb, linestyle='-', color='r', label='Water Level 6')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
@@ -277,4 +288,35 @@ plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
 end_plot(name='MWatB_lvl.png')
+
+def init_plot1(title, yMin=0, yMax=3):
+    plt.figure(figsize=(12, 6))
+    plt.title(title + disclamers, fontsize=11)
+    plt.xlabel(xtext, fontsize=11)
+    plt.ylabel(ytext, fontsize=11)
+    #plt.xlim(xMin,xMax)
+    plt.ylim(yMin,yMax)
+    plt.grid()
+#plt.xticks(np.arange(xMin,xMax+1))
+
+def end_plot1(name=None, cols=5):
+    plt.legend(loc=2, ncol=cols, fontsize=10, title='   Sensor Position & Depth, cm\nSCB         ALS-a         ALS-b')
+    if name:
+        plt.savefig(name, bbox_inches='tight')
+
+init_plot1('Water Level at Mukilteo Stations')
+
+plt.plot(column_0, lvl1_m_mvd, linestyle='-', color='b', label='1 300')
+plt.plot(column_0, lvl2_m_mvd, linestyle='-', color='r', label='5 300')
+plt.plot(column_0, lvl1_m_wca, linestyle='--', color='b', label='1 300')
+plt.plot(column_0, lvl2_m_wca, linestyle='--', color='r', label='5 300')
+plt.plot(column_0, lvl1_m_wcb, linestyle='-.', color='b', label='1 150')
+plt.plot(column_0, lvl2_m_wcb, linestyle='-.', color='r', label='5 300')
+
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
+plt.gca().xaxis.set_major_locator(mdates.HourLocator())
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+
+end_plot1(name='Muk_lvl.png',cols=3)
 

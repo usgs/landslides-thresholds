@@ -1,3 +1,6 @@
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -21,16 +24,17 @@ def readfiles(file_list,c1):
     return data
 
 def init_plot(title, yMin=-0, yMax=18):
-    plt.figure(figsize=(24, 12))
-    plt.title(title + disclamers)
-    plt.xlabel(xtext)
-    plt.ylabel(ytext)
+    plt.figure(figsize=(12, 6))
+    plt.title(title + disclamers, fontsize=11)
+    plt.xlabel(xtext, fontsize=11)
+    plt.ylabel(ytext, fontsize=11)
     plt.ylim(yMin,yMax)
     plt.grid()
 
 def end_plot(name=None, cols=5):
-    plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=8, ncol=cols,
-               mode="expand", borderaxespad=-1.,  scatterpoints=1)
+    plt.legend(loc=3, fontsize=10, title='Station')
+           #plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=0, ncol=cols,
+           #               mode="expand", borderaxespad=-1.,  scatterpoints=1, fontsize=12)
     if name:
         plt.savefig(name, bbox_inches='tight')
 
@@ -65,96 +69,25 @@ data_1 = ma.fix_invalid(data, fill_value = 'nan')
 column_0_MLP = np.array(data_1)[0][:,0]
 battery_volt_MLP = np.array(data_1)[0][:,1]
 
+# Set fontsize for plot
+
+font = {'family' : 'monospace',
+    'weight' : 'normal',
+        'size'   : '10'}
+
+matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 init_plot('Battery voltage at all Stations')
 
-plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='b', label='MVD & 116 St SW')
-plt.plot(column_0_MWatA, battery_volt_MWatA, linestyle='-', color='r', label='Waterton Cir. A')
-plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='g', label='Waterton Cir. B')
-plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='c', label='MWWD')
-plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='m', label='MLP')
+plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='b', label='SCB')
+plt.plot(column_0_MWatA, battery_volt_MWatA, linestyle='-', color='r', label='ALS-a')
+plt.plot(column_0_MVD116, battery_volt_MWatB, linestyle='-', color='g', label='ALS-b')
+plt.plot(column_0_MVD116, battery_volt_MLP, linestyle='-', color='m', label='M1')
+plt.plot(column_0_MVD116, battery_volt_MWWD, linestyle='-', color='c', label='M2')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
-end_plot(name='M_battery.png')
-
-# ------------------------
-
-#data = readfiles(['waMLP_14d.txt'],4)
-#data_1 = ma.fix_invalid(data, fill_value = 'nan')
-#
-#column_0 = np.array(data_1)[0][:,0]
-#airTempRaw = np.array(data_1)[0][:,1]
-#
-##Compute Air Temperature
-#airTempRs_ohms = 23100*((airTempRaw/2500)/(1-(airTempRaw/2500))) # use for CR200 series
-##airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000
-#airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
-#airTemp_degF = 9.*airTemp_degC/5. +32.
-#
-#init_plot('Air Temperature at Mukilteo Lighthouse Park')
-#
-##plt.plot(column_0, airTemp_degC, linestyle='-', color='b', label='Air Temperature')
-#plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
-#
-#plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-#plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-#plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-#plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
-#
-#end_plot(name='MLP_airTemp.png')
-
-# ------------------------
-
-#data = readfiles(['waMWWD_14d.txt'],4)
-#data_1 = ma.fix_invalid(data, fill_value = 'nan')
-#
-#column_0 = np.array(data_1)[0][:,0]
-#airTempRaw = np.array(data_1)[0][:,1]
-#
-##Compute Air Temperature
-#airTempRs_ohms = 23100*((airTempRaw/2500)/(1-(airTempRaw/2500))) # use for CR200 series
-##airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000
-#airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
-#airTemp_degF = 9.*airTemp_degC/5. +32.
-#
-#init_plot('Air Temperature at Mukilteo Wastewater Plant')
-#
-##plt.plot(column_0, airTemp_degC, linestyle='-', color='b', label='Air Temperature')
-#plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
-#
-#plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-#plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-#plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-#plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
-#
-#end_plot(name='MWWD_airTemp.png')
-
-# ------------------------
-
-#data = readfiles(['waWatertonA_14d.txt'],4)
-#data_1 = ma.fix_invalid(data, fill_value = 'nan')
-#
-#column_0 = np.array(data_1)[0][:,0]
-#airTempRaw = np.array(data_1)[0][:,1]
-#
-##Compute Air Temperature
-## airTempRs_ohms = 23100*((airTempRaw/2500)/(1-(airTempRaw/2500))) # use for CR200 series
-#airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000
-#airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
-#airTemp_degF = 9.*airTemp_degC/5. +32.
-#
-#init_plot('Air Temperature at Waterton Circle Station A')
-#
-##plt.plot(column_0, airTemp_degC, linestyle='-', color='b', label='Air Temperature')
-#plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
-#
-#plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-#plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-#plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-#plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
-
-# end_plot(name='MWat_airTemp.png')
+end_plot(name='Muk_battery.png')

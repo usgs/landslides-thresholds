@@ -1,9 +1,20 @@
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime
 import csv
 from matplotlib.dates import strpdate2num
+
+# Set fontsize for plots
+
+font = {'family' : 'monospace',
+    'weight' : 'normal',
+        'size'   : '10'}
+
+matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 #def skip_first(seq,n):
 #    for i, item in enumerate(seq):
@@ -32,7 +43,7 @@ def readfiles(file_list,c1):
     return data
 
 def init_plot(title, yMin=90, yMax=115):
-    plt.figure(figsize=(24, 12))
+    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
     plt.title(title + disclamers)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
@@ -42,7 +53,7 @@ def init_plot(title, yMin=90, yMax=115):
     #plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot(name=None, cols=5):
-    plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=8, ncol=cols,
+    plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=8, ncol=cols, fontsize=10,
                mode="expand", borderaxespad=-1.,  scatterpoints=1)
     if name:
         plt.savefig(name, bbox_inches='tight')

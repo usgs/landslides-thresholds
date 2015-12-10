@@ -146,12 +146,12 @@ contains
 	pti3,awimx,AWI,AWIexceedCtr,powerSwitch,polySwitch,interSwitch,&
 	intervals,xVals,yVals,intensityDuration,in2mm,powerCoeff,duration,&
 	powerExp,polynomArr,ctrid,ptid,AWIThresh,AWIIntensCtr,ptawid,&
-	threshAvgExceed,ctria,nlo20,ptia) !{{{
+	threshAvgExceed,ctria,nlo20,ptia,id_index_factor) !{{{
 	implicit none
 
    ! FORMAL ARGUMENTS
 	real, intent(in)    :: intercept,slope
-	real, intent(in)    :: AWI(*),in2mm,powerCoeff
+	real, intent(in)    :: AWI(*),in2mm,powerCoeff,id_index_factor
 	real, intent(in)    :: duration(*),powerExp,polynomArr(*),AWIThresh
 	real, intent(in)    :: runningIntens, xVals(intervals+1), yVals(intervals+1)
 	real, intent(out)   :: intensityDuration(*),intensity(*)
@@ -289,11 +289,11 @@ contains
          
          if(duration(i) > 0.) then
             if(powerSwitch) then
-               intensityDuration(i) = in2mm * intensity(i) /&
+               intensityDuration(i) = id_index_factor * intensity(i) /&
                (powerCoeff * (duration(i) ** (powerExp)))
             else if(polySwitch) then
                x = duration(i)
-               intensityDuration(i) = in2mm * intensity(i) / ( polynomArr(1) + x * &
+               intensityDuration(i) = id_index_factor * intensity(i) / ( polynomArr(1) + x * &
                (polynomArr(2) + x * (polynomArr(3) + x * (polynomArr(4) +&
                x * (polynomArr(5) + polynomArr(6) * x)))))
             else if (interSwitch) then
@@ -302,7 +302,7 @@ contains
                   if(xVals(j) < x .and. x < xVals(j+1)) then
                		  m = (yVals(j+1) - yVals(j)) / (xVals(j+1) - xVals(j))
                		  b = yVals(j) - m * xVals(j)
-               		  intensityDuration(i) = in2mm * intensity(i) / (m * x + b)
+               		  intensityDuration(i) = id_index_factor * intensity(i) / (m * x + b)
                   end if
                end do
             end if
