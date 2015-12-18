@@ -57,7 +57,7 @@ corrTensPres_kPa_2_mvd = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3_mvd = corrTensPres_V_3 * tensMult + tensOffs
 
 
-def init_plot(title, yMin=-100, yMax=100):
+def init_plot(title, yMin=-90, yMax=25):
     plt.figure(figsize=(12, 6)) # figsize=(24, 12)
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -146,7 +146,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
 end_plot(name='MWatB_Tensiometer_Press.png')
 
-def init_plot1(title, yMin=-100, yMax=100):
+def init_plot1(title, yMin=-90, yMax=25):
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext, fontsize=10)
