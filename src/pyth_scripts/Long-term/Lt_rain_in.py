@@ -42,8 +42,8 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
-def init_plot(title, yMin=0, yMax=13):
-    plt.figure(figsize=(12, 6))  # figsize=(24, 12)
+def init_plot(title, yMin=0, yMax=0.5):
+    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
@@ -62,87 +62,122 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date & Time')
-ytext = ('15-minute rainfall, mm')
+ytext = ('15-minute rainfall, inches')
 
-data = readfiles(['waMVD116_14d.txt'],5)
+data = readfiles(['waMVD116_Lt.txt'],5)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
 
 #Compute Rainfall
-rain_mm = rain_tipCount * 0.254
+rain_in_mvd = rain_tipCount * 0.01
 
 init_plot('Rainfall at Marine View Dr. & 116 St. SW')
 
-plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
+plt.plot(column_0, rain_in_mvd, linestyle='-', color='b', label='Rainfall')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
-end_plot(name='MVD116_rain.png')
+end_plot(name='MVD116_rain_in.png')
 
 # ------------------------
 
-data = readfiles(['waMLP_14d.txt'],3)
+data = readfiles(['waMLP_Lt.txt'],3)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
 
 #Compute Rainfall
-rain_mm = rain_tipCount * 0.254
+rain_in_mlp = rain_tipCount * 0.01
 
 init_plot('Rainfall at Mukilteo Lighthouse Park')
 
-plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
+plt.plot(column_0, rain_in_mlp, linestyle='-', color='b', label='Rainfall')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
-end_plot(name='MLP_rain.png')
+end_plot(name='MLP_rain_in.png')
 
 # ------------------------
 
-data = readfiles(['waMWWD_14d.txt'],3)
+data = readfiles(['waMWWD_Lt.txt'],3)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
 
 #Compute Rainfall
-rain_mm = rain_tipCount * 0.254
+rain_in_mwwd = rain_tipCount * 0.01
 
 init_plot('Rainfall at Mukilteo Wastewater Plant')
 
-plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
+plt.plot(column_0, rain_in_mwwd, linestyle='-', color='b', label='Rainfall')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
-end_plot(name='MWWD_rain.png')
+end_plot(name='MWWD_rain_in.png')
 
 # ------------------------
 
-data = readfiles(['waWatertonA_14d.txt'],6)
+data = readfiles(['waWatertonA_Lt.txt'],6)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
 
 #Compute Rainfall
-rain_mm = rain_tipCount * 0.254
+rain_in_wca = rain_tipCount * 0.01
 
 init_plot('Rainfall at Waterton Circle Station A')
 
-plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
+plt.plot(column_0, rain_in_wca, linestyle='-', color='b', label='Rainfall')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
 plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
-end_plot(name='MWatA_rain.png')
+end_plot(name='MWatA_rain_in.png')
+
+def init_plot1(title, yMin=0, yMax=0.5):
+    plt.figure(figsize=(12, 6))
+    plt.title(title + disclamers, fontsize=11)
+    plt.xlabel(xtext, fontsize=11)
+    plt.ylabel(ytext, fontsize=11)
+    plt.ylim(yMin,yMax)
+    plt.grid()
+
+def end_plot1(name=None, cols=5):
+    plt.legend(loc=2, fontsize=10, title='Station')
+    if name:
+        plt.savefig(name, bbox_inches='tight')
+
+# Set fontsize for plot
+
+font = {'family' : 'monospace',
+    'weight' : 'normal',
+        'size'   : '10'}
+
+matplotlib.rc('font', **font)  # pass in the font dict as kwargs
+
+init_plot1('Rainfall at Mukilteo Stations')
+
+plt.plot(column_0, rain_in_mvd, linestyle='-', color='b', alpha=0.75, label='SCB')
+plt.plot(column_0, rain_in_mlp, linestyle='-', color='r', alpha=0.75, label='M1')
+plt.plot(column_0, rain_in_mwwd, linestyle='-', color='g', alpha=0.75, label='M2')
+plt.plot(column_0, rain_in_wca, linestyle='-', color='orange', alpha=0.75, label='ALS')
+
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
+plt.gca().xaxis.set_major_locator(mdates.HourLocator())
+plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
+plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+
+end_plot1(name='Muk_rain_in.png')
 

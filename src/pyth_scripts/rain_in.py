@@ -42,7 +42,7 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
-def init_plot(title, yMin=0, yMax=1):
+def init_plot(title, yMin=0, yMax=0.5):
     plt.figure(figsize=(12, 6)) # figsize=(24, 12)
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -146,7 +146,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
 end_plot(name='MWatA_rain_in.png')
 
-def init_plot1(title, yMin=0, yMax=0.75):
+def init_plot1(title, yMin=0, yMax=0.5):
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext, fontsize=11)

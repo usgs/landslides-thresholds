@@ -23,7 +23,7 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
-def init_plot(title, yMin=-0, yMax=18):
+def init_plot(title, yMin=9, yMax=15):
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext, fontsize=11)

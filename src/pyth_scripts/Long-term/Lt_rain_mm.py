@@ -64,7 +64,7 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
 xtext = ('Date & Time')
 ytext = ('15-minute rainfall, mm')
 
-data = readfiles(['waMVD116_14d.txt'],5)
+data = readfiles(['waMVD116_Lt.txt'],5)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
@@ -85,7 +85,7 @@ end_plot(name='MVD116_rain.png')
 
 # ------------------------
 
-data = readfiles(['waMLP_14d.txt'],3)
+data = readfiles(['waMLP_Lt.txt'],3)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
@@ -106,7 +106,7 @@ end_plot(name='MLP_rain.png')
 
 # ------------------------
 
-data = readfiles(['waMWWD_14d.txt'],3)
+data = readfiles(['waMWWD_Lt.txt'],3)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]
@@ -127,7 +127,7 @@ end_plot(name='MWWD_rain.png')
 
 # ------------------------
 
-data = readfiles(['waWatertonA_14d.txt'],6)
+data = readfiles(['waWatertonA_Lt.txt'],6)
 
 column_0 = np.array(data)[0][:,0]
 rain_tipCount = np.array(data)[0][:,1]

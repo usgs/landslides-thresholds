@@ -1,3 +1,4 @@
+#VWC_Lt.py
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -35,10 +36,10 @@ def readfiles(file_list,c1,c2,c3,c4,c5):
     return data
 
 
-data = readfiles(['waMVD116_14d.txt'],6,7,8,9,10) # 6,7,8,9,10
+data = readfiles(['waMVD116_Lt.txt'],6,7,8,9,10) # 6,7,8,9,10
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
-column_0 = np.array(data_1)[0][:,0]
+column_0_mvd = np.array(data_1)[0][:,0]
 vwcRaw_1 = np.array(data_1)[0][:,1]
 vwcRaw_2 = np.array(data_1)[0][:,2]
 vwcRaw_3 = np.array(data_1)[0][:,3]
@@ -86,25 +87,24 @@ matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 init_plot('Volumetric Water Content at Marine View Drive & 116 St. SW')
 
-plt.plot(column_0, vwcEng_1_mvd, linestyle='-', color='b', label='VWC 1')
-plt.plot(column_0, vwcEng_2_mvd, linestyle='-', color='r', label='VWC 2')
-plt.plot(column_0, vwcEng_3_mvd, linestyle='-', color='g', label='VWC 3')
-plt.plot(column_0, vwcEng_4_mvd, linestyle='-', color='c', label='VWC 4')
-plt.plot(column_0, vwcEng_5_mvd, linestyle='-', color='m', label='VWC 5')
+plt.plot(column_0_mvd, vwcEng_1_mvd, linestyle='-', color='b', label='VWC 1')
+plt.plot(column_0_mvd, vwcEng_2_mvd, linestyle='-', color='r', label='VWC 2')
+plt.plot(column_0_mvd, vwcEng_3_mvd, linestyle='-', color='g', label='VWC 3')
+plt.plot(column_0_mvd, vwcEng_4_mvd, linestyle='-', color='c', label='VWC 4')
+plt.plot(column_0_mvd, vwcEng_5_mvd, linestyle='-', color='m', label='VWC 5')
 
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=1))
 
-end_plot(name='MVD116_VWC.png')
+end_plot(name='MVD116_VWC_Lt.png')
 
 # ------------------------
 
-data = readfiles(['waWatertonA_14d.txt'],7,8,9,10,11) # 7,8,9,10,11
+data = readfiles(['waWatertonA_Lt.txt'],7,8,9,10,11) # 7,8,9,10,11
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
-column_0 = np.array(data_1)[0][:,0]
+column_0_watA = np.array(data_1)[0][:,0]
 vwcRaw_1 = np.array(data_1)[0][:,1]
 vwcRaw_2 = np.array(data_1)[0][:,2]
 vwcRaw_3 = np.array(data_1)[0][:,3]
@@ -119,25 +119,24 @@ vwcEng_5_watA = vwcRaw_5 * vwcMult + vwxOffs
 
 init_plot('Volumetric Water Content at Waterton Circle Station A')
 
-plt.plot(column_0, vwcEng_1_watA, linestyle='-', color='b', label='VWC 1')
-plt.plot(column_0, vwcEng_2_watA, linestyle='-', color='r', label='VWC 2')
-plt.plot(column_0, vwcEng_3_watA, linestyle='-', color='g', label='VWC 3')
-plt.plot(column_0, vwcEng_4_watA, linestyle='-', color='c', label='VWC 4')
-plt.plot(column_0, vwcEng_5_watA, linestyle='-', color='m', label='VWC 5')
+plt.plot(column_0_watA, vwcEng_1_watA, linestyle='-', color='b', label='VWC 1')
+plt.plot(column_0_watA, vwcEng_2_watA, linestyle='-', color='r', label='VWC 2')
+plt.plot(column_0_watA, vwcEng_3_watA, linestyle='-', color='g', label='VWC 3')
+plt.plot(column_0_watA, vwcEng_4_watA, linestyle='-', color='c', label='VWC 4')
+plt.plot(column_0_watA, vwcEng_5_watA, linestyle='-', color='m', label='VWC 5')
 
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=1))
 
-end_plot(name='MWatA_VWC.png')
+end_plot(name='MWatA_VWC_Lt.png')
 
 # ------------------------
 
-data = readfiles(['waWatertonB_14d.txt'],6,7,8,9,10) #6,7,8,9,10
+data = readfiles(['waWatertonB_Lt.txt'],6,7,8,9,10) #6,7,8,9,10
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
-column_0 = np.array(data_1)[0][:,0]
+column_0_watB = np.array(data_1)[0][:,0]
 vwcRaw_1 = np.array(data_1)[0][:,1]
 vwcRaw_2 = np.array(data_1)[0][:,2]
 vwcRaw_3 = np.array(data_1)[0][:,3]
@@ -152,18 +151,17 @@ vwcEng_5_watB = vwcRaw_5 * vwcMult + vwxOffs
 
 init_plot('Volumetric Water Content at Waterton Circle Station B')
 
-plt.plot(column_0, vwcEng_1_watB, linestyle='-', color='b', label='VWC 1')
-plt.plot(column_0, vwcEng_2_watB, linestyle='-', color='r', label='VWC 2')
-plt.plot(column_0, vwcEng_3_watB, linestyle='-', color='g', label='VWC 3')
-plt.plot(column_0, vwcEng_4_watB, linestyle='-', color='c', label='VWC 4')
-plt.plot(column_0, vwcEng_5_watB, linestyle='-', color='m', label='VWC 5')
+plt.plot(column_0_watB, vwcEng_1_watB, linestyle='-', color='b', label='VWC 1')
+plt.plot(column_0_watB, vwcEng_2_watB, linestyle='-', color='r', label='VWC 2')
+plt.plot(column_0_watB, vwcEng_3_watB, linestyle='-', color='g', label='VWC 3')
+plt.plot(column_0_watB, vwcEng_4_watB, linestyle='-', color='c', label='VWC 4')
+plt.plot(column_0_watB, vwcEng_5_watB, linestyle='-', color='m', label='VWC 5')
 
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+plt.gca().xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=1))
 
-end_plot(name='MWatB_VWC.png')
+end_plot(name='MWatB_VWC_Lt.png')
 
 #
 def init_plot_all(title, yMin=0, yMax=0.6):
@@ -190,29 +188,29 @@ xtext = ('Date & Time')
 ytext = ('Volumetric Water content')
 
 # Plot graph of volumetric water content
+try:
+    init_plot_all('Volumetric Water Content at Mukilteo Stations')
 
-init_plot_all('Volumetric Water Content at Mukilteo Stations')
+    plt.plot(column_0_mvd, vwcEng_1_mvd, linestyle='-', color='b', label='1 110')
+    plt.plot(column_0_mvd, vwcEng_2_mvd, linestyle='-', color='r', label='2 110')
+    plt.plot(column_0_mvd, vwcEng_3_mvd, linestyle='-', color='g', label='3 100')
+    plt.plot(column_0_mvd, vwcEng_4_mvd, linestyle='-', color='c', label='4 130')
+    plt.plot(column_0_mvd, vwcEng_5_mvd, linestyle='-', color='m', label='5 100')
+    plt.plot(column_0_watA, vwcEng_1_watA, linestyle='--', color='b', label='1 20')
+    plt.plot(column_0_watA, vwcEng_2_watA, linestyle='--', color='r', label='2 20')
+    plt.plot(column_0_watA, vwcEng_3_watA, linestyle='--', color='g', label='3 80')
+    plt.plot(column_0_watA, vwcEng_4_watA, linestyle='--', color='c', label='4 80')
+    plt.plot(column_0_watA, vwcEng_5_watA, linestyle='--', color='m', label='5 95')
+    plt.plot(column_0_watB, vwcEng_1_watB, linestyle='-.', color='b', label='1 100')
+    plt.plot(column_0_watB, vwcEng_2_watB, linestyle='-.', color='r', label='2 20')
+    plt.plot(column_0_watB, vwcEng_3_watB, linestyle='-.', color='g', label='3 115')
+    plt.plot(column_0_watB, vwcEng_4_watB, linestyle='-.', color='c', label='4 115')
+    plt.plot(column_0_watB, vwcEng_5_watB, linestyle='-.', color='m', label='5 120')
 
-plt.plot(column_0, vwcEng_1_mvd, linestyle='-', color='b', label='1 110')
-plt.plot(column_0, vwcEng_2_mvd, linestyle='-', color='r', label='2 110')
-plt.plot(column_0, vwcEng_3_mvd, linestyle='-', color='g', label='3 100')
-plt.plot(column_0, vwcEng_4_mvd, linestyle='-', color='c', label='4 130')
-plt.plot(column_0, vwcEng_5_mvd, linestyle='-', color='m', label='5 100')
-plt.plot(column_0, vwcEng_1_watA, linestyle='--', color='b', label='1 20')
-plt.plot(column_0, vwcEng_2_watA, linestyle='--', color='r', label='2 20')
-plt.plot(column_0, vwcEng_3_watA, linestyle='--', color='g', label='3 80')
-plt.plot(column_0, vwcEng_4_watA, linestyle='--', color='c', label='4 80')
-plt.plot(column_0, vwcEng_5_watA, linestyle='--', color='m', label='5 95')
-plt.plot(column_0, vwcEng_1_watB, linestyle='-.', color='b', label='1 100')
-plt.plot(column_0, vwcEng_2_watB, linestyle='-.', color='r', label='2 20')
-plt.plot(column_0, vwcEng_3_watB, linestyle='-.', color='g', label='3 115')
-plt.plot(column_0, vwcEng_4_watB, linestyle='-.', color='c', label='4 115')
-plt.plot(column_0, vwcEng_5_watB, linestyle='-.', color='m', label='5 120')
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+    plt.gca().xaxis.set_minor_locator(mdates.DayLocator(interval=1))
+    plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=1))
 
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
-plt.gca().xaxis.set_major_locator(mdates.HourLocator())
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
-
-end_plot(name='Muk_VWC.png', cols=3)
-
+    end_plot(name='Muk_VWC_Lt.png', cols=3)
+except:
+    print('Unable to plot Muk_VWC_Lt.png')
