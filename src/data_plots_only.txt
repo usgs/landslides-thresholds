@@ -1,0 +1,38 @@
+#!/bin/sh
+# Shell Script to copy and reformat data from remote stations in Mukilteo
+# Add paths to python to path variable.
+# *****************##########################*****************************
+# Edit paths for system where the script will be running
+# *****************##########################*****************************
+
+PATH=~/anaconda/bin:$PATH  # Mac OS  PATH=? on Linux
+
+cd ~/Desktop/LandslideThresholds # Folder location on MacOS
+#rm ./data_log.txt
+date > ./data_plot_log.txt  #Edit path if this script is moved to a different folder
+# On Linux, LoggerNet stores incoming data at /var/opt/Campbellsci/LoggerNet/
+# On Linux, the LoggerNet user, lhp, stores the LandslideThresholds folder at /home/lhp/LandslideThresholds (~/LandslideThresholds)
+cd data/RALHS
+
+# Run plotting routines
+python "../../src/pyth_scripts/airTemp.py"
+python "../../src/pyth_scripts/barom.py"
+python "../../src/pyth_scripts/battery.py"
+python "../../src/pyth_scripts/lvl_m.py"
+# python "../../src/pyth_scripts/rain_mm.py"
+python "../../src/pyth_scripts/rain_in.py"
+python "../../src/pyth_scripts/Tensiometer_Press.py"
+# python "../../src/pyth_scripts/Tensiometer_Temp_C.py"
+python "../../src/pyth_scripts/Tensiometer_Temp_F.py"
+python "../../src/pyth_scripts/VWC.py"
+python "../../src/pyth_scripts/Laser.py"
+python "../../src/pyth_scripts/rain_in_day.py"
+
+cp *.png ../../plots/
+
+# Copy plots to folder for web server
+# cp *.png ~/xfer_to_web/
+# cp ./data/ThCurrTabl.htm ~/xfer_to_web/ThCurrTabl2.htm
+
+
+
