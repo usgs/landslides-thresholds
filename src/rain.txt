@@ -21,6 +21,35 @@ cp ./data/ThCurrTabl.htm ../../plots/
 # cp *.png ~/xfer_to_web/
 # cp ./data/ThCurrTabl.htm ~/xfer_to_web/ThCurrTabl.htm
 
+# Make backup folder for year and copy annual data file to backup folder (Added 07/01/2016, RLB)
+read day mon dat tim yr < date.txt
+    if [ -d backup ]
+    then :
+    else
+      mkdir backup
+    fi
+#
+if [ "$dat" -eq "01" ] ; then
+  if [ "$mon" = "Jul" ] ; then
+    if [ -d backup/$yr ]
+    then :
+    else
+      mkdir backup/$yr
+    fi
+    while read DataFile
+    do
+      grep -c [0-9] $DataFile > lines.txt
+      read linct < lines.txt 
+      if [ "$linct" -gt 500 ]
+      then
+        tail -n 480 $DataFile > temp1.txt
+        mv $DataFile backup/$yr
+        mv temp1.txt $DataFile
+      fi
+    done < sta2.txt
+  fi
+fi
+#
 
 cd "../Forecast"
 python "../../src/pyth_scripts/Forecast.py"  >> ../../rain_log.txt

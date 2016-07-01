@@ -25,8 +25,8 @@
 	integer, intent(in)      :: uout,ulog,ctrHolder,rph,nlo20,pt(nlo20)
 	
 ! LOCAL VARIABLES
-	character (len=255) :: outputFile,mdurflag
-	character (len=22)  :: header
+	character (len=255) :: outputFile
+	character (len=22)  :: header,mdurflag
 	character (len=10)  :: date,manteced,mrecent,mintensity,mduration
 	character (len=10)  :: mrunningIntens,mprecip,mdeficit,mavgIntensity
 	character (len=10)  :: mintensityDuration,mAWI
@@ -75,15 +75,16 @@
 ! Read data and write time-series plot file
    tptrm1=pt(1)-1
    do j=1,ctrHolder
+      tptr=pt(j)
       !initialize mdurflag, intensLogic, durLow, durHigh
       mdurflag            = ""
       intensLogic1        = intensity(tptr)<0
-      intensLogic2        = intensity(tptr)*in2mm<1.d-1
+!      intensLogic2        = intensity(tptr)*in2mm<1.d-1
+      intensLogic2        = abs(intensity(tptr)*in2mm)<1.d-2
       durLow              = duration(tptr) < lowLim
       durHigh             = duration(tptr) > upLim
       runningIntensLogic  = runningIntens(tptr)<0
       
-      tptr=pt(j)
       if(tptr-tptrm1>rph*minTStormGap) then
          write(uout,*) ''
       end if
@@ -114,9 +115,11 @@
       end if
       write(mduration,           '(f10.1)')     duration(tptr)
       if(durLow) then 
-         write(mdurflag,         '(A)'    )     "duration below minimum defined duration"
+         write(mdurflag,         '(A)'    )     '< minimum defined'
       else if(durHigh) then 
-         write(mdurflag,         '(A)'    )     "duration above maximum defined duration" 
+         write(mdurflag,         '(A)'    )     '> maximum defined' 
+      else
+          write(mdurflag,         '(A)'    )     'within limits'   
       end if
       if(runningIntensLogic) then
          write(mrunningIntens,   '(f10.3)')     runningIntens(tptr)
