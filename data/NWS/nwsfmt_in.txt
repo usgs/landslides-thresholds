@@ -1,0 +1,9 @@
+NumberOfStations,4
+NumberOfDataLines,500
+ListOfStationNumbers_Localities_InputFiles
+01,'Seattle/Boeing Field','KBFI.txt'
+02,'Everett/Paine Field','KPAE.txt'
+03,'Seattle-Tacoma Airport','KSEA.txt'
+04,'Tacoma Narrows','KTIW.txt'
+AppendData?,.true.
+ReadingsPerHour,1
