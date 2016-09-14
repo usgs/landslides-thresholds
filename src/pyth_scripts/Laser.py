@@ -1,4 +1,4 @@
-#Laser_Lt.py
+#Laser_Lt.py plots distance measured by laser distance sensor
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -23,7 +23,7 @@ def readfiles(file_list,c1):
     return data
 
 
-data = readfiles(['waWat_DynSlowScan_14d.txt'],3) # 3
+data = readfiles(['waWat_DynSlowScan_14d.txt'],3) # column 3
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
 column_0 = np.array(data_1)[0][:,0]
@@ -36,14 +36,12 @@ laserDistance_mm = laserDistance_raw*laserDistance_mult+laserDistance_Offs
 laserDistance_m = laserDistance_mm/1000.
 
 def init_plot(title, yMin=8.5, yMax=9.0):
-    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
+    plt.figure(figsize=(12, 6)) 
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
-    #plt.xlim(xMin,xMax)
     plt.ylim(yMin,yMax)
     plt.grid()
-    #plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot(name=None, cols=5):
     plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10,

@@ -1,3 +1,4 @@
+# rain_in_day.py plots daily and hourly rainfall for staions in Mukilteo, WA
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -158,8 +159,6 @@ def make_plot1(title, x1a, y1a, x1b, y1b, x1c, y1c, x1d, y1d, x2a, y2a, x2b, y2b
     host.legend(lines, [l.get_label() for l in lines], loc=2, ncol=cols, fontsize=10, scatterpoints=1)
     if name:
         plt.savefig(name, bbox_inches='tight')
-
-#    plt.legend(loc=2, fontsize=10, title='Station')
 #
 ## Set fontsize for plot
 #

@@ -1,3 +1,4 @@
+# battery.py plots battery voltage time series for multiple stations
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -33,8 +34,6 @@ def init_plot(title, yMin=9, yMax=15):
 
 def end_plot(name=None, cols=5):
     plt.legend(loc=3, fontsize=10, title='Station')
-           #plt.legend(bbox_to_anchor=(0, -.1, 1, -0.5), loc=0, ncol=cols,
-           #               mode="expand", borderaxespad=-1.,  scatterpoints=1, fontsize=12)
     if name:
         plt.savefig(name, bbox_inches='tight')
 

@@ -1,4 +1,4 @@
-#CET.py
+#CET.py plots measurements of cable extension transducer (extensometer)
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -29,23 +29,19 @@ data_1 = ma.fix_invalid(data, fill_value = 'nan')
 column_0 = np.array(data_1)[0][:,0]
 cetDistance_raw = np.array(data_1)[0][:,1]
 
-#Const cet_mult = 0.6477' mm/mV
-#Const cet_offs = -14
-cetDistance_mult = 0.6477
+cetDistance_mult = 0.6477 # mm/mV
 cetDistance_Offs = -14
 
 cetDistance_mm = cetDistance_raw*cetDistance_mult+cetDistance_Offs
 #cetDistance_m = cetDistance_mm/1000.
 
 def init_plot(title, yMin=-1, yMax=40):
-    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
+    plt.figure(figsize=(12, 6)) 
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
-    #plt.xlim(xMin,xMax)
     plt.ylim(yMin,yMax)
     plt.grid()
-    #plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot(name=None, cols=5):
     plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10,

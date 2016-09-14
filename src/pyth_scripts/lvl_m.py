@@ -1,11 +1,11 @@
+# lvl_m.py corrects pore pressure transducer data for barometric pressure to compute water levels
+# and plots the time-series of water levels
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-#from datetime import datetime
-#import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
@@ -16,18 +16,6 @@ font = {'family' : 'monospace',
         'size'   : '10'}
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
-
-#def skip_first(seq,n):
-#    for i, item in enumerate(seq):
-#        if i >= n:
-#            yield item
-#g = open('soundTransit1_remote_rawMeasurements_15m.txt', 'w')
-#with open('soundTransit1_remote_rawMeasurements_15m.dat', 'rb') as f:
-#    csvreader = csv.reader(f)
-#    for row in skip_first(csvreader,4):
-#        for row in csv.reader(f,delimiter=',',skipinitialspace=True):
-#            print >>g, "\t".join(row)
-#g.close()
 
 # ------------------------
 def readfiles1(file_list,c1):
@@ -76,8 +64,6 @@ freq1 = np.array(data_1)[0][:,1]
 thermRes1 = np.array(data_1)[0][:,2]
 freq2 = np.array(data_1)[0][:,3]
 thermRes2 = np.array(data_1)[0][:,4]
-#freq1=float(freq1)
-#freq2=float(freq2)
 
 #'VW piezometer Serial numbers
 #'VWP #1 = 83807
@@ -101,7 +87,6 @@ tempCal2 = 20.2 #'Temp Calibrated
 
 #    'Calculate thermistor temperature 'ThermTemp'
 thermTemp1_degC =1/(1.4051E-3+2.369E-4*np.log(thermRes1)+1.019E-7*np.log(thermRes1)**3)
-#thermTemp1_degC = (-23.50833439*((thermRes1/1000)**2)) + (227.625007*(thermRes1/1000))+(-341.217356417)
 #    'Convert 'ThermTemp' to 'degC' and add 'TempOffset'
 thermTemp1_degC = thermTemp1_degC-273.15+tempOffset1
 #    'Calculate water level 'pHead' (kPa)
@@ -116,7 +101,6 @@ lvl1_m_mvd= pHead1_kpa*0.1019977334 + 0.1
 
 #		'Calculate thermistor temperature 'ThermTemp'
 thermTemp2_degC=1/(1.4051E-3+2.369E-4*np.log(thermRes2)+1.019E-7*np.log(thermRes2)**3)
-#thermTemp2_degC = (-23.50833439*((thermRes2/1000)**2)) + (227.625007*(thermRes2/1000))+(-341.217356417)
 #		'Convert 'ThermTemp' to 'degC' and add 'TempOffset'
 thermTemp2_degC=thermTemp2_degC-273.15+tempOffset2
 #		'Calculate water level 'pHead' (kPa)
@@ -129,14 +113,12 @@ pHead2_kpa = pHead2_kpa - (barometricPressure_kPa -101.3)
 lvl2_m_mvd = pHead2_kpa*0.1019977334 - 0.2
 
 def init_plot(title, yMin=0, yMax=3):
-    plt.figure(figsize=(12, 6)) # figsize=(24, 12)
+    plt.figure(figsize=(12, 6)) 
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
     plt.ylabel(ytext)
-    #plt.xlim(xMin,xMax)
     plt.ylim(yMin,yMax)
     plt.grid()
-    #plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot(name=None, cols=5):
     plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10, 
@@ -297,7 +279,6 @@ def init_plot1(title, yMin=0, yMax=3):
     #plt.xlim(xMin,xMax)
     plt.ylim(yMin,yMax)
     plt.grid()
-#plt.xticks(np.arange(xMin,xMax+1))
 
 def end_plot1(name=None, cols=5):
     plt.legend(loc=2, ncol=cols, fontsize=10, title='   Sensor Position & Depth, cm\nSCB         ALS-a         ALS-b')
@@ -311,7 +292,7 @@ plt.plot(column_0, lvl2_m_mvd, linestyle='-', color='r', label='5 297')
 plt.plot(column_0, lvl1_m_wca, linestyle='--', color='b', label='1 300')
 plt.plot(column_0, lvl2_m_wca, linestyle='--', color='r', alpha=1, label='5 300')
 plt.plot(column_0, lvl1_m_wcb, linestyle='-.', color='b', label='1 300')
-plt.plot(column_0, lvl2_m_wcb, linestyle='-.', color='r', alpha=0, label='5 175')
+plt.plot(column_0, lvl2_m_wcb, linestyle='-.', color='r', alpha=0, label='5 175') # alpha=0 hides plot of malfunctioning sensor
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
