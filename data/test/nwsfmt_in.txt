@@ -1,9 +1,9 @@
 NumberOfStations,4
-NumberOfDataLines,50000
+NumberOfDataLines,500
 ListOfStationNumbers_Localities_InputFiles
-01,'Marine View Dr. & 116th','waMVD116_rain.txt'
-02,'Waterton Circle','waWatertonA_rain.txt'
-03,'Mukilteo Wastewater','waMWWD_rain.txt'
-04,'Mukilteo Lighthouse Park','waMLP_rain.txt'
+01,'Seattle/Boeing Field','KBFI.txt'
+02,'Everett/Paine Field','KPAE.txt'
+03,'Seattle-Tacoma Airport','KSEA.txt'
+04,'Tacoma Narrows','KTIW.txt'
 AppendData?,.true.
-ReadingsPerHour,4
+ReadingsPerHour,1

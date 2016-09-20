@@ -1,7 +1,7 @@
 Number_Of_Stations,4
 Number_Of_Data_Lines,40000
-Readings_Per_Hour,4
-Precipitation_Unit,mm
+Readings_Per_Hour,1
+Precipitation_Unit,in
 Recent_Hours,72
 Antecedent_Hours,360
 Intensity_Hours,0
@@ -12,14 +12,14 @@ Long_Plot_Window_Hours,360
 Short_Plot_Window_Hours,36
 Slope_3_day_15_day_Threshold,-0.67
 Intercept_3_day_15_day_Threshold,3.5
-Power_Law_Defined_Intensity_Duration,.FALSE.
+Power_Law_Defined_Intensity_Duration,.TRUE.
    Coeff_Int_Dur_Threshold,3.257
    Exponent_Int_Dur_Threshold,-1.13
    Duration_Interval,0,60
 Polynomial_Defined_Intensity_Duration,.FALSE.
    5th_Deg_Polynom_Coefficients,0.464559,-0.0373087,0.00150227,-0.000032942,0.000000375634,-0.000000000174586
    Duration_Interval,0,60
-Linear_Interpolation_On_Intervals_Defined_Intensity_Duration,.TRUE.
+Linear_Interpolation_On_Intervals_Defined_Intensity_Duration,.FALSE.
    Number_of_Interpolating_Intervals,5
 Threshold_unit,in
 Reset_antecedent_month_&_day,0,0
@@ -37,7 +37,7 @@ Statistics?,.FALSE.
 Forecast?,.FALSE.
 Name_Of_OutputFolder,'./Data/'
 List_Of_Station_Numbers_Localities_InputFiles
-01,'Marine View Drive','./waMVD116_rain_t.txt'
-02,'Waterton Circle','./waWatertonA_rain_t.txt'
-03,'Mukilteo Lighthouse','./waMLP_rain_t.txt'
-04,'Mukiteo Wastewater','./waMWWD_rain_t.txt'
+01,'Seattle/Boeing Field','./KBFI_t.txt'
+02,'Everett/Paine Field','./KPAE_t.txt'
+03,'Seattle-Tacoma Airport','./KSEA_t.txt'
+04,'Tacoma Narrows','./KTIW_t.txt'
