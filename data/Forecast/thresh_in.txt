@@ -35,7 +35,7 @@ Midnight=2400, 2
 Plot_Format,gnp2
 Statistics?,.FALSE.
 Forecast?,.TRUE.
-Name_Of_OutputFolder,'./Data/'
+Name_Of_OutputFolder,'./data/'
 List_Of_Station_Numbers_Localities_InputFiles
 01,'Seattle/Boeing Field','./KBFI_ft.txt'
 02,'Everett/Paine Field','./KPAE_ft.txt'

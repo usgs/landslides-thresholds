@@ -35,7 +35,7 @@ Midnight=2400, 2
 Plot_Format,gnp2
 Statistics?,.FALSE.
 Forecast?,.FALSE.
-Name_Of_OutputFolder,'./Data/'
+Name_Of_OutputFolder,'./data/'
 List_Of_Station_Numbers_Localities_InputFiles
 01,'Marine View Drive','./waMVD116_rain_t.txt'
 02,'Waterton Circle','./waWatertonA_rain_t.txt'
