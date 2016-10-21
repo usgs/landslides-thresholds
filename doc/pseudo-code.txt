@@ -1,0 +1,84 @@
+Pseudo-code structure of program thresh.
+1	Program thresh
+2	Reference modules
+3	Declare variables
+4	subroutine date_and_time
+5		function imid
+6			Extract current date and time
+7	subroutine titl
+8		Print banner on terminal
+9	Open ThreshLog.txt and log current date and time
+10	subroutine read_init
+11		Read thresh_in.txt and save copy to log file
+12		subroutine error 1
+13			Provide error statements if input data is entered incorrectly
+14		subroutine check_antMonth_antDay
+15			Check reset dates for antecedent precipitation totals
+16		Determine desired plot format (gnp1, gnp2, dgrs)
+17		subroutine check_switches
+18			if  [power law function] then
+19				subroutine set_power_limits
+20					Upper and lower duration limit for power-law intensity-duration threshold
+21			else if [polynomial interpolation] then
+22				subroutine set_poly_limits
+23					Upper and lower duration limit for polynomial intensity-duration threshold
+24					function check_AWI
+25					function check_SAT
+26	Write input variables into log file
+27	Convert AWI and average intensity to correct units, if needed
+28	if [linearly interpolated threshold] then
+29		subroutine read_interpolating_points
+30	Allocate and initialize data arrays
+31	subroutine read_thlast
+32		Get time of last data processed previously
+33		if [time-stamps are at the end of each hour] then
+34			subroutine ir24
+35				Adjust for leap year and midnight = 24:00
+36				Correct date if offset straddles midnight
+37	Read data files and compute precipitation totals, intensity, & duration
+38	subroutine read_station_file
+39		Obtain date and time of latest data in file
+40	subroutine s1904t
+41		Convert time and date to serial numbers
+42		Initialize variables to track storms at each station
+43	subroutine track_storm
+44		Compute AWI, track beginning, end and duration of storms
+45	Compute intensity and duration at beginning of record
+46	subroutine track_intensity
+47		Step through cumulative precipitation and intensity computations for each file
+48	if [stats was chosen] then
+49		subroutine count_events
+50			Count number of threshold exceedances
+51		Convert time-series arrays to 1D station series array for plotter output
+52	subroutine gnpts
+53		Create time-series plot file for each station
+54		Create short-term time-series plot file for each station
+55	if [NOT forecast] then
+56		subroutine arcsav
+57			Create time-series archive file for each station
+58	if [stats was chosen] then
+59		subroutine gnpts1
+60			Create time-series listings of threshold exceedance values
+61		subroutine tindm
+62			Creates time-series plots of daily maxima for each station
+63	if [realtime (continuous mode) was chosen] then
+64		if [plot format gnp1 was chosen] then
+65			subroutine gnp1
+66				Tab text; recent totals and intensities by station; in one file 
+67		else if [plot format gnp2 was chosen] then
+68			subroutine gnp2
+69				Tab text; recent totals and intensities by station; separate file for each station
+70		else if [plot format dgrs was chosen] then
+71			subroutine dgrs
+72				Tab text; paired current values of antecedent and recent cumulative precipitation for making x-y scatter plot with a different symbol for each station
+73		subroutine alert
+74			Construct a plain text table that is color-coded based on alert level
+75		subroutine alerthtm
+76			Construct a color-coded alert table in HTML format
+77		subroutine tabl
+78			Construct a plain text table of current values that is not color-coded
+79		subroutine tablhtm
+80			Construct an HTML table of current values, color-coded based on current rainfall intensity
+81	Write status files
+82	End the program; record time and date
+
