@@ -1,6 +1,10 @@
 #test_py
 #For automated download of hourly observations from NWS website and computation of rainfall
 # intensities and cumulative amounts for comparison to thresholds:
+# By Rex L. Baum and Sarah J. Fischer, USGS 2015-2016
+# Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
+# This script contains parameters specific to a particular problem. 
+# It can be used as a template for other sites.
 import os
 import sys
 import time

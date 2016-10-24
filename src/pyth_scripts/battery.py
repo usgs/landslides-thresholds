@@ -1,4 +1,8 @@
 # battery.py plots battery voltage time series for multiple stations
+# By Rex L. Baum and Sarah J. Fischer, USGS 2015-2016
+# Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
+# This script contains parameters specific to a particular problem. 
+# It can be used as a template for other sites.
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
