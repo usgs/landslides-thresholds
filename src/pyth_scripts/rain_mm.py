@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -21,6 +23,7 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
+# Define functions
 def readfiles(file_list,c1):
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
@@ -35,7 +38,7 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
-def init_plot(title, yMin=0, yMax=13):
+def init_plot(title, yMin=0, yMax=13):  #Set plot dimensions & parameters
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -54,6 +57,10 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
               )
 xtext = ('Date & Time')
 ytext = ('15-minute rainfall, mm')
+
+# --------------****************-----------------------
+# Import data, scale and plot; repeat for each station
+# --------------****************-----------------------
 
 data = readfiles(['waMVD116_14d.txt'],5)
 

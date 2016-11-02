@@ -4,6 +4,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -13,7 +15,7 @@ import matplotlib.dates as mdates
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
-# Set fontsize for plot
+# Set fontsize for plots
 
 font = {'family' : 'monospace',
     'weight' : 'normal',
@@ -22,7 +24,9 @@ font = {'family' : 'monospace',
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 # ------------------------
-def readfiles1(file_list,c1):
+# Obtain barometric pressure corrections
+
+def readfiles1(file_list,c1): # defines function to read timestamp and 1 column of data
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
     data = []
@@ -36,17 +40,20 @@ def readfiles1(file_list,c1):
                                dtype=None))
     return data
 
+# Import data and assign to arrays
 data = readfiles1(['waWatertonA_14d.txt'],5)
 
 column_0 = np.array(data)[0][:,0]
 barometricPressure_raw = np.array(data)[0][:,1]
 
-#Compute Barometric pressure
+#Compute Barometric pressure in kPa
 barometricPressure_kPa=(barometricPressure_raw*0.240+500)*0.1
 
 #-------------------------
+# Obtain vibrating-wire piezometer frequency and temperature, readings, scale and plot
+# Define functions
 
-def readfiles(file_list,c1,c2,c3,c4):
+def readfiles(file_list,c1,c2,c3,c4): #  Read timestamps and 4 columns of data
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
     data = []
@@ -60,6 +67,27 @@ def readfiles(file_list,c1,c2,c3,c4):
                                dtype=None))
     return data
 
+def init_plot(title, yMin=0, yMax=3): # Set parameters and dimensions of plots
+    plt.figure(figsize=(12, 6)) 
+    plt.title(title + disclamers, fontsize=11)
+    plt.xlabel(xtext)
+    plt.ylabel(ytext)
+    plt.ylim(yMin,yMax)
+    plt.grid()
+
+def end_plot(name=None, cols=5):
+    plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10, 
+               mode="expand", borderaxespad=-1.,  scatterpoints=1)
+    if name:
+        plt.savefig(name, bbox_inches='tight')
+
+disclamers = ('\nUSGS PROVISIONAL DATA'
+              '\nSUBJECT TO REVISION'
+              )
+xtext = ('Date & Time')
+ytext = ('Water Level, m')
+
+# Import raw data and assign to arrays
 data = readfiles(['waMVD116_14d.txt'],17,18,19,20) # 17,18,19,20
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -115,26 +143,6 @@ pHead2_kpa = pHead2_kpa +((tempCal2-thermTemp2_degC)*tempCoeff2_m)+(tempCoeff2_b
 pHead2_kpa = pHead2_kpa - (barometricPressure_kPa -101.3)
 #		'Convert pressureKPA to m, and shift by small offset
 lvl2_m_mvd = pHead2_kpa*0.1019977334 - 0.2
-
-def init_plot(title, yMin=0, yMax=3):
-    plt.figure(figsize=(12, 6)) 
-    plt.title(title + disclamers, fontsize=11)
-    plt.xlabel(xtext)
-    plt.ylabel(ytext)
-    plt.ylim(yMin,yMax)
-    plt.grid()
-
-def end_plot(name=None, cols=5):
-    plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10, 
-               mode="expand", borderaxespad=-1.,  scatterpoints=1)
-    if name:
-        plt.savefig(name, bbox_inches='tight')
-
-disclamers = ('\nUSGS PROVISIONAL DATA'
-              '\nSUBJECT TO REVISION'
-              )
-xtext = ('Date & Time')
-ytext = ('Water Level, m')
 
 init_plot('Water Level at Marine View Drive & 116 St. SW')
 

@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -14,7 +16,7 @@ from datetime import datetime
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
-def readfiles(file_list,c1,c2,c3):
+def readfiles(file_list,c1,c2,c3): # Read time stamp and three columns of data
     data = []
     for fname in file_list:
         data.append(
@@ -26,7 +28,7 @@ def readfiles(file_list,c1,c2,c3):
                                dtype=None))
     return data
 
-def init_plot(title, yMin=0, yMax=100):
+def init_plot(title, yMin=0, yMax=100): # Set plot parameters and dimensions
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -46,6 +48,7 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
 xtext = ('Date & Time')
 ytext = ('Temperature, deg F')
 
+# Import data and assign to arrays
 data = readfiles(['waMVD116_14d.txt'],14,15,16) # columns 14,15,16
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -72,7 +75,7 @@ font = {'family' : 'monospace',
         'size'   : '10'}
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
-
+# Draw and save plot
 init_plot('Tensiometer Temperature at Marine View Drive & 116 St. SW')
 
 plt.plot(column_0, corrTensTemp_F_1, linestyle='-', color='b', label='2 110 cm')
@@ -87,7 +90,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 end_plot(name='MVD116_Tensiometer_Temp_F.png')
 
 # ------------------------
-
+# Import data and assign to arrays
 data = readfiles(['waWatertonA_14d.txt'],15,16,17) # columns 15,16,17
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -99,12 +102,12 @@ corrTensTemp_V_3 = np.array(data_1)[0][:,3]
 corrTensTemp_kPa_1 = corrTensTemp_V_1 * tensMult + tensOffs
 corrTensTemp_kPa_2 = corrTensTemp_V_2 * tensMult + tensOffs
 corrTensTemp_kPa_3 = corrTensTemp_V_3 * tensMult + tensOffs
-# Convert to Farenheit
+# Convert to Fahrenheit
 corrTensTemp_F_1 = 32. + 9.*corrTensTemp_kPa_1/5.
 corrTensTemp_F_2 = 32. + 9.*corrTensTemp_kPa_2/5.
 corrTensTemp_F_3 = 32. + 9.*corrTensTemp_kPa_3/5.
 
-
+# Draw and save plot
 init_plot('Tensiometer Temperature at Waterton Circle Station A')
 
 plt.plot(column_0, corrTensTemp_F_1, linestyle='-', color='b', label='2 110 cm')
@@ -119,7 +122,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 end_plot(name='MWatA_Tensiometer_Temp_F.png')
 
 # ------------------------
-
+# Import data and assign to arrays
 data = readfiles(['waWatertonB_14d.txt'],14,15,16) # Columns 14,15,16
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -131,12 +134,12 @@ corrTensTemp_V_3 = np.array(data_1)[0][:,3]
 corrTensTemp_kPa_1 = corrTensTemp_V_1 * tensMult + tensOffs
 corrTensTemp_kPa_2 = corrTensTemp_V_2 * tensMult + tensOffs
 corrTensTemp_kPa_3 = corrTensTemp_V_3 * tensMult + tensOffs
-# Convert to Farenheit
+# Convert to Fahrenheit
 corrTensTemp_F_1 = 32. + 9.*corrTensTemp_kPa_1/5.
 corrTensTemp_F_2 = 32. + 9.*corrTensTemp_kPa_2/5.
 corrTensTemp_F_3 = 32. + 9.*corrTensTemp_kPa_3/5.
 
-
+# Draw and save plot
 init_plot('Tensiometer Temperature at Waterton Circle Station B')
 
 plt.plot(column_0, corrTensTemp_F_1, linestyle='-', color='b', label='2 110 cm')

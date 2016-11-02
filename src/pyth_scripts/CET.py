@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -13,8 +15,9 @@ from datetime import datetime
 import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
-
-def readfiles(file_list,c1):
+#
+# Define Functions
+def readfiles(file_list,c1):  #Read tab-delimited text and skip comment lines
     data = []
     for fname in file_list:
         data.append(
@@ -27,19 +30,7 @@ def readfiles(file_list,c1):
     return data
 
 
-data = readfiles(['waWat_DynCont_14d.txt'],9) # 9
-data_1 = ma.fix_invalid(data, fill_value = 'nan')
-
-column_0 = np.array(data_1)[0][:,0]
-cetDistance_raw = np.array(data_1)[0][:,1]
-
-cetDistance_mult = 0.6477 # mm/mV
-cetDistance_Offs = -14
-
-cetDistance_mm = cetDistance_raw*cetDistance_mult+cetDistance_Offs
-#cetDistance_m = cetDistance_mm/1000.
-
-def init_plot(title, yMin=-1, yMax=40):
+def init_plot(title, yMin=-1, yMax=40): # Set plot dimensions and parameters
     plt.figure(figsize=(12, 6)) 
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -67,6 +58,20 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
+# Import, scale and plot data
+
+data = readfiles(['waWat_DynCont_14d.txt'],9) # 9
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+cetDistance_raw = np.array(data_1)[0][:,1]
+
+cetDistance_mult = 0.6477 # mm/mV
+cetDistance_Offs = -14
+
+cetDistance_mm = cetDistance_raw*cetDistance_mult+cetDistance_Offs
+#cetDistance_m = cetDistance_mm/1000.
+
 init_plot('Extensometer Distance at ALS')
 
 plt.plot(column_0, cetDistance_mm, linestyle='-', color='b', label='CET 1')
@@ -77,4 +82,3 @@ plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=6))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
 end_plot(name='MVWat_Dyn_cet.png')
-

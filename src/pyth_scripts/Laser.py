@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -14,7 +16,8 @@ import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
-def readfiles(file_list,c1):
+# Define functions
+def readfiles(file_list,c1):  #Read tab-delimited text, skip comment lines
     data = []
     for fname in file_list:
         data.append(
@@ -26,20 +29,7 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
-
-data = readfiles(['waWat_DynSlowScan_14d.txt'],3) # column 3
-data_1 = ma.fix_invalid(data, fill_value = 'nan')
-
-column_0 = np.array(data_1)[0][:,0]
-laserDistance_raw = np.array(data_1)[0][:,1]
-
-laserDistance_mult = 12.428
-laserDistance_Offs = -4837.5
-
-laserDistance_mm = laserDistance_raw*laserDistance_mult+laserDistance_Offs
-laserDistance_m = laserDistance_mm/1000.
-
-def init_plot(title, yMin=8.5, yMax=9.0):
+def init_plot(title, yMin=8.5, yMax=9.0):  #Set plot dimensions & parameters
     plt.figure(figsize=(12, 6)) 
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -67,6 +57,20 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
+# Import and scale data 
+data = readfiles(['waWat_DynSlowScan_14d.txt'],3) # column 3
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+laserDistance_raw = np.array(data_1)[0][:,1]
+
+laserDistance_mult = 12.428
+laserDistance_Offs = -4837.5
+
+laserDistance_mm = laserDistance_raw*laserDistance_mult+laserDistance_Offs
+laserDistance_m = laserDistance_mm/1000.
+
+# Draw & save plot
 init_plot('Laser Distance at ALS')
 
 plt.plot(column_0, laserDistance_m, linestyle='-', color='b', label='laser 1')

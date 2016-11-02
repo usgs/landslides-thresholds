@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -24,7 +26,7 @@ font = {'family' : 'monospace',
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 # Define functions for reading and plotting data
-def readfiles(file_list,c1):
+def readfiles(file_list,c1): # reads time stamps and 1 column of data
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
     data = []
@@ -38,6 +40,7 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
+# Define function to plot 15-minute and daily rainfall amounts for a single station
 def make_plot(title, x1, y1, x2, y2, name=None, cols=5, yMin=0, yMax=0.5, y2Max=3.0):
     fig, host = plt.subplots(figsize=(12, 6))
     par1 = host.twinx()
@@ -70,6 +73,7 @@ ytext = ('15-minute rainfall, inches')
 y2text = ('Daily rainfall, inches')
 
 # Process data for Marine View Drive (Stable Coastal Bluff site)
+# Import data and assign to arrays
 data = readfiles(['waMVD116_14d.txt'],5)
 
 column_0_mvd = np.array(data)[0][:,0]
@@ -86,7 +90,7 @@ make_plot('Rainfall at Marine View Dr. & 116 St. SW', column_0_mvd, rain_in_mvd,
 #
 ## ------------------------
 # Process data for Mukilteo Lighthouse Park
-#
+# Import data and assign to arrays
 data = readfiles(['waMLP_14d.txt'],3)
 #
 column_0_mlp = np.array(data)[0][:,0]
@@ -103,7 +107,7 @@ make_plot('Rainfall at Mukilteo Lighthouse Park', column_0_mlp, rain_in_mlp, dai
 #
 ## ------------------------
 # Process data for Mukilteo Wastewater Plant
-#
+# Import data and assign to arrays
 data = readfiles(['waMWWD_14d.txt'],3)
 #
 column_0_mwwd = np.array(data)[0][:,0]
@@ -120,7 +124,7 @@ make_plot('Rainfall at Mukilteo Wastewater Plant', column_0_mwwd, rain_in_mwwd, 
 #
 ## ------------------------
 # Process data for Waterton Circle (Active Landslide Area)
-#
+# Import data and assign to arrays
 data = readfiles(['waWatertonA_14d.txt'],6)
 #
 column_0_wca = np.array(data)[0][:,0]
@@ -135,6 +139,7 @@ daily_in_wca = ts.resample('d', how='sum')
 #
 make_plot('Rainfall at Waterton Circle Station A', column_0_wca, rain_in_wca, daily_in_wca.index, daily_in_wca.values, name='MWatA_rain_in_day.png')
 #
+# Define function to plot 15-minute and daily rainfall amounts for multiple stations
 def make_plot1(title, x1a, y1a, x1b, y1b, x1c, y1c, x1d, y1d, x2a, y2a, x2b, y2b, x2c, y2c, x2d, y2d, name=None, cols=4, yMin=0, yMax=0.5, y2Max=3.0):
     fig, host = plt.subplots(figsize=(12, 6))
     par1 = host.twinx()

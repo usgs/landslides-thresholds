@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -21,6 +23,7 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
+# Define Functions
 def readfiles(file_list,c1):
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
@@ -35,7 +38,7 @@ def readfiles(file_list,c1):
                                dtype=None))
     return data
 
-def init_plot(title, yMin=90, yMax=115):
+def init_plot(title, yMin=90, yMax=115): # Set plot dimensions and parameters
     plt.figure(figsize=(12, 6)) 
     plt.title(title + disclamers)
     plt.xlabel(xtext)
@@ -56,15 +59,17 @@ xtext = ('Date & Time')
 ytext = ('Barometric pressure, kPa')
 
 # ------------------------
+# Import raw data
 
 data = readfiles(['waWatertonA_14d.txt'],5)
 
 column_0 = np.array(data)[0][:,0]
 barometricPressure_raw = np.array(data)[0][:,1]
 
-#Compute Barometric pressure
+# Compute Barometric pressure
 barometricPressure_kPa=(barometricPressure_raw*0.240+500)*0.1
 
+# Draw and save plot
 init_plot('Barometric Pressure at Waterton Circle Station A')
 
 plt.plot(column_0, barometricPressure_kPa, linestyle='-', color='b', label='Barometric pressure')

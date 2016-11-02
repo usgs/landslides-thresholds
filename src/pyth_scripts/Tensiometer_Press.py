@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -22,7 +24,8 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
-def readfiles(file_list,c1,c2,c3):
+# Define functions
+def readfiles(file_list,c1,c2,c3): # read timestamp and 3 columns of data
     data = []
     for fname in file_list:
         data.append(
@@ -34,23 +37,8 @@ def readfiles(file_list,c1,c2,c3):
                                dtype=None))
     return data
 
-data = readfiles(['waMVD116_14d.txt'],11,12,13) #Columns 11,12,13
-data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
-column_0 = np.array(data_1)[0][:,0]
-corrTensPres_V_1 = np.array(data_1)[0][:,1]
-corrTensPres_V_2 = np.array(data_1)[0][:,2]
-corrTensPres_V_3 = np.array(data_1)[0][:,3]
-
-tensMult = -0.1
-tensOffs = 100
-
-corrTensPres_kPa_1_mvd = corrTensPres_V_1 * tensMult + tensOffs
-corrTensPres_kPa_2_mvd = corrTensPres_V_2 * tensMult + tensOffs
-corrTensPres_kPa_3_mvd = corrTensPres_V_3 * tensMult + tensOffs
-
-
-def init_plot(title, yMin=-90, yMax=25):
+def init_plot(title, yMin=-90, yMax=25): # Set plot dimensions and parameters
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -70,6 +58,22 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
 xtext = ('Date & Time')
 ytext = ('Pressure, kPa')
 
+# Import data and assign to arrays
+data = readfiles(['waMVD116_14d.txt'],11,12,13) #Columns 11,12,13
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+corrTensPres_V_1 = np.array(data_1)[0][:,1]
+corrTensPres_V_2 = np.array(data_1)[0][:,2]
+corrTensPres_V_3 = np.array(data_1)[0][:,3]
+# Compute pressures
+tensMult = -0.1
+tensOffs = 100
+
+corrTensPres_kPa_1_mvd = corrTensPres_V_1 * tensMult + tensOffs
+corrTensPres_kPa_2_mvd = corrTensPres_V_2 * tensMult + tensOffs
+corrTensPres_kPa_3_mvd = corrTensPres_V_3 * tensMult + tensOffs
+# Draw and save plot
 init_plot('Tensiometer Pressure at Marine View Drive & 116 St. SW')
 
 plt.plot(column_0, corrTensPres_kPa_1_mvd, linestyle='-', color='b', label='2 110 cm')
@@ -84,7 +88,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 end_plot(name='MVD116_Tensiometer_Press.png')
 
 # ------------------------
-
+# Import data and assign to arrays
 data = readfiles(['waWatertonA_14d.txt'],12,13,14) # Columns 12,13,14
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -92,11 +96,11 @@ column_0 = np.array(data_1)[0][:,0]
 corrTensPres_V_1 = np.array(data_1)[0][:,1]
 corrTensPres_V_2 = np.array(data_1)[0][:,2]
 corrTensPres_V_3 = np.array(data_1)[0][:,3]
-
+# Compute pressures
 corrTensPres_kPa_1_wca = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2_wca = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3_wca = corrTensPres_V_3 * tensMult + tensOffs
-
+# Draw and save plot
 init_plot('Tensiometer Pressure at Waterton Circle Station A')
 
 plt.plot(column_0, corrTensPres_kPa_1_wca, linestyle='-', color='b', label='2 110 cm')
@@ -111,7 +115,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 end_plot(name='MWatA_Tensiometer_Press.png')
 
 # ------------------------
-
+# Import data and assign to arrays
 data = readfiles(['waWatertonB_14d.txt'],11,12,13) # Columns 11,12,13
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -119,11 +123,11 @@ column_0 = np.array(data_1)[0][:,0]
 corrTensPres_V_1 = np.array(data_1)[0][:,1]
 corrTensPres_V_2 = np.array(data_1)[0][:,2]
 corrTensPres_V_3 = np.array(data_1)[0][:,3]
-
+# Compute pressure
 corrTensPres_kPa_1_wcb = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2_wcb = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3_wcb = corrTensPres_V_3 * tensMult + tensOffs
-
+# Draw and save plot
 init_plot('Tensiometer Pressure at Waterton Circle Station B')
 
 plt.plot(column_0, corrTensPres_kPa_1_wcb, linestyle='-', color='b', label='2 110 cm')
@@ -137,7 +141,8 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
 end_plot(name='MWatB_Tensiometer_Press.png')
 
-def init_plot1(title, yMin=-90, yMax=25):
+# Define function to plot data from all stations
+def init_plot1(title, yMin=-90, yMax=25): # Set plot dimensions and paramters
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext, fontsize=10)
@@ -150,6 +155,7 @@ def end_plot1(name=None, cols=5):
     if name:
         plt.savefig(name, bbox_inches='tight')
 
+# Draw and save plot
 init_plot1('Tensiometer Pressure at Mukilteo Stations')
 
 # Use alpha=0 to hide lines for sensor that are malfunctioning or have been removed.

@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -14,7 +16,8 @@ import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
-def readfiles(file_list,c1,c2,c3,c4,c5):
+# Define functions
+def readfiles(file_list,c1,c2,c3,c4,c5): # Read timestamp and 5 columns of data
     data = []
     for fname in file_list:
         data.append(
@@ -26,27 +29,7 @@ def readfiles(file_list,c1,c2,c3,c4,c5):
                                dtype=None))
     return data
 
-
-data = readfiles(['waMVD116_14d.txt'],6,7,8,9,10) # Columns 6,7,8,9,10
-data_1 = ma.fix_invalid(data, fill_value = 'nan')
-
-column_0 = np.array(data_1)[0][:,0]
-vwcRaw_1 = np.array(data_1)[0][:,1]
-vwcRaw_2 = np.array(data_1)[0][:,2]
-vwcRaw_3 = np.array(data_1)[0][:,3]
-vwcRaw_4 = np.array(data_1)[0][:,4]
-vwcRaw_5 = np.array(data_1)[0][:,5]
-
-vwcMult = 2.975
-vwxOffs = -0.4
-
-vwcEng_1_mvd = vwcRaw_1 * vwcMult + vwxOffs
-vwcEng_2_mvd = vwcRaw_2 * vwcMult + vwxOffs
-vwcEng_3_mvd = vwcRaw_3 * vwcMult + vwxOffs
-vwcEng_4_mvd = vwcRaw_4 * vwcMult + vwxOffs
-vwcEng_5_mvd = vwcRaw_5 * vwcMult + vwxOffs
-
-def init_plot(title, yMin=0, yMax=0.6):
+def init_plot(title, yMin=0, yMax=0.6): # set plot parameters and dimensions
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext)
@@ -54,7 +37,7 @@ def init_plot(title, yMin=0, yMax=0.6):
     plt.ylim(yMin,yMax)
     plt.grid()
 
-def end_plot(name=None, cols=5):
+def end_plot(name=None, cols=5): # Set legend and output target
     plt.legend(bbox_to_anchor=(0, -.15, 1, -0.5), loc=8, ncol=cols, fontsize=10,
                mode="expand", borderaxespad=-1.,  scatterpoints=1)
     if name:
@@ -74,6 +57,26 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
+# Import data and assign to arrays
+data = readfiles(['waMVD116_14d.txt'],6,7,8,9,10) # Columns 6,7,8,9,10
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+vwcRaw_1 = np.array(data_1)[0][:,1]
+vwcRaw_2 = np.array(data_1)[0][:,2]
+vwcRaw_3 = np.array(data_1)[0][:,3]
+vwcRaw_4 = np.array(data_1)[0][:,4]
+vwcRaw_5 = np.array(data_1)[0][:,5]
+# Compute volumetric water content from voltages
+vwcMult = 2.975
+vwxOffs = -0.4
+
+vwcEng_1_mvd = vwcRaw_1 * vwcMult + vwxOffs
+vwcEng_2_mvd = vwcRaw_2 * vwcMult + vwxOffs
+vwcEng_3_mvd = vwcRaw_3 * vwcMult + vwxOffs
+vwcEng_4_mvd = vwcRaw_4 * vwcMult + vwxOffs
+vwcEng_5_mvd = vwcRaw_5 * vwcMult + vwxOffs
+# Draw and save plot
 init_plot('Volumetric Water Content at Marine View Drive & 116 St. SW')
 
 plt.plot(column_0, vwcEng_1_mvd, linestyle='-', color='b', label='1 110 cm')
@@ -90,7 +93,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 end_plot(name='MVD116_VWC.png')
 
 # ------------------------
-
+# Import data and assign to arrays
 data = readfiles(['waWatertonA_14d.txt'],7,8,9,10,11) # Columns 7,8,9,10,11
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -100,13 +103,13 @@ vwcRaw_2 = np.array(data_1)[0][:,2]
 vwcRaw_3 = np.array(data_1)[0][:,3]
 vwcRaw_4 = np.array(data_1)[0][:,4]
 vwcRaw_5 = np.array(data_1)[0][:,5]
-
+# Compute volumetric water contents from voltages
 vwcEng_1_watA = vwcRaw_1 * vwcMult + vwxOffs
 vwcEng_2_watA = vwcRaw_2 * vwcMult + vwxOffs
 vwcEng_3_watA = vwcRaw_3 * vwcMult + vwxOffs
 vwcEng_4_watA = vwcRaw_4 * vwcMult + vwxOffs
 vwcEng_5_watA = vwcRaw_5 * vwcMult + vwxOffs
-
+# Draw and save plot
 init_plot('Volumetric Water Content at Waterton Circle Station A')
 
 plt.plot(column_0, vwcEng_1_watA, linestyle='-', color='b', label='1 20 cm')
@@ -123,7 +126,7 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 end_plot(name='MWatA_VWC.png')
 
 # ------------------------
-
+# Import data and assign to arrays
 data = readfiles(['waWatertonB_14d.txt'],6,7,8,9,10) # Columns 6,7,8,9,10
 data_1 = ma.fix_invalid(data, fill_value = 'nan')
 
@@ -133,13 +136,13 @@ vwcRaw_2 = np.array(data_1)[0][:,2]
 vwcRaw_3 = np.array(data_1)[0][:,3]
 vwcRaw_4 = np.array(data_1)[0][:,4]
 vwcRaw_5 = np.array(data_1)[0][:,5]
-
+# Compute volumetric water contents from voltages
 vwcEng_1_watB = vwcRaw_1 * vwcMult + vwxOffs
 vwcEng_2_watB = vwcRaw_2 * vwcMult + vwxOffs
 vwcEng_3_watB = vwcRaw_3 * vwcMult + vwxOffs
 vwcEng_4_watB = vwcRaw_4 * vwcMult + vwxOffs
 vwcEng_5_watB = vwcRaw_5 * vwcMult + vwxOffs
-
+# Draw and save plot
 init_plot('Volumetric Water Content at Waterton Circle Station B')
 
 plt.plot(column_0, vwcEng_1_watB, linestyle='-', color='b', label='1 100 cm')
@@ -155,8 +158,8 @@ plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 
 end_plot(name='MWatB_VWC.png')
 
-#
-def init_plot_all(title, yMin=0, yMax=0.6):
+# Define functions to plot data from all stations
+def init_plot_all(title, yMin=0, yMax=0.6): # set plot parameters and dimensions
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers, fontsize=11)
     plt.xlabel(xtext, fontsize=11)
@@ -175,7 +178,7 @@ disclamers = ('\nUSGS PROVISIONAL DATA'
 xtext = ('Date & Time')
 ytext = ('Volumetric Water content')
 
-# Plot graph of volumetric water content
+# Plot and save graph of volumetric water content at all stations
 
 init_plot_all('Volumetric Water Content at Mukilteo Stations')
 

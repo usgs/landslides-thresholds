@@ -5,27 +5,16 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+# Get libraries
 import os
 import sys
 import time
 import calendar
 time_now=calendar.timegm(time.gmtime())
-
 from xml.dom.minidom import parse
 import pandas as pd
 import time
-
-sys_name = os.name
-#Run thresh to compute Precipitation Thresholds
-# If os.name returns "nt' then use a Windows-specific path name
-if sys_name == 'nt':
-    thresh_path=os.path.normpath('../../bin/thresh.exe')
-else:
-    thresh_path=os.path.normpath('../../bin/thresh')
-print(thresh_path)
-os.system(thresh_path)
-
-#Plot Incremental Precipitation
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -34,7 +23,19 @@ import matplotlib.pyplot as plt
 import glob
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
-def Threshold(numbers):
+sys_name = os.name
+# Run thresh to compute Precipitation Thresholds
+# If os.name returns "nt' then use a Windows-specific path name
+if sys_name == 'nt':
+    thresh_path=os.path.normpath('../../bin/thresh.exe')
+else:
+    thresh_path=os.path.normpath('../../bin/thresh')
+print(thresh_path)
+os.system(thresh_path)
+
+# Plot Incremental Precipitation
+# Function to compute threshold line
+def Threshold(numbers): # Compute threshold line within defined limits
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
     for x in numbers:
@@ -43,7 +44,7 @@ def Threshold(numbers):
             ret[1].append(3.5 - (0.67*x))
     return ret
 
-def Extrapolated_threshold(numbers):
+def Extrapolated_threshold(numbers): # Extrapolate beyond defined limits of threshold
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
     for x in numbers:
@@ -51,7 +52,7 @@ def Extrapolated_threshold(numbers):
         ret[1].append(3.5 - (0.67*x))
     return ret
 
-def plot_threshold():
+def plot_threshold(): # Draw and label threshold line
     """ plot Threshold(Red) and
         Extrapolated_threshold(Black)"""
     x = np.arange(0,16,.5)
@@ -61,7 +62,7 @@ def plot_threshold():
     ex_slide = Extrapolated_threshold(x)
     plt.plot(ex_slide[0], ex_slide[1], 'k:')
 
-def readfiles(file_list):
+def readfiles(file_list): # Read values from table of current conditions
     """ read <TAB> delimited files as strings
         ignoring '# Comment' lines """
     data = []
@@ -73,7 +74,7 @@ def readfiles(file_list):
                                   dtype ="|S", autostrip=True).T)
     return data
 
-def init_plot(title, xMin=0, xMax=15, yMin=0, yMax=8):
+def init_plot(title, xMin=0, xMax=15, yMin=0, yMax=8): # Set plot parameters
     """ Init plot """
     plt.figure(figsize=(12, 6))
     plt.title(title + disclamers + date_text, fontsize=11)
@@ -84,7 +85,7 @@ def init_plot(title, xMin=0, xMax=15, yMin=0, yMax=8):
     plt.grid()
     plt.xticks(np.arange(xMin,xMax+1))
 
-def end_plot(name=None, cols=3):
+def end_plot(name=None, cols=3): # Set legend parameters and output target
     """ Finalize plot"""
     plt.legend(bbox_to_anchor=(0, -.2, 1, -.5), loc=8, ncol=cols, fontsize=10,
                mode="expand", borderaxespad=0.,  scatterpoints=1)
@@ -121,10 +122,11 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
+# draw plot of current conditions for recent and antecedent precipitation threshold at all stations
 init_plot('Current conditions near Seattle, Washington,')
 data = readfiles(glob.glob('data/ThSta*.txt'))
 
-for i, d in enumerate(data):
+for i, d in enumerate(data): assign makrers and generate scatter plot 
     plt.scatter(d[2], d[3],
                 marker=markers[str(d[1])][0],
                 c=markers[str(d[1])][1],
@@ -134,7 +136,7 @@ plot_threshold()
 
 end_plot(name='cmtrsea.png')
 
-#Plot Precipitation History for 3-Day/Prior 15-Day Threshold
+#Plot Precipitation History for Recent-Antecedent Threshold at Boeing field 
 init_plot('360-hour precipitation history near Seattle, Washington')
 
 #set output 'boeing.png'
@@ -153,6 +155,7 @@ plot_threshold()
 
 end_plot(name='boeing.png', cols=3)
 
+#Plot Precipitation History for Recent-Antecedent Threshold at SeaTac
 init_plot('360-hour precipitation history near Seattle, Washington')
 
 #set output 'seatac.png'
@@ -171,6 +174,7 @@ plot_threshold()
 
 end_plot(name='seatac.png', cols=3)
 
+# Plot Precipitation history for Recent-Antecedent Threshold at Everett
 init_plot('360-hour precipitation history in Everett, Washington')
 
 #set output 'paine.png'
@@ -189,6 +193,7 @@ plot_threshold()
 
 end_plot(name='paine.png', cols=3)
 
+# Plot Precipitation history for Recent-Antecedent Threshold at Tacoma Narrows
 init_plot('360-hour precipitation history in Tacoma, Washington')
 
 #set output 'tacoma.png'

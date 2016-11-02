@@ -3,6 +3,8 @@
 # Developed for Python 2.7, and requires compatible versions of numpy, pandas, and matplotlib.
 # This script contains parameters specific to a particular problem. 
 # It can be used as a template for other sites.
+#
+#Get libraries
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
 matplotlib.use('Agg')
@@ -14,6 +16,7 @@ import csv
 from numpy import ma
 from matplotlib.dates import strpdate2num
 
+# Define Functions
 def readfiles(file_list,temp_col):
     """ read <TAB> delemited files as strings
         ignoring '# Comment' lines """
@@ -27,17 +30,6 @@ def readfiles(file_list,temp_col):
                                converters = { 0 : strpdate2num('%Y-%m-%d %H:%M:%S') },
                                dtype=None))
     return data
-
-data = readfiles(['waMVD116_14d.txt'],4)
-data_1 = ma.fix_invalid(data, fill_value = 'nan')
-
-column_0 = np.array(data_1)[0][:,0]
-airTempRaw = np.array(data_1)[0][:,1]
-
-#Compute Air Temperature
-airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000 data logger
-airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
-airTemp_degF = 9.*airTemp_degC/5. +32.
 
 def init_plot(title, yMin=-10, yMax=100):
     plt.figure(figsize=(12, 6)) 
@@ -66,6 +58,21 @@ font = {'family' : 'monospace',
         'size'   : '10'}
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
+
+# --------------****************-----------------------
+# Import data, scale and plot; repeat for each station
+# --------------****************-----------------------
+
+data = readfiles(['waMVD116_14d.txt'],4)
+data_1 = ma.fix_invalid(data, fill_value = 'nan')
+
+column_0 = np.array(data_1)[0][:,0]
+airTempRaw = np.array(data_1)[0][:,1]
+
+#Compute Air Temperature
+airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000 data logger
+airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
+airTemp_degF = 9.*airTemp_degC/5. +32.
 
 init_plot('Air Temperature at Marine View Dr. & 116 St. SW')
 
