@@ -113,7 +113,7 @@
       else 
          write(logmmIntensity,   '(f10.3)')     log10(intensity(tptr)*25.4)
       end if
-      write(mduration,           '(f10.1)')     duration(tptr)
+      write(mduration,           '(f10.2)')     duration(tptr)
       if(durLow) then 
          write(mdurflag,         '(A)'    )     '< minimum defined'
       else if(durHigh) then 

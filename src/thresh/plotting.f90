@@ -106,7 +106,7 @@ contains
 	     else
 	       avgmmIntensity = runningIntens(i) !*in2mm
 	     end if
-	     write(unitNumber,'(a1,a8,a1,f7.2,a1,f7.2,a1,f7.3,a1,f7.3,a1,f7.1,&
+	     write(unitNumber,'(a1,a8,a1,f7.2,a1,f7.2,a1,f7.3,a1,f7.3,a1,f8.2,&
 	     &a1,f7.3,a1,f7.3)')tb,trim(stationNumber(i)),tb,sumAnteced(i),tb,&
 	     &sumRecent(i),tb,intensity(i),tb,mmIntensity,tb,durs(i),tb,&
 	     &avgmmIntensity,tb,logintensity
@@ -191,7 +191,7 @@ contains
 	        avgmmIntensity=runningIntens(i) !*in2mm
 	     end if
 	  
- 	     write(unitNumber,'(a1,a8,a1,f7.2,a1,f7.2,a1,f7.3,a1,f7.3,a1,f7.1,&
+ 	     write(unitNumber,'(a1,a8,a1,f7.2,a1,f7.2,a1,f7.3,a1,f7.3,a1,f8.2,&
 	       &a1,f7.3,a1,f7.3)')tb,trim(stationNumber(i)),tb,&
 	       sumAntecedent(i),tb,sumRecent(i),tb,intensity(i),tb,&
 	       mmIntensity,tb,durs(i),tb,avgmmIntensity,tb,logintensity

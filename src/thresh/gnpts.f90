@@ -86,7 +86,7 @@
 	   else 
 	      write(logmmIntensity,   '(f10.3)')     log10(intensity(j)*in2mm)
 	   end if	   
-	   write(mduration,           '(f10.1)')     duration(j)
+	   write(mduration,           '(f10.2)')     duration(j)
 	   if(runningIntens(j)<0) then
 	      write(mrunningIntens,   '(f10.3)')     runningIntens(j)
 	   else

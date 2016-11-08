@@ -76,7 +76,7 @@ write(*,*) '!## stationPtr, ctrHolder ##! ', stationPtr,ctrHolder
 	  write(msumAnteced,     '(f10.2)')     sumAnteced(j)
      write(msumRecent,      '(f10.2)')     sumRecent(j)
      write(mintensity,      '(f10.3)')     intensity(j)
-     write(mstormDuration,  '(f10.1)')     stormDuration(j)
+     write(mstormDuration,  '(f10.2)')     stormDuration(j)
      write(mrunIntensity,   '(f10.3)')     runIntensity(j)
      write(mAWI,            '(f10.3)')     AWI(j)
 	  write(mprecip,         '(f10.2)')     floatPrecip
