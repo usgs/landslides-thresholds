@@ -62,7 +62,7 @@
 	integer :: ctr315,ctrid,ctria,cum15dRainfallCtr,ctra
 	integer :: ctri,AWIExceedCtr,AWIIntensCtr
 	integer :: ctri3,diffPtrOffset
-	integer :: ndiv
+	integer :: ndiv,j
 
 
 	character (len=255),allocatable:: dataLocation(:)
@@ -91,7 +91,7 @@
 	character (len=2) :: fcUnit,powerUnit, precipUnit
 	character (len=1) :: pd,cm
 	
-	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch,forecast
+	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch,forecast,date_err
 
 	real,allocatable :: threshIntensityDuration(:),threshAvgExceed(:)
 	real,allocatable :: AWI(:),AWI_0(:),sAWI(:), xVals(:), yVals(:)
@@ -108,7 +108,7 @@
  	real :: powerCoeff,powerExp,runningIntens,drainConst,fieldCap,decayFactor
  	real :: AWIconversion,evapConsts(12),AWIThresh,seasonalAntThresh
  	real :: awimx,sum3mx,rntsymx
- 	real :: polynomArr(6),upLim, lowLim
+ 	real :: polynomArr(6),upLim, lowLim, date_dif
 
 	real (double),allocatable:: eachDate1904(:),last1904(:)
 	real (double),allocatable:: newest1904(:)
@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='07 Nov 2016'; vrsn=' 1.0.008'
+     	revdate='08 Nov 2016'; vrsn=' 1.0.009'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -343,7 +343,25 @@
   	   close (unitNumber(3))
 	   call s1904t(eachDate1904,timestampYear,timestampMonth,da,hr,mins,ctr,maxLines) 
 	   newest1904(i)=eachDate1904(stationPtr(i))
-	   
+
+!  check to confirm that data are in order, added 8 Nov 2016
+                   date_err=.FALSE.
+                   do j=1, stationPtr(i)-1
+                      date_dif=eachDate1904(j+1)-eachDate1904(j)
+                      if(date_dif<0.) then
+                         write(*,*) 'Date anomaly in file --> ',trim(dataLocation(i)),' <-- near line ',j
+                         write(unitNumber(1),*) '### Check input file for data that are out of order! ####'
+                         write(*,*) 'Date anomaly in file --> ',trim(dataLocation(i)),' <-- near line ',j
+                         write(unitNumber(1),*) '### Check input file for data that are out of order! ####'
+                         date_err=.TRUE.
+                      end if
+                   end do
+                   if (date_err) then
+                      write(unitNumber(1),*) 'Program thresh exited.  Non-sequential input data detected'
+                      close(unitNumber(1))
+                      stop 'Program thresh exiting!! Check and correct input file before proceeding.'
+                   end if
+!	   
  	   numNewLines=int(rph*24*(newest1904(i)-last1904(i)))
  	   
  	   if(numNewLines>=ctr) ctrHolder(i)=ctr
