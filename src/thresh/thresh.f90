@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='08 Nov 2016'; vrsn=' 1.0.009'
+     	revdate='09 Nov 2016'; vrsn=' 1.0.010'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -284,6 +284,7 @@
 	end if
 
 ! read data files and compute precipitation totals, intensity, & duration
+                date_err=.false. ! used to control operations when non-sequential input data are found.
 	do i=1,numStations !{{{
 	   if (trim(stationNumber(i))=='0') cycle
 	   ctr=0  ! initialize counters
@@ -344,22 +345,26 @@
 	   call s1904t(eachDate1904,timestampYear,timestampMonth,da,hr,mins,ctr,maxLines) 
 	   newest1904(i)=eachDate1904(stationPtr(i))
 
-!  check to confirm that data are in order, added 8 Nov 2016
-                   date_err=.FALSE.
-                   do j=1, stationPtr(i)-1
-                      date_dif=eachDate1904(j+1)-eachDate1904(j)
-                      if(date_dif<0.) then
-                         write(*,*) 'Date anomaly in file --> ',trim(dataLocation(i)),' <-- near line ',j
-                         write(unitNumber(1),*) '### Check input file for data that are out of order! ####'
-                         write(*,*) 'Date anomaly in file --> ',trim(dataLocation(i)),' <-- near line ',j
-                         write(unitNumber(1),*) '### Check input file for data that are out of order! ####'
-                         date_err=.TRUE.
-                      end if
-                   end do
-                   if (date_err) then
-                      write(unitNumber(1),*) 'Program thresh exited.  Non-sequential input data detected'
-                      close(unitNumber(1))
-                      stop 'Program thresh exiting!! Check and correct input file before proceeding.'
+!  check to confirm that data are in order, added 8-9 Nov 2016
+! Enabled only in statistics mode.  Checks all input files before exiting.
+                   if(stats) then
+                       do j=1, stationPtr(i)-1
+                          date_dif=eachDate1904(j+1)-eachDate1904(j)
+                          if(date_dif<0.) then
+                             write(*,*) 'Date anomaly in file --> ',trim(dataLocation(i)),' <-- near line ',j
+                             write(*,*) '### Check input file for data that are out of order! ####'
+                             write(unitNumber(1),*) 'Date anomaly in file --> ',trim(dataLocation(i)),' <-- near line ',j
+                             write(unitNumber(1),*) '### Check input file for data that are out of order! ####'
+                             date_err=.true.
+                          end if
+                       end do
+                       if (date_err .and. i>=numStations) then
+                          write(unitNumber(1),*) 'Program thresh exited.  Non-sequential input data detected'
+                          close(unitNumber(1))
+                          stop 'Program thresh exiting!! Check and correct input file before proceeding.'
+                       else if (date_err .and. i<numStations) then
+                          cycle
+                       end if
                    end if
 !	   
  	   numNewLines=int(rph*24*(newest1904(i)-last1904(i)))
