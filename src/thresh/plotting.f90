@@ -7,7 +7,7 @@ implicit none
 contains
     ! PURPOSE:
     !	  Writes a file listing most recent conditons at all stations for 
-    !   plotting by DeltaGraph 4,"dgrs" using separate symbols for each.
+    !   plotting by interactive graphing programs,"dgrs" using separate symbols for each.
 	subroutine dgrs(numStations,outputFolder,ulog,&
 	 &dgOutputfile,unitNumber,stationNumber,sumAnteced,sumRecent,Trecent)
 	implicit none

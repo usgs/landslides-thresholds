@@ -1,5 +1,5 @@
 ! PURPOSE: 
-!	  writes rainfall threshold parameters to individual time-series plot
+!	  writes Maximum precipitation threshold exceedance values to individual a single
 !	  file per station
 !
 	

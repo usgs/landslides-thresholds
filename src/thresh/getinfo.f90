@@ -13,7 +13,7 @@ contains
    
       subroutine read_init(uout,numStations,maxLines,rph,Trecent,Tantecedent,&
 	   Tintensity,minTStormGap,TavgIntensity,maxDataGap,numPlotPoints,&
-	   numPlotPoints2,slope,intercept,powerCoeff,powerUnit,powerExp,&
+	   numPlotPoints2,slope,intercept,powerCoeff,thresholdUnit,powerExp,&
 	   powerSwitch,polynomArr,seasonalAntThresh,runningIntens,AWIThresh,&
 	   fieldCap,fcUnit,drainConst,evapConst,resetAntMonth,resetAntDay,&
 	   timezoneOffset,year,lgyr,midnightVal,plotFormat,stats,outputFolder,&
@@ -29,7 +29,7 @@ contains
 	      character (len=*), allocatable,intent(out) :: stationLocation(:)
 	      character (len=*), allocatable,intent(out) :: stationNumber(:)
 	      character (len=*),intent(out) :: outputFolder
-	      character (len=*),intent(out) :: powerUnit,fcUnit,precipUnit
+	      character (len=*),intent(out) :: thresholdUnit,fcUnit,precipUnit
 	      character (len=*),intent(out) :: plotFormat
 	      real,intent(out)		:: slope,intercept,powerCoeff
 	      real,intent(out)     :: polynomArr(6),runningIntens,AWIThresh
@@ -168,9 +168,8 @@ contains
 	   		intervals = 0
 	   		lineCtr = lineCtr + 1 !}}}
 	   	end if
-	   !Line 24 Threshold Unit, historically and currently called powerUnit, for 
-	   !the sake of not having to rewrite code. The author should make not of this.
-	      read(thresh_in,*,err=115) junk, powerUnit
+	   !Line 24 Threshold Unit
+	      read(thresh_in,*,err=115) junk, thresholdUnit
 	   !Line 25 Day and month to start annual antecedent rainfall running
 	   !total
 	      read(thresh_in,*,err=115) junk, resetAntMonth, resetAntDay
@@ -431,7 +430,7 @@ contains
 	      write(uout,"(A,F5.3)")                  'Intercept of recent time / antecedent time ',intercept
 	      write(uout,"(A,L3)")                    'Will the power function be used? ',powerSwitch
 	      if(powerSwitch) then
-	         write(uout,"(A,F5.3,A2)")            'Power function coefficient (with units) ',powerCoeff,powerUnit
+	         write(uout,"(A,F5.3,A2)")            'Power function coefficient (with units) ',powerCoeff,thresholdUnit
 	         write(uout,"(A,F5.2)")               'Power function exponent ',powerExp
 	      else if(polySwitch) then
 	         write(uout,"(A,6F5.3)")              'Coefficients for polynomial function ',(polynomArr(i), i = 1,6)

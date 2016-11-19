@@ -88,7 +88,7 @@
 	character (len=5) :: latestTime
 	character (len=4) :: plotFormat
 	character (len=3) :: month(12)
-	character (len=2) :: fcUnit,powerUnit, precipUnit
+	character (len=2) :: fcUnit,thresholdUnit, precipUnit
 	character (len=1) :: pd,cm
 	
 	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch,forecast,date_err
@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='09 Nov 2016'; vrsn=' 1.0.010'
+     	revdate='18 Nov 2016'; vrsn=' 1.0.011'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -159,7 +159,7 @@
 ! read initialization file & save copy to log file
 	call read_init(unitNumber(1),numStations,maxLines,rph,Trecent,&
 	Tantecedent,Tintensity,minTStormGap,TavgIntensity,maxDataGap,&
-	numPlotPoints,numPlotPoints2,slope,intercept,powerCoeff,powerUnit,&
+	numPlotPoints,numPlotPoints2,slope,intercept,powerCoeff,thresholdUnit,&
 	powerExp,powerSwitch,polynomArr,seasonalAntThresh,runningIntens,&
 	AWIThresh,fieldCap,fcUnit,drainConst,evapConsts,resetAntMonth,resetAntDay,&
 	timezoneOffset,year,lgyr,midnightVal,plotFormat,stats,outputFolder,&
@@ -181,13 +181,13 @@
 ! unit Conversion factor for threshold index
         select case (precipUnit)
           case ('in');
-  	select case (powerUnit)
+  	select case (thresholdUnit)
   	   case ('mm'); id_index_factor=25.4
   	   case ('in'); id_index_factor=1.
   	   case default; id_index_factor=1.
 	end select
           case ('mm');
-  	select case (powerUnit)
+  	select case (thresholdUnit)
   	   case ('mm'); id_index_factor=1.
   	   case ('in'); id_index_factor=1./25.4
   	   case default; id_index_factor=1.
