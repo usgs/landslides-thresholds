@@ -46,11 +46,11 @@
    write(hrly,'(i5)') TavgIntensity
    hrly=adjustl(hrly)
    select case (trim(adjustl(xid)))
-   case('Ex315'); header='Recent & Antecedent'
+   case('ExRA_'); header='Recent & Antecedent'
    case('ExID_'); header='Intensity-Duration'
    case('ExIDA'); header='Int.-Dur. & Ant. Water'
    case('ExIR_'); header=trim(hrly)//'-hr Intensity'
-   case('ExI3_'); header='Intensity & Cumulative'
+   case('ExIRA'); header='Intensity & Cumulative'
    end select
    open(uout,file=outputFile,status='unknown',position='rewind',err=125)
 	
@@ -66,7 +66,7 @@
                  'Duration',tb,&
                  'Log10(Intensity(mm/hour))',tb,&
                  trim(hrly)//'-hr Intensity (in/hour)',tb,&
-                 '3-/15-day Index',tb,&
+                 'Recent/Antecedent Index',tb,&
                  'Intensity-Duration Index',tb,&
                  TavgIntensity,'-hr Intensity Index',tb,&
                  'Antecedent Water Index',tb,&

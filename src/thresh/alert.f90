@@ -23,7 +23,7 @@
 	character (len=7)   :: alert_lev(4)
 	character 	    :: tb = char(9)
 	real		    :: avgToRunning
-	integer 	    :: i,alertCondition3d15d(numStations)
+	integer 	    :: i,alertConditionRecentAntecedent(numStations)
 	integer 	    :: alertConditionID(numStations)
 	integer 	    :: alertConditionIA(numStations)
 
@@ -31,13 +31,13 @@
 ! alert levels 0="Null", 1="Outlook", 2="Watch", 3="Warning"	
        alert_lev=(/' Null  ','Outlook',' Watch ','Warning'/)
 	
-! determine alert condition for 3-day/15-day threshold
+! determine alert condition for Cumulative Recent & Antecedent threshold
 	do i=1,numStations	
-	  alertCondition3d15d(i)=0
+	  alertConditionRecentAntecedent(i)=0
 	  if(deficit(i) > -0.5 .and. deficit(i) < 0.d0) then
-	    alertCondition3d15d(i)=0
+	    alertConditionRecentAntecedent(i)=0
 	  else if (deficit(i) >=0.) then
-	    alertCondition3d15d(i)=1
+	    alertConditionRecentAntecedent(i)=1
 	  end if
 	end do
 	
@@ -82,7 +82,7 @@
 	do i=1,numStations
 	  write(unitNumber,*) tb,trim(stationNumber(i)),&
 	                      tb,datim(i),&
-	                      tb,alert_lev(1+alertCondition3d15d(i)),&
+	                      tb,alert_lev(1+alertConditionRecentAntecedent(i)),&
 	                      tb,alert_lev(1+alertConditionID(i)),&
 	                      tb,alert_lev(1+alertConditionIA(i))
 	end do

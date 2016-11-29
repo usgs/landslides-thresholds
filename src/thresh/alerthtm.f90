@@ -26,7 +26,7 @@
 	character (len=4),parameter  :: h1='<th>',d1='<td>'
 	character (len=5),parameter  :: r2='</tr>',h2='</th>',d2='</td>'
 	real			     :: avgToRunning
-	integer 		     :: i,alertCondition3d15d(numStations)
+	integer 		     :: i,alertConditionRecentAntecedent(numStations)
 	integer 		     :: alertConditionID(numStations)
 	integer 		     :: alertConditionIA(numStations)
 	
@@ -38,13 +38,13 @@
 	&'<td bgcolor=#ff6600>','<td bgcolor=#ff0000>'/)
 	
 
-! determine alert condition for 3-day/15-day threshold
+! determine alert condition for Cumulative Recent & Antecedent threshold
 	do i=1,numStations	
-	  alertCondition3d15d(i)=0
+	  alertConditionRecentAntecedent(i)=0
 	  if(deficit(i) >-0.5 .and. deficit(i) <0.d0) then
-	    alertCondition3d15d(i)=0
+	    alertConditionRecentAntecedent(i)=0
 	  else if (deficit(i) >=0.) then
-	    alertCondition3d15d(i)=1
+	    alertConditionRecentAntecedent(i)=1
 	  end if
 	end do
 	
@@ -89,8 +89,8 @@
 	do i=1,numStations
 	  write(unitNumber,*) &
           r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
-          d1,datimb(i),d2,hexColor(1+alertCondition3d15d(i)),&
-          alert_lev(1+alertCondition3d15d(i)),d2,&
+          d1,datimb(i),d2,hexColor(1+alertConditionRecentAntecedent(i)),&
+          alert_lev(1+alertConditionRecentAntecedent(i)),d2,&
           hexColor(1+alertConditionID(i)),alert_lev(1+alertConditionID(i)),&
           d2,hexColor(1+alertConditionIA(i)),alert_lev(1+alertConditionIA(i)),d2,r2
 	end do

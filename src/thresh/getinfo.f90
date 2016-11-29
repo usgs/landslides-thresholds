@@ -124,15 +124,17 @@ contains
 	   			read(thresh_in,*,err=115) junk, lowLim, upLim
 	   			lineCtr = lineCtr + 1 !}}}
 	   	else !{{{
-	   		!Lines 16, 17, 18 are all irrelevant. Information sent to junk
-	   			read(thresh_in,*,err=115) junk
-	   			read(thresh_in,*,err=115) junk
-	   			read(thresh_in,*,err=115) junk
+	   		!Lines 16, 17, 18 are all irrelevant. Values overwritten by zeros
+	   			read(thresh_in,*,err=115) junk, powerCoeff
+	   			lineCtr = lineCtr + 1
+	   			read(thresh_in,*,err=115) junk, powerExp
+	   			lineCtr = lineCtr + 1
+	   			read(thresh_in,*,err=115) junk, lowLim, upLim
+	   			lineCtr = lineCtr + 1
 	   			powerCoeff = 0
 	   			powerExp = 0
 	   			lowLim = 0
-	   			upLim = 0
-	   			lineCtr = lineCtr + 3 !}}}
+	   			upLim = 0 !}}}
 	   	end if 
 	   !Line 19 Polynomial defined ID flag
 	   	read(thresh_in,*,err=115) junk, polySwitch
@@ -146,13 +148,14 @@ contains
 	   			read(thresh_in,*,err=115) junk, lowLim, upLim
 	   			lineCtr = lineCtr + 1 !}}}
 	   	else !{{{
-	   		!Lines 20, 21 are irrelevant. Information sent to junk
-	   	   read(thresh_in,*,err=115) junk
-	   	   read(thresh_in,*,err=115) junk
+	   		!Lines 20, 21 are irrelevant.  Values overwritten by zeros
+	   			read(thresh_in,*,err=115) junk, (polynomArr(i), i = 1,6)
+	   			lineCtr = lineCtr + 1
+	   			read(thresh_in,*,err=115) junk, lowLim, upLim
+	   			lineCtr = lineCtr + 1 
 	   		polynomArr = 0
 	   		lowLim = 0
-	   		upLim = 0
-	   		lineCtr = lineCtr + 2 !}}}
+	   		upLim = 0 !}}}
 	   	end if
 	   !line 22 Linear interpolation ID flag
 	   	read(thresh_in,*,err=115) junk, interSwitch
@@ -163,8 +166,8 @@ contains
 	   		read(thresh_in,*,err=115) junk, intervals
 	   		lineCtr = lineCtr + 1 !}}}
 	   	else !{{{
-	   		!Line 23 is irrelevant. Information sent to junk 
-	   		read(thresh_in,*,err=115) junk
+	   		!Line 23 is irrelevant. Values overwritten by zeros
+	   		read(thresh_in,*,err=115) junk, intervals
 	   		intervals = 0
 	   		lineCtr = lineCtr + 1 !}}}
 	   	end if
@@ -212,7 +215,7 @@ contains
 	   !Line 38 Folder to store output
 	      read(thresh_in,*,err=115) junk, outputFolder
 	      lineCtr = lineCtr + 1
-	   !Line 39 is irrelevant
+	   !Line 39 is a column heading for succeding lines, used only to aid user in editing thresh_in.tcxt
 	      read(thresh_in,*,err=115) junk
 	      lineCtr = lineCtr + 1
 	      
@@ -321,10 +324,10 @@ contains
 	   !Ensuring slope and intercept aren't both zero. All rainfall would be considered
 	   !exceeding the threshold at that point
 	      if(slope == 0 .and. intercept == 0) then
-	     	 	write(uout,*) 'Slope_3_day_15_day_Threshold or Intercept_3_day_15_day_Threshold&
+	     	 	write(uout,*) 'Slope_Recent_Antecedent_Threshold or Intercept_Recent_Antecedent_Threshold&
 	     		& must be nonzero.'
    			write(uout,*) 'Thresh exited due to an incompatible value.'
-   			write(*,*) 'Slope_3_day_15_day_Threshold or Intercept_3_day_15_day_Threshold&
+   			write(*,*) 'Slope_Recent_Antecedent_Threshold or Intercept_Recent_Antecedent_Threshold&
 	     		& must be nonzero.'
    			write(*,*) 'Edit thresh_in.txt and restart thresh.'
    			write(*,*) 'Press Enter key to exit program.'
@@ -417,15 +420,15 @@ contains
 	      write(uout,"(A19,I2)")                  'Number of stations ',numStations
 	      write(uout,"(A29,I6)")                  'Maximum number of data lines ',maxLines
 	      write(uout,"(A,I2)")                    'Readings per  hour ',rph
-	      write(uout,"(A,A2)")					  'Precipitation data units ', precipUnit
-	      write(uout,"(A,I3)")                    'Length of recent time ',Trecent
-	      write(uout,"(A,I3)")                    'Length of antecedent time ',Tantecedent
+	      write(uout,"(A,A2)")	       'Precipitation data units ', precipUnit
+	      write(uout,"(A,I6)")                    'Length of recent time ',Trecent
+	      write(uout,"(A,I6)")                    'Length of antecedent time ',Tantecedent
 	      write(uout,"(A,I2)")                    'Intensity hours ',Tintensity
 	      write(uout,"(A,I2)")                    'Hours between storms ',minTStormGap
 	      write(uout,"(A,I2)")                    'Running average intensity hours ',TAvgIntensity
 	      write(uout,"(A,I4)")                    'Maximum gap in data lines ',maxDataGap
-	      write(uout,"(A,I3)")                    'Plot lines for long plot ',numPlotPoints
-	      write(uout,"(A,I3)")                    'Plot lines for short plot ',numPlotPoints2
+	      write(uout,"(A,I6)")                    'Plot lines for long plot ',numPlotPoints
+	      write(uout,"(A,I6)")                    'Plot lines for short plot ',numPlotPoints2
 	      write(uout,"(A39,F5.2)")                'Slope of recent time / antecedent time ',slope
 	      write(uout,"(A,F5.3)")                  'Intercept of recent time / antecedent time ',intercept
 	      write(uout,"(A,L3)")                    'Will the power function be used? ',powerSwitch
@@ -649,9 +652,9 @@ contains
 	subroutine read_station_file(file, dataLocation, rph, lgyr, maxLines,&
 	fileName, tyear,month, day, hour, precip, ctr, sysYear, sysMonth,&
 	sysDay, sysHour, sysMinute, stationPtr, year, minute, uout, ctrHolder,&
-	sumTrecent, sumTantecedent, intensity, sum3s, sum15s, intsys, def315s,&
-	sthreshIntensityDuration, sthreshAvgIntensity, latestMonth, latestDay,&
-	latestHour, latestMinute,forecast)!{{{
+	sumTrecent, sumTantecedent, intensity, sumRecent_s, sumAntecedent_s,&
+                intsys, deficit_recent_antecedent_s, sthreshIntensityDuration,&
+                sthreshAvgIntensity, latestMonth, latestDay, latestHour, latestMinute,forecast)!{{{
 	implicit none
 
 	! FORMAL ARGUMENTS
@@ -664,7 +667,7 @@ contains
 	   logical :: lgyr
 	   ! Arguments associated only with error statement
 	   real, intent(out)    :: sumTrecent(*), sumTantecedent(*),intensity(*)
-	   real, intent(out)    :: sum3s, sum15s, intsys,def315s
+	   real, intent(out)    :: sumRecent_s, sumAntecedent_s, intsys,deficit_recent_antecedent_s
 	   real, intent(out)    :: sthreshIntensityDuration, sthreshAvgIntensity
 	   integer, intent(out) :: ctrHolder, latestMonth, latestDay, latestHour
 	   integer, intent(out) :: latestMinute
@@ -745,10 +748,10 @@ contains
   	       sumTrecent(i) = -99.
 	       sumTantecedent(i) = -99.
 	       intensity(i) = -99.
-	       sum3s = -99.
-	       sum15s = -99.
+	       sumRecent_s = -99.
+	       sumAntecedent_s = -99.
 	       intsys = -99.
-	       def315s = -99.
+	       deficit_recent_antecedent_s = -99.
 	       sthreshIntensityDuration = -99.
 	       sthreshAvgIntensity = -99.
 	       latestMonth = -99

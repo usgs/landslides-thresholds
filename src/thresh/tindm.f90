@@ -24,8 +24,8 @@
 	character (len=10)  :: date,anteced,recent,mintensity,mduration
 	character (len=10)  :: mdeficit,mintensityDuration,mAWI,mrunningIntensity
 	character (len=10)  :: mmintensity 
-	character 	    :: pd,tb,cb3ri
-	real	    	    :: maxDeficit,maxDuration,d315mx,maxThreshIndex 
+	character 	    :: pd,tb,cbrai
+	real	    	    :: maxDeficit,maxDuration,d_recent_antecedentmx,maxThreshIndex 
 	integer		    :: j,k,hcnt,ist,ind,maxDefptr,maxDurptr,maxThInptr,un(2)
 
 !------------------------------	
@@ -87,7 +87,7 @@
      	 write(anteced,'(f10.2)') sumTantecedent(maxDefptr)
      	 write(recent,'(f10.2)') sumTrecent(maxDefptr)
 	    write(mdeficit,'(f10.3)') deficit(maxDefptr)
-	    d315mx=deficit(maxDefptr)
+	    d_recent_antecedentmx=deficit(maxDefptr)
 	    write(mintensityDuration,'(f10.3)') intensityDuration(maxDurptr)
      	 write(mduration,'(f10.1)') duration(maxDurptr)
      	 write(mintensity,'(f10.3)') intensity(maxDurptr)
@@ -100,11 +100,11 @@
 	    
 	    write(mAWI,'(f10.3)') AWI(maxDurptr)
 	    write(mrunningIntensity,'(f10.3)') runningIntens(maxThInptr)
-	    
-	    if (d315mx>0. .and. maxThreshIndex>avgIntensity) then
-	      write (cb3ri,'(i1)') 1
+!  Combined Recent/Antecedent Index & Intensity Index (cbrai)
+	    if (d_recent_antecedentmx>0. .and. maxThreshIndex>avgIntensity) then
+	      write (cbrai,'(i1)') 1
 	    else
-	      write (cb3ri,'(i1)') 0
+	      write (cbrai,'(i1)') 0
 	    end if
 	    
 	    anteced              = trim(adjustl(anteced))
@@ -127,9 +127,9 @@
 	                  mintensityDuration,tb,&
 	                  mAWI,tb,&
 	                  mrunningIntensity,tb,&
-	                  cb3ri
+	                  cbrai
 	                  
-	    if(d315mx>0.) write(uout2,*) trim(stationNumber),tb,&
+	    if(d_recent_antecedentmx>0.) write(uout2,*) trim(stationNumber),tb,&
 	                                 date,tb,&
 	                                 anteced,tb,&
 	                                 recent,tb,&
@@ -140,7 +140,7 @@
 	                                 mintensityDuration,tb,&
 	                                 mAWI,tb,&
 	                                 mrunningIntensity,tb,&
-	                                 cb3ri
+	                                 cbrai
               
 	    ist=k
 	    hcnt=1

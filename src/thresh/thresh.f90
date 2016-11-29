@@ -42,7 +42,7 @@
 	integer,allocatable :: latestMonth(:),latestHour(:)
 	integer,allocatable :: timestampYear(:),latestYear(:)
 	integer,allocatable :: mins(:),latestMinute(:)
-	integer,allocatable :: pt315(:),ptid(:),ptia(:),pti3(:),ptawid(:)
+	integer,allocatable :: pt_recent_antecedent(:),ptid(:),ptia(:),ptira(:),ptawid(:)
 	integer,allocatable :: tlenx(:),numTimestampsHolder(:)		  
 		  
 	integer :: numStations,maxLines,nlo20
@@ -53,15 +53,15 @@
 	integer :: sumPrecip,maxDataGap,year
 	integer :: unitNumber(10),Tintensity,Trecent
 	integer :: Tantecedent,rph,numNewLines,fmins
-	integer :: ev315,evid,evia,evi3
+	integer :: ev_recent_antecedent,evid,evia,evira
 	integer :: evawid,resetAntMonth,resetAntDay
 	integer :: tRainfallBegan,tRainfallEnd
 	integer :: TstormGap,minTStormGap
 	integer :: TavgIntensity,numPlotPoints,numPlotPoints2,numPlotPoints3
 	integer :: AWICompOffset,intervals
-	integer :: ctr315,ctrid,ctria,cum15dRainfallCtr,ctra
+	integer :: ctr_recent_antecedent,ctrid,ctria,cumAntecedentRainfallCtr,ctra
 	integer :: ctri,AWIExceedCtr,AWIIntensCtr
-	integer :: ctri3,diffPtrOffset
+	integer :: ctrira,diffPtrOffset
 	integer :: ndiv,j
 
 
@@ -97,9 +97,9 @@
 	real,allocatable :: AWI(:),AWI_0(:),sAWI(:), xVals(:), yVals(:)
 	real,allocatable :: sumTrecent(:),sumTantecedent(:)
 	real,allocatable :: intensity(:),dur(:)
-	real,allocatable :: runIntensity(:),def315(:)
-	real,allocatable :: sum3s(:),sum15s(:),intsys(:),durs(:)
-	real,allocatable :: srunIntensity(:),def315s(:)
+	real,allocatable :: runIntensity(:),deficit_recent_antecedent(:)
+	real,allocatable :: sumRecent_s(:),sumAntecedent_s(:),intsys(:),durs(:)
+	real,allocatable :: srunIntensity(:),deficit_recent_antecedent_s(:)
 	real,allocatable :: sthreshIntensityDuration(:)
 	real,allocatable :: sthreshAvgIntensity(:)
 	real, allocatable:: div(:)
@@ -107,7 +107,7 @@
  	real :: slope,intercept,in2mm,id_index_factor
  	real :: powerCoeff,powerExp,runningIntens,drainConst,fieldCap,decayFactor
  	real :: AWIconversion,evapConsts(12),AWIThresh,seasonalAntThresh
- 	real :: awimx,sum3mx,rntsymx
+ 	real :: awimx,sumRecentmx,rntsymx
  	real :: polynomArr(6),upLim, lowLim, date_dif
 
 	real (double),allocatable:: eachDate1904(:),last1904(:)
@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='18 Nov 2016'; vrsn=' 1.0.011'
+     	revdate='28 Nov 2016'; vrsn=' 1.0.012'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -211,23 +211,23 @@
 	allocate (eachDate1904(maxLines),last1904(numStations),newest1904(numStations))
 	allocate (latestDay(numStations),latestMonth(numStations),latestHour(numStations))
 	allocate (stationPtr(numStations),ctrHolder(numStations))
-	allocate (sumTrecent(maxLines),sumTantecedent(maxLines),def315(maxLines))
+	allocate (sumTrecent(maxLines),sumTantecedent(maxLines),deficit_recent_antecedent(maxLines))
 	allocate (intensity(maxLines),runIntensity(maxLines))
 	allocate (threshIntensityDuration(maxLines),threshAvgExceed(maxLines))
 	allocate (dur(maxLines))
 	allocate (tstormBeg1904(numStations),tstormEnd1904(numStations))
-	allocate (sum3s(numStations),sum15s(numStations))
+	allocate (sumRecent_s(numStations),sumAntecedent_s(numStations))
 	allocate (intsys(numStations),durs(numStations),srunIntensity(numStations))
-	allocate (def315s(numStations),sthreshIntensityDuration(numStations),sthreshAvgIntensity(numStations))
+	allocate (deficit_recent_antecedent_s(numStations),sthreshIntensityDuration(numStations),sthreshAvgIntensity(numStations))
 	allocate (timestampYear(maxLines),latestYear(numStations),datim(numStations),datimb(numStations))
 	allocate (AWI(maxLines),AWI_0(numStations),tlenx(numStations),numTimestampsHolder(numStations))
 	allocate (sAWI(numStations))
  	allocate (mins(maxLines),latestMinute(numStations)) ! assumes that hourly data are summed on the hour
  	! next line assumes that threshold exceedences will occur less than 20% of time
  	nlo20=maxLines/5
- 	allocate (pt315(maxLines),ptid(nlo20),ptia(nlo20),pti3(nlo20),ptawid(nlo20))
-	sum3s = 0.
-	sum15s = 0.
+ 	allocate (pt_recent_antecedent(maxLines),ptid(nlo20),ptia(nlo20),ptira(nlo20),ptawid(nlo20))
+	sumRecent_s = 0.
+	sumAntecedent_s = 0.
 	intsys = 0.
 	srunIntensity = 0.
 	durs = 0.
@@ -236,7 +236,7 @@
 	ctrHolder = maxDataGap
 	dgap = minTStormGap / 24.d0
 	latestMinute = 0
-	pt315 = 0; ptid = 0; ptia = 0; pti3 = 0; ptawid = 0
+	pt_recent_antecedent = 0; ptid = 0; ptia = 0; ptira = 0; ptawid = 0
 	last1904 = 0.
 	tstormBeg1904 = 0.
 	tstormEnd1904 = 0.
@@ -288,13 +288,13 @@
 	do i=1,numStations !{{{
 	   if (trim(stationNumber(i))=='0') cycle
 	   ctr=0  ! initialize counters
-	   ctr315=0; cum15dRainfallCtr=0; ctrid=0; ctri3=0
+	   ctr_recent_antecedent=0; cumAntecedentRainfallCtr=0; ctrid=0; ctrira=0
 	   ctria=0; ctra=0; ctri=0; AWIExceedCtr=0; AWIIntensCtr=0
 	   precip=0 ! initialize 1-d arrays
 	   threshIntensityDuration = 0.
 
 	   threshAvgExceed=0. ! replace intensity antecedent with running average intensity
-	   def315=-1.-intercept
+	   deficit_recent_antecedent=-1.-intercept
 	   sumTrecent=0.
 	   sumTantecedent=0.
 	   intensity=0.
@@ -315,8 +315,8 @@
 	   maxLines,dataLocation(i), timestampYear, timestampMonth, da, hr,&
 	   precip, ctr,sysYear, sysMonth, sysDay, sysHour, sysMinute,&
 	   stationPtr(i), year, mins, unitNumber(1),ctrHolder(i),sumTrecent,&
-	   sumTantecedent, intensity, sum3s(i), sum15s(i), intsys(i),&
-	   def315s(i),sthreshIntensityDuration(i), sthreshAvgIntensity(i),&
+	   sumTantecedent, intensity, sumRecent_s(i), sumAntecedent_s(i), intsys(i),&
+	   deficit_recent_antecedent_s(i),sthreshIntensityDuration(i), sthreshAvgIntensity(i),&
 	   latestMonth(i), latestDay(i), latestHour(i), latestMinute(i),forecast)  
 	
 
@@ -449,9 +449,9 @@
 	   ! step through computations for each file	   
 	   call track_intensity(stationPtr(i),maxLines,tlenx(i),sumTintensity,&
 	   sumTrecent,sumTantecedent,tptr,Trecent,rph,xptr,precip,Tintensity,&
-	   TavgIntensity,Tantecedent,cum15dRainfallCtr,intensity,runIntensity,&
-	   runningIntens,ctri,ctra,intercept,slope,def315,ctr315,&
-	   pt315,ctri3,pti3,awimx,AWI,AWIExceedCtr,powerSwitch,polySwitch,&
+	   TavgIntensity,Tantecedent,cumAntecedentRainfallCtr,intensity,runIntensity,&
+	   runningIntens,ctri,ctra,intercept,slope,deficit_recent_antecedent,ctr_recent_antecedent,&
+	   pt_recent_antecedent,ctrira,ptira,awimx,AWI,AWIExceedCtr,powerSwitch,polySwitch,&
 	   interSwitch,intervals,xVals,yVals,threshIntensityDuration,in2mm,&
 	   powerCoeff,dur,powerExp,polynomArr,ctrid,ptid,AWIThresh,AWIIntensCtr,&
 	   ptawid,threshAvgExceed,ctria,nlo20,ptia,id_index_factor)
@@ -460,29 +460,29 @@
 	   
 ! Count "events" -- Continuous periods of threshold exceedence 
 	   if(stats) then	!{{{
-	      call count_events(ev315,ctr315,pt315,rph,minTStormGap)
+	      call count_events(ev_recent_antecedent,ctr_recent_antecedent,pt_recent_antecedent,rph,minTStormGap)
 	      call count_events(evid,ctrid,ptid,rph,minTStormGap)
 	      call count_events(evia,ctria,ptia,rph,minTStormGap)
-	      call count_events(evi3,ctri3,pti3,rph,minTStormGap)
+	      call count_events(evira,ctrira,ptira,rph,minTStormGap)
 	      call count_events(evawid,AWIIntensCtr,ptawid,rph,minTStormGap)
-	      sum3mx=maxval(sumTrecent)/float(Trecent*rph) ! Added maxima 1 Aug 2006
+	      sumRecentmx=maxval(sumTrecent)/float(Trecent*rph) ! Added maxima 1 Aug 2006
 	      rntsymx=maxval(runIntensity)
  	      write (unitNumber(1),*) '--------------- Threshhold statistics ---------------' 
  	      write (unitNumber(1),*) 'Threshold hours                   Total    Exceedance'	 
- 	      write (unitNumber(1),*) 'Recent/antecedent                 ',cum15dRainfallCtr, ctr315	 
- 	      write (unitNumber(1),*) 'Recent/antecedent & ',TavgIntensity,'-hr Intensity',cum15dRainfallCtr, ctri3	 
+ 	      write (unitNumber(1),*) 'Recent/antecedent                 ',cumAntecedentRainfallCtr, ctr_recent_antecedent	 
+ 	      write (unitNumber(1),*) 'Recent/antecedent & ',TavgIntensity,'-hr Intensity',cumAntecedentRainfallCtr, ctrira	 
  	      write (unitNumber(1),*) 'Intensity-Duration           ',ctri, ctrid	 
- 	      write (unitNumber(1),*) 'Maximum Intensity, ',sum3mx,', ',Trecent,'-hour Duration (Trecent)' 
+ 	      write (unitNumber(1),*) 'Maximum Intensity, ',sumRecentmx,', ',Trecent,'-hour Duration (Trecent)' 
  	      write (unitNumber(1),*) 'Maximum Intensity, ',rntsymx,', ',TavgIntensity,'-hour Duration (TavgIntensity)' 
  	      write (unitNumber(1),*) 'Antecedent Water Index       ','-- ',AWIExceedCtr
  	      write (unitNumber(1),*) 'Antecedent Water Index & Intensity-Duration ',AWIIntensCtr
  	      write (unitNumber(1),*) TavgIntensity,'-hr Intensity        ',ctra, ctria
  	      write (unitNumber(1),*) '** Number of Continuous Periods Above Threshold **' 
- 	      write (unitNumber(1),*) '3-Day/15-Day                             ',ev315	 
+ 	      write (unitNumber(1),*) Trecent,'-hr/',Tantecedent,'-hr                             ',ev_recent_antecedent	 
  	      write (unitNumber(1),*) 'Intensity-Duration                       ',evid	 
  	      write (unitNumber(1),*) 'Intensity-Duration & Antecedent Water    ',evawid	 
  	      write (unitNumber(1),*) TavgIntensity,'-hr Intensity                    ',evia
- 	      write (unitNumber(1),*) '3-Day/15-Day & ',TavgIntensity,'-hr Intensity  ',evi3
+ 	      write (unitNumber(1),*) Trecent,'-hr/',Tantecedent,'-hr & ',TavgIntensity,'-hr Intensity  ',evira
  	      write (unitNumber(1),*) '' 
  	      write (unitNumber(1),*) 'Max. Antecedent Water Index ',awimx
  	      write (unitNumber(1),*) '--------------- ********************* ---------------' 
@@ -500,12 +500,12 @@
            da(tptr),month(timestampMonth(tptr)),timestampYear(tptr)
            
 ! copy current values from 1-d time-series arrays to 1-d station series array for plotter output 	  
-	   sum3s(i)=sumTrecent(stationPtr(i))
-	   sum15s(i)=sumTantecedent(stationPtr(i))
+	   sumRecent_s(i)=sumTrecent(stationPtr(i))
+	   sumAntecedent_s(i)=sumTantecedent(stationPtr(i))
 	   intsys(i)=intensity(stationPtr(i))
 	   durs(i)=dur(stationPtr(i))
 	   srunIntensity(i)=runIntensity(stationPtr(i))
-	   def315s(i)=def315(stationPtr(i))
+	   deficit_recent_antecedent_s(i)=deficit_recent_antecedent(stationPtr(i))
 	   sthreshIntensityDuration(i)=threshIntensityDuration(stationPtr(i))
 	   AWI_0(i)=AWI(1 + stationPtr(i)-tlenx(i))+fieldCap !Corrected 6/18/2013
 	   sthreshAvgIntensity(i)=threshAvgExceed(stationPtr(i))
@@ -527,7 +527,7 @@
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),numPlotPoints,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	      dur,precip,runIntensity,AWI,def315,threshIntensityDuration,&
+ 	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
  	      TavgIntensity,Tantecedent,Trecent,precipUnit)
 	   else if (stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints>0) then
@@ -535,7 +535,7 @@
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),numPlotPoints3,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	      dur,precip,runIntensity,AWI,def315,threshIntensityDuration,&
+ 	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
  	      TavgIntensity,Tantecedent,Trecent,precipUnit)
 	   end if
@@ -546,7 +546,7 @@
  	         call gnpts(unitNumber(1),unitNumber(5),maxLines,&
  	         stationNumber(i),numPlotPoints2,stationPtr(i),timestampYear,&
  	         timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	         dur,precip,runIntensity,AWI,def315,&
+ 	         dur,precip,runIntensity,AWI,deficit_recent_antecedent,&
  	         threshIntensityDuration,threshAvgExceed,outputFolder,&
  	         timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
  	      end if
@@ -569,37 +569,37 @@
 ! Create time series listings of threshold exceedance values
 	   if(stats) then	  
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
- 	      stationNumber(i),ctr315,timestampYear,&
+ 	      stationNumber(i),ctr_recent_antecedent,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	      dur,precip,runIntensity,def315,threshIntensityDuration,&
+ 	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
- 	      rph,pt315,maxLines,'Ex315',AWI,minTStormGap,TavgIntensity,&
+ 	      rph,pt_recent_antecedent,maxLines,'ExRA_',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrid,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	      dur,precip,runIntensity,def315,threshIntensityDuration,&
+ 	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
  	      rph,ptid,nlo20,'ExID_',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),AWIIntensCtr,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	      dur,precip,runIntensity,def315,threshIntensityDuration,&
+ 	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
  	      rph,ptawid,nlo20,'ExIDA',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
- 	      stationNumber(i),ctri3,timestampYear,&
+ 	      stationNumber(i),ctrira,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
- 	      dur,precip,runIntensity,def315,threshIntensityDuration,&
+ 	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
- 	      rph,pti3,nlo20,'ExI3_',AWI,minTStormGap,TavgIntensity,&
+ 	      rph,ptira,nlo20,'ExIRA',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call tindm(unitNumber(1),unitNumber(5),unitNumber(10),maxLines,&
  	      stationNumber(i),stationPtr(i),timestampYear,timestampMonth,&
  	      da,hr,sumTantecedent,sumTrecent,intensity,dur,&
- 	      def315,threshIntensityDuration,outputFolder,timeSeriesExceedFile,&
+ 	      deficit_recent_antecedent,threshIntensityDuration,outputFolder,timeSeriesExceedFile,&
  	      in2mm,'Max',AWI,runIntensity,TavgIntensity,runningIntens,&
  	      Tantecedent,Trecent)
 	   end if
@@ -610,34 +610,34 @@
 	   ! plot file for current conditions relative to thresholds
 	   if(plotFormat=='gnp1') call gnp1(numStations,outputFolder,&
 	      unitNumber(1),defaultOutputFile,unitNumber(6),latestTime,fdat,&
-	      stationNumber,sum15s,sum3s,intsys,durs,srunIntensity,in2mm,&
+	      stationNumber,sumAntecedent_s,sumRecent_s,intsys,durs,srunIntensity,in2mm,&
 	      Tintensity,TavgIntensity) 
 	   if(plotFormat=='gnp2') call gnp2(numStations,outputFolder,&
-	      unitNumber(1),unitNumber(6),latestTime,fdat,stationNumber,sum15s,&
-	      sum3s,intsys,durs,srunIntensity,in2mm,Tintensity,TavgIntensity,&
+	      unitNumber(1),unitNumber(6),latestTime,fdat,stationNumber,sumAntecedent_s,&
+	      sumRecent_s,intsys,durs,srunIntensity,in2mm,Tintensity,TavgIntensity,&
 	      Tantecedent,Trecent)
 	   if(plotFormat=='dgrs') call dgrs(numStations,outputFolder,&
-	      unitNumber(1),dgOutputfile,unitNumber(6),stationNumber,sum15s,&
-	      sum3s,Trecent)
+	      unitNumber(1),dgOutputfile,unitNumber(6),stationNumber,sumAntecedent_s,&
+	      sumRecent_s,Trecent)
   
 ! the next files and formatted text, are created no matter what
 ! output format is selected for plotting
 	   call alert(numStations,outputFolder,unitNumber(1),&
-	   unitNumber(8),datim,stationNumber,def315s,&
+	   unitNumber(8),datim,stationNumber,deficit_recent_antecedent_s,&
 	   sthreshIntensityDuration,runningIntens,sthreshAvgIntensity,&
 	   srunIntensity,in2mm,durs,TavgIntensity,sAWI)
 	   call alerthtm(numStations,outputFolder,unitNumber(1),&
-	   unitNumber(8),datimb,stationNumber,def315s,&
+	   unitNumber(8),datimb,stationNumber,deficit_recent_antecedent_s,&
 	   sthreshIntensityDuration,sthreshAvgIntensity,runningIntens,&
 	   srunIntensity,in2mm,durs,stationLocation,TavgIntensity,sAWI)
 	 if(forecast .eqv. .FALSE.) then
  	   call tabl(unitNumber(4),unitNumber(1),outputFolder,&
- 	   numStations,stationNumber,datim,durs,sum15s,&
- 	   sum3s,intsys,Tantecedent,Trecent)
+ 	   numStations,stationNumber,datim,durs,sumAntecedent_s,&
+ 	   sumRecent_s,intsys,Tantecedent,Trecent)
 	   call read_colors(hexColors,colors,div,ndiv)
  	   call tablhtm(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datimb,durs,&
- 	   sum15s,sum3s,intsys,srunIntensity,stationLocation,&
+ 	   sumAntecedent_s,sumRecent_s,intsys,srunIntensity,stationLocation,&
  	   Tantecedent,Trecent,hexColors,colors,div,ndiv)
  	 end if
 	end if

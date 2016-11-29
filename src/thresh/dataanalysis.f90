@@ -142,8 +142,8 @@ contains
 	subroutine track_intensity(stationPtr,maxLines,tlenx,sumTintensity,&
 	sumTrecent,sumTantecedent,tptr,Trecent,rph,xptr,precip,Tintensity,&
 	TavgIntensity,Tantecedent,cumRainfall,intensity,runIntensity,&
-	runningIntens,ctri,ctra,intercept,slope,deficit,ctr315,pt315,ctri3,&
-	pti3,awimx,AWI,AWIexceedCtr,powerSwitch,polySwitch,interSwitch,&
+	runningIntens,ctri,ctra,intercept,slope,deficit,ctr_recent_antecedent,pt_recent_antecedent,ctrira,&
+	ptira,awimx,AWI,AWIexceedCtr,powerSwitch,polySwitch,interSwitch,&
 	intervals,xVals,yVals,intensityDuration,in2mm,powerCoeff,duration,&
 	powerExp,polynomArr,ctrid,ptid,AWIThresh,AWIIntensCtr,ptawid,&
 	threshAvgExceed,ctria,nlo20,ptia,id_index_factor) !{{{
@@ -161,10 +161,10 @@ contains
 	integer, intent(in)    :: stationPtr, tlenx, Trecent, maxLines
 	integer, intent(in)    :: rph, precip(*),Tintensity,TavgIntensity
 	integer, intent(in)    :: Tantecedent,nlo20, intervals
-	integer, intent(out)   :: pt315(*),pti3(*)
+	integer, intent(out)   :: pt_recent_antecedent(*),ptira(*)
 	integer, intent(out)   :: ptid(*),ptawid(*),ptia(*)
 	integer, intent(out)   :: sumTintensity,tptr, xptr
-	integer, intent(inout) :: cumRainfall,ctri,ctra,ctr315,ctri3
+	integer, intent(inout) :: cumRainfall,ctri,ctra,ctr_recent_antecedent,ctrira
 	integer, intent(inout) :: AWIexceedCtr,ctrid,ctria,AWIIntensCtr
 	logical, intent(in)    :: powerSwitch, polySwitch, interSwitch
 	
@@ -254,7 +254,7 @@ contains
          sumTrecent(i) = float(ssumTrecent) / 100
          sumTantecedent(i) = float(ssumTantecedent) / 100
          
-         if(sumTantecedent(i) >= 0) cumRainfall=cumRainfall+1 ! count number of possible values of 15-day total
+         if(sumTantecedent(i) >= 0) cumRainfall=cumRainfall+1 ! count number of possible values of Cumulative Antecedent total
             
          if(Tintensity > 0) &
             intensity(i) = float(sumTintensity) / (float(Tintensity * rph) * 100)
@@ -274,14 +274,14 @@ contains
                deficit(i) = sumTrecent(i)
             end if
             if(deficit(i) > 0) then 
-               ctr315 = ctr315 + 1 ! count exceedence of 3-day/15-day totals
-               pt315(ctr315) = i
+               ctr_recent_antecedent = ctr_recent_antecedent + 1 ! count exceedence of Cumulative Recent & Antecedent totals
+               pt_recent_antecedent(ctr_recent_antecedent) = i
             end if
          end if
          
          if(runIntensity(i) > runningIntens .and. deficit(i) > 0) then
-            ctri3 = ctri3 + 1 ! count exceedences of running average Intensity threshhold
-            pti3(ctri3) = i
+            ctrira = ctrira + 1 ! count exceedences of running average Intensity threshhold
+            ptira(ctrira) = i
          end if	 
          
          if(AWI(i) > awimx) awimx = AWI(i)                         ! update max AWI if necessary
