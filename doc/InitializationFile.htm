@@ -1,0 +1,216 @@
+ <center><table border=1 width=95%>
+ <caption><H1> Explanation of entries in the initialization file, thresh_in.txt, for the program thresh </H1></caption>
+<tr align=center><th style='border:none;padding:0in 6pt 0.05in 6pt'> Descriptor and sample entry</th><th style='border:none;padding:0in 6pt 0.05in 6pt'> Variable name </th><th style='border:none;padding:0in 6pt 0.05in 6pt'> Type</th><th style='border:none;padding:0in 6pt 0.05in 6pt'> Range</th><th style='border:none;padding:0in 6pt 0.05in 6pt'> Explanation</th></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number_Of_Stations,4
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>numStations</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 1&#8211;99
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number of rainfall stations to be analyzed, a separate input data file for each station must be listed at the end of the initialization file </td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number_Of_Data_Lines, 9600
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>maxLines</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;1
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Maximum number of lines of data appearing in any of the data files. Used to set array lengths</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Readings_Per_Hour, 1
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>rph</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 1&#8211;60
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number of times per hour that rainfall data are recorded.  For example, enter 1 for hourly data and 4 for 15-minute data</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Precipitation_Unit, in
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>precipUnit</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Character (len=2)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> in, mm
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Units of precipitation in input data files</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Recent_Hours, 72
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code> Trecent</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Applies to the cumulative recent and antecedent (RA) precipitation threshold , determines the number of hours of data for computing the recent rainfall (24R, eq. 5)</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Antecedent_Hours, 360
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>Tantecedent</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer 
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Determines the number of hours of data for computing the antecedent rainfall for the cumulative recent and antecedent precipitation threshold (24A hours, eq. 5); may be 0 (zero) for simple cumulative thresholds</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Intensity_Hours, 0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>Tintensity</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Determines number of hours used in computing a running average intensity, such as a 6-hour average intensity; default value, 0, results in computing storm-average intensity</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Hours_Between_Storms, 3
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>minTStormGap</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Determines the number of hours of no rainfall needed to separate storms in computing the intensity duration threshold</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Running_Ave_Intensity_Hours, 6
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>TavgIntensity</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;0 
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number of hours used in computing a running average rainfall intensity</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Gap_Length, 9000
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>maxDataGap</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0 
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Maximum length in number of lines of data for gaps in the data; if set to 0 (zero), program will set to a minimum value needed to ensure operation depending on other parameters.</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Long_Plot_Window_Hours, 360
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>numPlotPoints</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;1
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number of values saved to a text file formatted for use by plotting routines</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'>Short_Plot_Window_Hours, 36
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>numPlotPoints2</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;1
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number of values saved to a second text file formatted for use by plotting routines</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Slope_RA_Threshold, -0.67
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>slope</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8804;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Slope used in defining the cumulative recent and antecedent precipitation (RA) threshold; may be negative or 0 (zero) for simple cumulative thresholds</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'>Intercept_RA_Threshold, 3.5
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>intercept</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Intercept used in defining the cumulative recent and antecedent precipitation (RA) threshold</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'>Power_Law_Defined_Intensity_Duration, .TRUE.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>powerSwitch</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Logical
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> .True., .False.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'>Used to determine whether the power law will be chosen to calculate intensity-duration thresholds</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Coeff_Int_Dur_Threshold, 3.257
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>powerCoeff</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Coefficient used in defining a power function for the intensity duration threshold</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Exponent_Int_Dur_Threshold, -1.13
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>powerExp</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real 
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#60;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Exponent used in defining power function for the intensity duration threshold</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Duration_Interval, 0,60
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>lowLim, upLim</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Determines the lower and upper duration limits (hours) for intensity-duration thresholds (if the power law is used)</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Polynomial_Defined_Intensity_Duration, .FALSE.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>polySwitch</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Logical
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> .True., .False.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Used to determine whether the intensity-duration thresholds will be defined by a fifth degree polynomial</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> 5th_Deg_Polynom_Coefficients, 0.464559, -0.0373087, 0.00150227, -0.000032942, 0.000000375634, -0.000000000174586
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>polynomArr</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> any real number
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Coefficients of the fifth degree polynomial used to represent rainfall intensity and duration thresholds that are not adequately modeled by a power function </td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Duration Interval, 0,60
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>lowLim, upLim</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Determines the lower and upper limits for intensity-duration thresholds (if a polynomial is used)</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Pointwise_Defined_Intensity_Duration, .FALSE.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>interSwitch</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'>Logical
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> .True., .False.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Used to determine whether the intensity-duration thresholds will be defined by linearly interpolating points</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number_Of_Interpolating_Intervals, 5
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>intervals</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 0&#8211;100
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> The number of linearly interpolating intervals chosen by the user</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Threshold_unit, in
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>thresholdUnit</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Character (len=2)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> in, mm
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Precipitation depth units used to define the thresholds </td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Reset_antecedent_month_&_day, 0,0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>resetAntMonth,resetAntDay</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer, integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 0&#8211;12, 0&#8211;31
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> The day and month to start annual antecedent rainfall running total</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Seasonal_Antecedent_Threshold, 10,in
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>seasonalAntThresh, SATunit</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real, Character
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0, in, mm
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> The value chosen for the seasonal antecedent threshold and its length units (either inches, in, or millimeters, mm)</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Run_Ave_Int_Threshold, 0.12
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>runningIntens</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Value of a running average intensity threshold </td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> AWI_Threshold, 0.02
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>AWIThresh</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;-1*(Field Capacity)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Threshold value for antecedent water index (AWI) in same units as field capacity</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Ant_Water_Index_Field_Cap, 0.18, mt
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>fieldCap, fcUnit</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real, character
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#62;0 ft, mt
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Field capacity of soil and length unit (ft=feet, or mt=meters) used in computing the AWI</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> AWI_drainage_Constant, 0.01
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>drainConst</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'>Real
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Drainage constant, in units compatible with field capacity, used in computing the antecedent water index (AWI)</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Hourly_Evap_Consts, 0.054, 0.11, 0.2, 0.43, 0.54, 0.68, 0.72, 0.71, 0.47, 0.17, 0.076, 0.045
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>evapConst</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Real array
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> &#8805;0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Hourly evapotranspiration constants for each month of the year from January through December.  Note that these must be in same units as raw precipitation input, either hundredth  of an inch or tenth of a millimeter.</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> TimeZoneOffset,0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>timezoneOffset</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> -23&#8211;23
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Number of hours difference between the time zone of the computer performing computations (or Universal time) and the area of observation;  may be 0 (zero) in statistics mode</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> year, 0
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>year</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 0&#8211;9999
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> The current year or the year of the data being analyzed.  Set to 0 (zero) if the input data file contains year information</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Midnight=2400, 2
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>midnightVal</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 1, 2
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> A flag used to compensate for differences in timestamps of different data collection systems. Set to 0 (zero) if midnight=0:00 or 2 if midnight = 24:00.</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> PlotFormat, gnp2
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>plotFormat</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Character (len=4)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> gnp1, gnp2, dgrs
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Plot file formats are ASCII text, the different options are suited to plotting routines in common use.  The choices are "gnp1," "gnp2," and "dgrs."  Option gnp1 is used for plotting current conditions in real-time mode.  Option gnp2 is used for plotting time-series using gnuplot or the data can be imported to a spreadsheet program for plotting.  Option dgrs is used for plotting timeseries using interactive graphing packages and spreadsheet programs.</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Statistics?, .FALSE.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>stats</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Logical
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> .True., .False.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> A logical variable used to switch statistical computations on (.true.) or off (.false.)</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> Forecast?, .FALSE.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>forecast</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Logical
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> .True., .False.
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> A logical variable used to determine if the data provided is a forecast or current. If ‘forecast’ is true, then ‘statistics’ must be set to false.</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> NameOfOutputFolder, 'C:\Users\user\Documents\thresh\data\'
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>outputFolder</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Character (len=255)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> any valid path name 
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Path name of the folder where output files are to be placed. Absolute or relative paths may be used, up to 255 characters long. Final character must be ‘/’ (Unix/Linux) or ‘\’ (Windows).  For best results, put path name between quotes.</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> ListOfStationNumbers_Localities_InputFiles
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>junk</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Character (len=31)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> -- 
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Descriptive heading for list of station numbers, station names, and data input files that follow on succeeding lines</td></tr>
+<tr align=left><td style='border:none;padding:0in 6pt 0.05in 6pt'> 01, 'Seattle/Boeing Field', 'KBFI_t.txt' 02,'Everett/Paine Field','./KPAE_t.txt' 03,'Seattle-Tacoma Airport','./KSEA_t.txt' 04,'Tacoma Narrows','./KTIW_t.txt'
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'><code>tempStatNum(),
+
+tempStatLoc(), 
+
+
+tempDatLoc()</code>
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Integer array, Character array (len=50), Character array (len=255)
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> 00&#8211;99
+
+
+
+
+
+
+
+</td><td style='border:none;padding:0in 6pt 0.05in 6pt'> Station number (tempStatNum), station name or location (tempStatLoc), and path name (tempDatLoc) of corresponding data file; this pattern is repeated on each succeeding line for the remaining rainfall stations.  For National Weather Service stations, use the last two digits of the NWS Station number.  Station numbers are not required to be in numerical order.  The station name can be either a formal name or if none exists a descriptive name based on location.  File path names can be either full or relative, depending on their relation to the present working directory.</td></tr>
+
