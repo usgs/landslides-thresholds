@@ -50,7 +50,7 @@
 	integer :: imid,tptr,xptr,timezoneOffset,sysYear
 	integer :: sysMinute,sysSeconds,lastDayOfMonth(12)
 	integer :: midnightVal,sumTintensity
-	integer :: sumPrecip,maxDataGap,year
+	integer :: maxDataGap,year ! ,sumPrecip
 	integer :: unitNumber(10),Tintensity,Trecent
 	integer :: Tantecedent,rph,numNewLines,fmins
 	integer :: ev_recent_antecedent,evid,evia,evira
@@ -122,7 +122,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='28 Nov 2016'; vrsn=' 1.0.012'
+     	revdate='17 Dec 2016'; vrsn=' 1.0.014'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -402,7 +402,7 @@
 	   
 	   write(*,*) 'Starting times:',tstormBeg1904(i),tstormEnd1904(i)
  	 
-	   sumPrecip=0  ! initialize "sumPrecip" before starting a new station
+!	   sumPrecip=0  ! initialize "sumPrecip" before starting a new station
 	   tlenx(i)=ctrHolder(i)
 	   AWICompOffset=numTimestampsHolder(i)+numNewLines !added 01/07/2008
 	   if(AWICompOffset<1 .or. AWICompOffset>stationPtr(i))then
@@ -528,7 +528,7 @@
  	      stationNumber(i),numPlotPoints,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
- 	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
+ 	      threshAvgExceed,outputFolder,timeSeriesPlotFile,stationLocation(i),in2mm,rph,&
  	      TavgIntensity,Tantecedent,Trecent,precipUnit)
 	   else if (stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints>0) then
 	   	  numPlotPoints3=stationPtr(i)/rph   ! replaced ctrHolder(i) with numPlotPoints3 7/29/2015, RLB
@@ -536,7 +536,7 @@
  	      stationNumber(i),numPlotPoints3,stationPtr(i),timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
- 	      threshAvgExceed,outputFolder,timeSeriesPlotFile,in2mm,rph,&
+ 	      threshAvgExceed,outputFolder,timeSeriesPlotFile,stationLocation(i),in2mm,rph,&
  	      TavgIntensity,Tantecedent,Trecent,precipUnit)
 	   end if
 	   
@@ -547,8 +547,8 @@
  	         stationNumber(i),numPlotPoints2,stationPtr(i),timestampYear,&
  	         timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	         dur,precip,runIntensity,AWI,deficit_recent_antecedent,&
- 	         threshIntensityDuration,threshAvgExceed,outputFolder,&
- 	         timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
+ 	         threshIntensityDuration,threshAvgExceed,outputFolder,timeSeriesPlotFile,&
+                 stationLocation(i),in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
  	      end if
 	   end if
 	   
@@ -561,8 +561,8 @@
  	      maxLines,stationNumber(i),ctrHolder(i),&	! replaced ctrHolder(i) with numPlotPoints3 8/4/2015, RLB, undo 6Nov2015
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
  	      sumTantecedent,sumTrecent,intensity,dur,precip,&
- 	      runIntensity,AWI,outputFolder,archiveFile,TavgIntensity,Tantecedent&
- 	      ,Trecent,precipUnit)
+ 	      runIntensity,AWI,outputFolder,archiveFile,stationLocation(i),&
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit)
  	   end if
  	  end if
  	   
@@ -572,35 +572,35 @@
  	      stationNumber(i),ctr_recent_antecedent,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
- 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
+ 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,pt_recent_antecedent,maxLines,'ExRA_',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrid,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
- 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
+ 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptid,nlo20,'ExID_',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),AWIIntensCtr,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
- 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
+ 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptawid,nlo20,'ExIDA',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrira,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
- 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,in2mm,&
+ 	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptira,nlo20,'ExIRA',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
  	      call tindm(unitNumber(1),unitNumber(5),unitNumber(10),maxLines,&
  	      stationNumber(i),stationPtr(i),timestampYear,timestampMonth,&
  	      da,hr,sumTantecedent,sumTrecent,intensity,dur,&
  	      deficit_recent_antecedent,threshIntensityDuration,outputFolder,timeSeriesExceedFile,&
- 	      in2mm,'Max',AWI,runIntensity,TavgIntensity,runningIntens,&
+ 	      stationLocation(i),in2mm,'Max',AWI,runIntensity,TavgIntensity,runningIntens,&
  	      Tantecedent,Trecent)
 	   end if
 	end do !}}}

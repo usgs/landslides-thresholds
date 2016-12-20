@@ -6,12 +6,13 @@
 	subroutine gnpts(ulog,uout,n,stationNumber,ctrHolder,&
 	stationPtr,year,month,day,hour,minute,sumTantecedent,&
 	sumTrecent,intensity,duration,precip,runningIntens,AWI,deficit,&
-	intensityDuration,avgIntensity,outputFolder,&
-	timeSeriesPlotFile,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
+	intensityDuration,avgIntensity,outputFolder,timeSeriesPlotFile,&
+	stationLocation,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
 	implicit none
 	
 ! FORMAL ARGUMENTS
 	character, intent(in) :: outputFolder*(*),timeSeriesPlotFile*(*),stationNumber*(*)
+	character, intent(in) :: stationLocation*(*)
 	character (len=2), intent(in) :: precipUnit
 	real, intent(in)      :: sumTantecedent(n),sumTrecent(n),intensity(n),in2mm
 	real, intent(in)      :: duration(n),runningIntens(n),AWI(n)
@@ -46,7 +47,7 @@
 	
    ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
 	write(uout,*) pd,' Time-Series Plot File for Rainfall Thresholds'
-	write(uout,*) pd,' Station ',trim(stationNumber)
+	write(uout,*) pd,' Station ',trim(stationNumber),': ', trim(stationLocation)
 	write(uout,*) pd,' Time & Date',tb,&
 	              'Hourly Precip.',tb,&
 	              Tantecedent,'-hr Precip.',tb,&

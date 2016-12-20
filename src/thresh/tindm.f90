@@ -5,7 +5,7 @@
 	
 	subroutine tindm(ulog,uout,uout2,n,stationNumber,stationPtr,&
 	year,month,day,hour,sumTantecedent,sumTrecent,intensity,duration,&
-	deficit,intensityDuration,outputFolder,plotFile,in2mm,xid,AWI,&
+	deficit,intensityDuration,outputFolder,plotFile,stationLocation,in2mm,xid,AWI,&
 	runningIntens,TavgIntensity,avgIntensity,Tantecedent,Trecent)
 	implicit none
 	
@@ -18,7 +18,8 @@
 	real, intent(in)     :: deficit(n),intensityDuration(n),runningIntens(n)
 	character,intent(in) :: xid*(*)
 	character,intent(in) :: outputFolder*(*),plotFile*(*),stationNumber*(*)
-	
+	character,intent(in) :: stationLocation*(*)
+
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile
 	character (len=10)  :: date,anteced,recent,mintensity,mduration
@@ -47,7 +48,7 @@
 	un(1) = uout; un(2) = uout2
 	  do k=1,2
 	  write(un(k),*) pd,' Maximum Daily Values for Thresholds '
-	  write(un(k),*) pd,' Station ',trim(stationNumber)
+	  write(un(k),*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation)
 	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-hr Precip.',&
             tb,Trecent,'-hr Precip.',tb,'Rec./Antec. Index',tb,&
 	    'Intensity(in/hour)',tb,'Intensity(mm/hour)',tb,&

@@ -280,7 +280,7 @@ contains
          end if
          
          if(runIntensity(i) > runningIntens .and. deficit(i) > 0) then
-            ctrira = ctrira + 1 ! count exceedences of running average Intensity threshhold
+            ctrira = ctrira + 1 ! count exceedences of running average Intensity threshhold when recent and antecedent threshhold is also exeeded.
             ptira(ctrira) = i
          end if	 
          

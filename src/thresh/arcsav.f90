@@ -6,11 +6,12 @@
 	subroutine arcsav(ulog,uout,n,stationNumber,ctrHolder,&
 	stationPtr,year,month,day,hour,minute,sumAnteced,&
 	sumRecent,intensity,stormDuration,precip,runIntensity,AWI,outputFolder,&
-	archiveFile,TavgIntensity,Tantecedent,Trecent,precipUnit)
+	archiveFile,stationLocation,TavgIntensity,Tantecedent,Trecent,precipUnit)
 	implicit none
 	
 ! FORMAL ARGUMENTS
 	character, intent(in) :: outputFolder*(*),archiveFile*(*),stationNumber*(*)
+	character, intent(in) :: stationLocation*(*)
 	character (len=2), intent(in) :: precipUnit
 	real, intent(in)      :: sumAnteced(n),sumRecent(n),intensity(n)
 	real, intent(in)      :: stormDuration(n),AWI(n),runIntensity(n)
@@ -47,7 +48,7 @@
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
      	if(pn=='rewind') then
 	  write(uout,*) pd,' Archive of Rainfall Totals for Comparison with Thresholds'
-	  write(uout,*) pd,' Station ',sNumber
+	  write(uout,*) pd,' Station ',trim(stationNumber) ,': ',trim(stationLocation)
 	  write(uout,*) pd,' Time & Date',&
                    tb,'Hourly Precip.',&
                    tb,Tantecedent,'-hr Antecedent Precip.',&

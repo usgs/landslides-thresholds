@@ -7,13 +7,14 @@
 	year,month,day,hour,minute,anteced,&
 	recent,intensity,duration,precip,runningIntens,deficit,&
 	intensityDuration,avgIntensity,outputFolder,&
-	plotFile,in2mm,rph,pt,nlo20,xid,AWI,minTStormGap,&
+	plotFile,stationLocation,in2mm,rph,pt,nlo20,xid,AWI,minTStormGap,&
 	TavgIntensity,Tantecedent,Trecent,lowLim,upLim,precipUnit)
 	implicit none
 	
 	
 ! FORMAL ARGUMENTS
 	character, intent(in)    :: outputFolder*(*),plotFile*(*),stationNumber*(*)
+	character, intent(in)    :: stationLocation*(*)
 	character, intent(inout) :: xid*(*)
 	character (len=2), intent(in) :: precipUnit
 	real, intent(in)         :: anteced(n),recent(n),intensity(n),in2mm
@@ -56,7 +57,7 @@
 	
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
    write(uout,*) pd,' Times of exceedance for rainfall threshold: '//header
-   write(uout,*) pd,' Station ',trim(stationNumber)
+   write(uout,*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation)
    write(uout,*) pd,' Time & Date',tb,&
                  'Hourly Precip.',tb,&
                  Tantecedent,'-hr Precip.',tb,&
