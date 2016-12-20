@@ -6,7 +6,7 @@
 	subroutine tindm(ulog,uout,uout2,n,stationNumber,stationPtr,&
 	year,month,day,hour,sumTantecedent,sumTrecent,intensity,duration,&
 	deficit,intensityDuration,outputFolder,plotFile,stationLocation,in2mm,xid,AWI,&
-	runningIntens,TavgIntensity,avgIntensity,Tantecedent,Trecent)
+	runningIntens,TavgIntensity,avgIntensity,Tantecedent,Trecent,checkS,checkA)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -19,12 +19,14 @@
 	character,intent(in) :: xid*(*)
 	character,intent(in) :: outputFolder*(*),plotFile*(*),stationNumber*(*)
 	character,intent(in) :: stationLocation*(*)
+        logical, intent(in)   :: checkS,checkA	
 
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile
 	character (len=10)  :: date,anteced,recent,mintensity,mduration
 	character (len=10)  :: mdeficit,mintensityDuration,mAWI,mrunningIntensity
-	character (len=10)  :: mmintensity 
+	character (len=10)  :: logRunIntensity,logStormIntensity 
+	character (len=3)   :: AntecedentHeader
 	character 	    :: pd,tb,cbrai
 	real	    	    :: maxDeficit,maxDuration,d_recent_antecedentmx,maxThreshIndex 
 	integer		    :: j,k,hcnt,ist,ind,maxDefptr,maxDurptr,maxThInptr,un(2)
@@ -33,6 +35,15 @@
 	
 	pd=char(35) ! pound sign
 	tb=char(9) ! tab character
+
+! Set text for heading of Antecedent precipitation column
+  	if(checkS) then
+  	   AntecedentHeader='SAP' !Seasonal Antecedent Precipitation
+        else if (checkA) then
+           AntecedentHeader='AWI' !Antecedent Wetness Index
+        else
+           AntecedentHeader='ACP' !Annual Cumulative Precipitation
+        end if
 
 ! Create output files
 	
@@ -51,9 +62,9 @@
 	  write(un(k),*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation)
 	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-hr Precip.',&
             tb,Trecent,'-hr Precip.',tb,'Rec./Antec. Index',tb,&
-	    'Intensity(in/hour)',tb,'Intensity(mm/hour)',tb,&
+	    'Intensity',tb,'Log10(Intensity)',tb,&
 	    'Duration',tb,'Intensity-Duration Index',tb,&
-	    'Antecedent Water Index',tb,TavgIntensity,'-hr Intensity',tb,&
+	    AntecedentHeader,tb,TavgIntensity,'-hr Intensity',tb,&
 	    'Combined Rec./Antec. & Intensity Index'
 	  end do
 	  
@@ -93,10 +104,10 @@
      	 write(mduration,'(f10.1)') duration(maxDurptr)
      	 write(mintensity,'(f10.3)') intensity(maxDurptr)
      	    
-	    if (intensity(maxDurptr)<0) then
-     	      write(mmintensity,'(f10.3)') intensity(maxDurptr)
+	    if (intensity(maxDurptr)<=0) then
+     	      write(logStormIntensity ,'(f10.3)') -99.
 	    else
-     	      write(mmintensity,'(f10.3)') intensity(maxDurptr)*in2mm
+     	      write(logStormIntensity ,'(f10.3)') log10(intensity(maxDurptr))
 	    end if
 	    
 	    write(mAWI,'(f10.3)') AWI(maxDurptr)
@@ -112,7 +123,7 @@
 	    recent               = trim(adjustl(recent))
   	    mdeficit             = trim(adjustl(mdeficit))
 	    mintensity           = trim(adjustl(mintensity))
-	    mmintensity          = trim(adjustl(mmintensity))
+	    logStormIntensity          = trim(adjustl(logStormIntensity))
 	    mduration            = trim(adjustl(mduration))
 	    mintensityDuration   = trim(adjustl(mintensityDuration))
 	    mAWI                 = trim(adjustl(mAWI))
@@ -123,7 +134,7 @@
 	                  recent,tb,&
 	                  mdeficit,tb,&
 	                  mintensity,tb,&
-	                  mmintensity,tb,&
+	                  logStormIntensity,tb,&
 	                  mduration,tb,&
 	                  mintensityDuration,tb,&
 	                  mAWI,tb,&
@@ -136,7 +147,7 @@
 	                                 recent,tb,&
 	                                 mdeficit,tb,&
 	                                 mintensity,tb,&
-	                                 mmintensity,tb,&
+	                                 logStormIntensity,tb,&
 	                                 mduration,tb,&
 	                                 mintensityDuration,tb,&
 	                                 mAWI,tb,&

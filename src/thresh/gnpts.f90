@@ -7,7 +7,8 @@
 	stationPtr,year,month,day,hour,minute,sumTantecedent,&
 	sumTrecent,intensity,duration,precip,runningIntens,AWI,deficit,&
 	intensityDuration,avgIntensity,outputFolder,timeSeriesPlotFile,&
-	stationLocation,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
+	stationLocation,in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit,&
+        checkS,checkA)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -21,6 +22,7 @@
 	integer, intent(in)   :: month(n),day(n),hour(n),minute(n),precip(n)
 	integer, intent(in)   :: uout,ulog,ctrHolder,stationPtr
 	integer, intent(in)   :: rph,TavgIntensity,Tantecedent,Trecent
+        logical, intent(in)   :: checkS,checkA	
 	
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile
@@ -28,13 +30,26 @@
 	character (len=10)  :: date,msumTantecedent,msumTrecent,mintensity
 	character (len=10)  :: mduration,mrunningIntens,mprecip,mdeficit
 	character (len=10)  :: mavgIntensity,mintensityDuration,mAWI
-	character (len=10)  :: mmIntensity,logmmIntensity 
-	character (len=5)   :: time
+	character (len=10)  :: logRunIntensity,logStormIntensity 
+	character (len=5)   :: time,hrly
+	character (len=3)   :: AntecedentHeader
 	character           :: pd = char(35),tb = char(9)
 	real                :: floatPrecip 
 	integer             :: j
 	
 !------------------------------	
+
+! Set text for heading of Antecedent precipitation column
+  	if(checkS) then
+  	   AntecedentHeader='SAP' !Seasonal Antecedent Precipitation
+        else if (checkA) then
+           AntecedentHeader='AWI' !Antecedent Wetness Index
+        else
+           AntecedentHeader='ACP' !Annual Cumulative Precipitation
+        end if
+
+   write(hrly,'(i5)') TavgIntensity
+   hrly=adjustl(hrly)
    
    ! Writing data values to variables for use in constructing outputFile
    write(mhour,'(i7,a4)') ctrHolder,'hour'
@@ -52,22 +67,22 @@
 	              'Hourly Precip.',tb,&
 	              Tantecedent,'-hr Precip.',tb,&
 	              Trecent,'-hr Precip.',tb,&
-	              'Intensity(in/hour)',tb,&
-	              'Intensity(mm/hour)',tb,&
+	              'Intensity',tb,&
+	              'Log10(Intensity)',tb,&
 	              'Duration',tb,&
-	              'Log10(Intensity(mm/hour))',tb,&
-	              TavgIntensity,'-hr Intensity',tb,&
+	              'Log10('//trim(hrly)//'-hr Intensity)',tb,&
+	              trim(hrly)//'-hr Intensity',tb,&
 	              'Recent/Antecedent Index',tb,&
 	              'Intensity-Duration Index',tb,&
 	              TavgIntensity,'-hr Intensity Index',tb,&
-	              'Antecedent Water Index'
+	              AntecedentHeader
 	  
 	do j=(1+stationPtr-ctrHolder*rph),stationPtr
 	   write(time,'(i2.2,a1,i2.2)') hour(j),':',minute(j)
 	   write(date,'(i2.2,a1,i2.2,a1,i4)')month(j),'/',day(j),'/',year(j)
 	   
 		if (precipUnit == 'mm') then
-			floatPrecip = float(precip(j))/254.
+			floatPrecip = float(precip(j))/10.
 		else if (precipUnit == 'in') then
 			floatPrecip = float(precip(j))/100.
 		end if
@@ -77,21 +92,18 @@
 	   write(msumTantecedent,     '(f10.2)')     sumTantecedent(j)
 	   write(msumTrecent,         '(f10.2)')     sumTrecent(j)
 	   write(mintensity,          '(f10.3)')     intensity(j)
-	   if(intensity(j)<0) then
-	      write(mmIntensity,      '(f10.3)')     intensity(j)
-	   else
-	      write(mmIntensity,      '(f10.3)')     intensity(j)*in2mm
-	   end if
-	   if(intensity(j)*in2mm<1.d-1) then
-	      write(logmmIntensity,   '(f10.3)')     -99.
+	   if(intensity(j)<=0.) then
+	      write(logStormIntensity,   '(f10.3)')     -99.
 	   else 
-	      write(logmmIntensity,   '(f10.3)')     log10(intensity(j)*in2mm)
+	      write(logStormIntensity,   '(f10.3)')     log10(intensity(j))
 	   end if	   
 	   write(mduration,           '(f10.2)')     duration(j)
-	   if(runningIntens(j)<0) then
+	   if(runningIntens(j)<=0) then
 	      write(mrunningIntens,   '(f10.3)')     runningIntens(j)
+	      write(logRunIntensity,  '(f10.3)')     -99.
 	   else
-	      write(mrunningIntens,   '(f10.3)')     runningIntens(j) !*in2mm
+	      write(mrunningIntens,   '(f10.3)')     runningIntens(j) 
+	      write(logRunIntensity,  '(f10.3)')     log10(runningIntens(j))
 	   end if
 	   write(mdeficit,            '(f10.3)')     deficit(j)
 	   write(mintensityDuration,  '(f10.3)')     intensityDuration(j)
@@ -101,8 +113,8 @@
 	   msumTantecedent      = trim(adjustl(msumTantecedent))
 	   msumTrecent          = trim(adjustl(msumTrecent))
 	   mintensity           = trim(adjustl(mintensity))
-	   mmIntensity          = trim(adjustl(mmIntensity))
-	   logmmIntensity       = trim(adjustl(logmmIntensity))
+	   logRunIntensity      = trim(adjustl(logRunIntensity))
+	   logStormIntensity    = trim(adjustl(logStormIntensity))
 	   mduration            = trim(adjustl(mduration))
 	   mrunningIntens       = trim(adjustl(mrunningIntens))
 	   mprecip              = trim(adjustl(mprecip))
@@ -116,9 +128,9 @@
                    msumTantecedent,tb,&
                    msumTrecent,tb,&
                    mintensity,tb,&
-                   mmIntensity,tb,&
+                   logStormIntensity,tb,&
                    mduration,tb,&
-                   logmmIntensity,tb,&
+                   logRunIntensity,tb,&
                    mrunningIntens,tb,tb,&
                    mdeficit,tb,&
                    mintensityDuration,tb,&

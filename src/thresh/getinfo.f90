@@ -18,7 +18,7 @@ contains
 	   fieldCap,fcUnit,drainConst,evapConst,resetAntMonth,resetAntDay,&
 	   timezoneOffset,year,lgyr,midnightVal,plotFormat,stats,outputFolder,&
 	   dataLocation,stationLocation,stationNumber,sysYear,upLim,lowLim,&
-	   interSwitch,intervals,polySwitch,precipUnit,forecast) !{{{
+	   interSwitch,intervals,polySwitch,precipUnit,forecast,checkS,checkA) !{{{
 	   use data_analysis !contains check_SAT, check_AWI, check_switches,
 	                     !check_antMonth_antDay,set_power_limits,set_poly_limits
 	                     !error1, and error2
@@ -42,9 +42,10 @@ contains
 	      integer,intent(out)  :: maxDataGap,numPlotPoints,numPlotPoints2
 	      integer,intent(out)  :: resetAntMonth,resetAntDay
 	      integer,intent(out)  :: timezoneOffset,year,midnightVal
-	      integer,intent(out)	:: intervals
+	      integer,intent(out)  :: intervals
 	      logical,intent(out)  :: powerSwitch,polySwitch,interSwitch
-	      logical,intent(out)	:: lgyr,stats,forecast
+	      logical,intent(out)  :: lgyr,stats,forecast
+	      logical,intent(out)  :: checkS, checkA
 
    ! LOCAL VARIABLES
 	      character(1) :: junk
@@ -55,7 +56,7 @@ contains
 	      character (len = 255) :: tempDataLoc
 	      character (len = 260) :: command
 	      integer   :: i, lineCtr, thresh_in=22, iostatus
-	      logical   :: exists, checkS, checkA
+	      logical   :: exists !, checkS, checkA
 
    !------------------------------
    ! Opening thresh_in.txt file to read from
@@ -509,7 +510,7 @@ contains
                write(uout,*)
                write(uout,*)'The data for Seasonal Antecedent Threshold&
                              & calculations and Antecedent Water Index calculations are incomplete.'
-               write(uout,*)'Annual cumulative precipitation was computed instead.'
+               write(uout,*)'Annual cumulative precipitation (ACP) was computed instead.'
                write(uout,*)
                write(uout,*)'To perform SAT calculations, ensure that the&
                             & reset month and day have meaningful values and that SAT is&

@@ -6,7 +6,8 @@
 	subroutine arcsav(ulog,uout,n,stationNumber,ctrHolder,&
 	stationPtr,year,month,day,hour,minute,sumAnteced,&
 	sumRecent,intensity,stormDuration,precip,runIntensity,AWI,outputFolder,&
-	archiveFile,stationLocation,TavgIntensity,Tantecedent,Trecent,precipUnit)
+	archiveFile,stationLocation,TavgIntensity,Tantecedent,Trecent,precipUnit,&
+        checkS,checkA)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -18,7 +19,7 @@
 	integer, intent(in)   :: n,TavgIntensity
 	integer, intent(in)   :: uout,ulog,ctrHolder,stationPtr,Tantecedent,Trecent
 	integer, intent(in)   :: year(n),month(n),day(n),hour(n),minute(n),precip(n)
-	
+        logical, intent(in)   :: checkS,checkA	
 	
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile
@@ -27,6 +28,7 @@
 	character (len=10)  :: mstormDuration,mrunIntensity,mAWI,mprecip
 	character (len=6)   :: pn
 	character (len=5)   :: time
+	character (len=3)   :: AntecedentHeader
 	character (len=1)   :: pd=char(35),tb=char(9)
 	real                :: floatPrecip
 	integer             :: j
@@ -35,6 +37,15 @@
 !------------------------------	
 	sNumber = adjustl(trim(stationNumber))// '.txt'
   	outputFile=trim(outputFolder)//trim(archiveFile)//trim(sNumber)
+
+! Set text for heading of Antecedent precipitation column
+  	if(checkS) then
+  	   AntecedentHeader='SAP' !Seasonal Antecedent Precipitation
+        else if (checkA) then
+           AntecedentHeader='AWI' !Antecedent Wetness Index
+        else
+           AntecedentHeader='ACP' !Annual Cumulative Precipitation
+        end if
   	
   	inquire(file=outputFile,exist=exists)
   	if(exists) then
@@ -56,7 +67,7 @@
                    tb,'Intensity',&
                    tb,'Duration',&
                    tb,TavgIntensity,'-hr Intensity',&
-                   tb,'Antecedent Water Index'
+                   tb,AntecedentHeader
      	end if
 
 ! Fill file with data

@@ -92,6 +92,7 @@
 	character (len=1) :: pd,cm
 	
 	logical :: lgyr,stats,flagRealtime,powerSwitch,polySwitch,interSwitch,forecast,date_err
+	Logical :: checkS, checkA
 
 	real,allocatable :: threshIntensityDuration(:),threshAvgExceed(:)
 	real,allocatable :: AWI(:),AWI_0(:),sAWI(:), xVals(:), yVals(:)
@@ -122,7 +123,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='17 Dec 2016'; vrsn=' 1.0.014'
+     	revdate='20 Dec 2016'; vrsn=' 1.0.015'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -164,7 +165,7 @@
 	AWIThresh,fieldCap,fcUnit,drainConst,evapConsts,resetAntMonth,resetAntDay,&
 	timezoneOffset,year,lgyr,midnightVal,plotFormat,stats,outputFolder,&
 	dataLocation,stationLocation,stationNumber,sysYear,upLim,lowLim,&
-	interSwitch,intervals,polySwitch,precipUnit,forecast)
+	interSwitch,intervals,polySwitch,precipUnit,forecast,checkS,checkA)
 	
 ! precipitation input data stored as hundredths of an inch
 	select case (fcUnit)
@@ -529,7 +530,7 @@
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,stationLocation(i),in2mm,rph,&
- 	      TavgIntensity,Tantecedent,Trecent,precipUnit)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA)
 	   else if (stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints>0) then
 	   	  numPlotPoints3=stationPtr(i)/rph   ! replaced ctrHolder(i) with numPlotPoints3 7/29/2015, RLB
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
@@ -537,7 +538,7 @@
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,stationLocation(i),in2mm,rph,&
- 	      TavgIntensity,Tantecedent,Trecent,precipUnit)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA)
 	   end if
 	   
 ! Create or update short-term time-series plot file for each station	
@@ -548,7 +549,8 @@
  	         timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	         dur,precip,runIntensity,AWI,deficit_recent_antecedent,&
  	         threshIntensityDuration,threshAvgExceed,outputFolder,timeSeriesPlotFile,&
-                 stationLocation(i),in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit)
+                 stationLocation(i),in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit,&
+                 checkS,checkA)
  	      end if
 	   end if
 	   
@@ -562,7 +564,7 @@
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
  	      sumTantecedent,sumTrecent,intensity,dur,precip,&
  	      runIntensity,AWI,outputFolder,archiveFile,stationLocation(i),&
- 	      TavgIntensity,Tantecedent,Trecent,precipUnit)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA)
  	   end if
  	  end if
  	   
@@ -574,34 +576,34 @@
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,pt_recent_antecedent,maxLines,'ExRA_',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrid,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptid,nlo20,'ExID_',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),AWIIntensCtr,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptawid,nlo20,'ExIDA',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
  	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrira,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptira,nlo20,'ExIRA',AWI,minTStormGap,TavgIntensity,&
- 	      Tantecedent,Trecent,lowLim,upLim,precipUnit)
+ 	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
  	      call tindm(unitNumber(1),unitNumber(5),unitNumber(10),maxLines,&
  	      stationNumber(i),stationPtr(i),timestampYear,timestampMonth,&
  	      da,hr,sumTantecedent,sumTrecent,intensity,dur,&
  	      deficit_recent_antecedent,threshIntensityDuration,outputFolder,timeSeriesExceedFile,&
  	      stationLocation(i),in2mm,'Max',AWI,runIntensity,TavgIntensity,runningIntens,&
- 	      Tantecedent,Trecent)
+ 	      Tantecedent,Trecent,checkS,checkA)
 	   end if
 	end do !}}}
 
