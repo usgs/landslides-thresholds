@@ -44,7 +44,7 @@
         else if (checkA) then
            AntecedentHeader='AWI' !Antecedent Wetness Index
         else
-           AntecedentHeader='ACP' !Annual Cumulative Precipitation
+           AntecedentHeader='CAP' !Cumulative Annual Precipitation
         end if
   	
   	inquire(file=outputFile,exist=exists)

@@ -5,7 +5,8 @@
 !
 	subroutine alert(numStations,outputFolder,ulog,unitNumber,datim,&
 	 stationNumber,deficit,intensity,runningIntens,avgIntensity,&
-	 antecedPrecip,in2mm,duration,TavgIntensity,sAWI)
+	 antecedPrecip,in2mm,duration,TavgIntensity,sAWI,AWIThresh,&
+         fieldCap,checkS,checkA)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -16,13 +17,15 @@
 	real, intent(in) 	       :: deficit(numStations),runningIntens
 	real, intent(in) 	       :: intensity(numStations)
 	real, intent(in) 	       :: avgIntensity(numStations),sAWI(numStations)
+	real, intent(in)               :: AWIThresh,fieldCap
 	integer, intent(in) 	    :: numStations,unitNumber,ulog,TavgIntensity
+        logical, intent(in)         :: checkS,checkA	
 	
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile='ThAlert.txt'
 	character (len=7)   :: alert_lev(4)
 	character 	    :: tb = char(9)
-	real		    :: avgToRunning
+	real		    :: avgToRunning,AWI_low
 	integer 	    :: i,alertConditionRecentAntecedent(numStations)
 	integer 	    :: alertConditionID(numStations)
 	integer 	    :: alertConditionIA(numStations)
@@ -41,19 +44,35 @@
 	  end if
 	end do
 	
+        if(checkA .and. .not. checkS) then
 ! determine alert condition for Intensity-Duration Threshold & AWI
-	do i = 1, numStations
-	  alertConditionID(i)=0
-	  if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
-	    alertConditionID(i)=1
-	    if(intensity(i) >1.0 .and. sAWI(i) >-0.1) then
-	      alertConditionID(i)=2
-	    else if(intensity(i) >=1.0 .and. sAWI(i) >0.02) then
-	      alertConditionID(i)=3
-	    end if
-	  end if
-	end do
-	
+           AWI_low=-(AWIThresh+fieldCap)/2.
+           do i = 1, numStations
+        	     alertConditionID(i)=0
+        	     if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
+        	       alertConditionID(i)=1
+        	       if(intensity(i) >1.0 .and. sAWI(i) > AWI_low) then
+        	          alertConditionID(i)=2
+        	       else if(intensity(i) >=1.0 .and. sAWI(i) > AWIThresh) then
+        	         alertConditionID(i)=3
+        	       end if
+        	     end if
+        	   end do
+	else	
+! determine alert condition for Intensity-Duration Threshold alone
+	   do i = 1, numStations
+	     alertConditionID(i)=0
+	     if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
+	       alertConditionID(i)=1
+	       if(intensity(i) > 0.9 .and. intensity(i) < 1.0 ) then
+	         alertConditionID(i)=2
+	       else if(intensity(i) >= 1.0) then
+	         alertConditionID(i)=3
+	       end if
+	     end if
+	   end do
+	end if
+		
 ! determine alert condition for Intensity-Antecedent Precipitation Threshold
 	do i = 1, numStations
 	  alertConditionIA(i)=0

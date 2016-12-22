@@ -36,7 +36,8 @@ contains
 	      real,intent(out)		:: powerExp,fieldCap,drainConst,evapConst(12)
 	      real,intent(out)		:: seasonalAntThresh,upLim,lowLim
 	      integer,intent(in)	:: sysYear
-	      integer,intent(out)  :: uout,numStations,maxLines,rph
+	      integer,intent(out)  :: uout,numStations,rph
+	      integer,intent(inout)  :: maxLines
 	      integer,intent(out)	:: Trecent,Tantecedent,Tintensity
 	      integer,intent(out) 	:: minTStormGap,TavgIntensity
 	      integer,intent(out)  :: maxDataGap,numPlotPoints,numPlotPoints2
@@ -55,7 +56,7 @@ contains
 	      character (len = 50)  :: tempStatLoc
 	      character (len = 255) :: tempDataLoc
 	      character (len = 260) :: command
-	      integer   :: i, lineCtr, thresh_in=22, iostatus
+	      integer   :: i, lineCtr, thresh_in=22, iostatus, temp_maxLines
 	      logical   :: exists !, checkS, checkA
 
    !------------------------------
@@ -69,7 +70,7 @@ contains
 	      read(thresh_in,*,err=115) junk, numStations
 	      lineCtr = lineCtr + 1
 	   !Line 2 Number of lines of data per file
-	      read(thresh_in,*,err=115) junk, maxLines
+	      read(thresh_in,*,err=115) junk, temp_maxLines
 	      lineCtr = lineCtr + 1
 	   !Line 3 Readings per hour
 	      read(thresh_in,*,err=115) junk, rph
@@ -284,8 +285,16 @@ contains
    !------------------------------------------------------------------------------!
    	
    		  
-   	! maxLines should be greater than zero. Thresh will exit otherwise.
-   		if(maxLines <= 0) call error1(uout,'Number_Of_Data_Lines','zero')
+   	! temp_maxLines should be greater than zero. Thresh will exit otherwise.
+   		if(temp_maxLines <= 0) then 
+                   call error1(uout,'Number_Of_Data_Lines','zero')
+                else if (temp_maxLines < maxLines) then
+                   temp_maxLines=maxLines
+                   write(*,*) 'Number_Of_Data_Lines reset to default, ',maxLines
+                   write(uout,*) 'Number_Of_Data_Lines reset to default, ',maxLines
+                else
+                   maxLines=temp_maxLines
+   		end if
 	      
 	   !Readings per hour should be between 1 and 60, inclusive. Thresh will exit otherwise
 	      if (rph < 1) then
@@ -510,7 +519,7 @@ contains
                write(uout,*)
                write(uout,*)'The data for Seasonal Antecedent Threshold&
                              & calculations and Antecedent Water Index calculations are incomplete.'
-               write(uout,*)'Annual cumulative precipitation (ACP) was computed instead.'
+               write(uout,*)'Cumulative annual precipitation (CAP) was computed instead.'
                write(uout,*)
                write(uout,*)'To perform SAT calculations, ensure that the&
                             & reset month and day have meaningful values and that SAT is&

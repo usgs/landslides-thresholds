@@ -123,7 +123,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='20 Dec 2016'; vrsn=' 1.0.015'
+     	revdate='22 Dec 2016'; vrsn=' 1.0.016'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -627,11 +627,13 @@
 	   call alert(numStations,outputFolder,unitNumber(1),&
 	   unitNumber(8),datim,stationNumber,deficit_recent_antecedent_s,&
 	   sthreshIntensityDuration,runningIntens,sthreshAvgIntensity,&
-	   srunIntensity,in2mm,durs,TavgIntensity,sAWI)
+	   srunIntensity,in2mm,durs,TavgIntensity,sAWI,AWIThresh,fieldCap,&
+           checkS,checkA)
 	   call alerthtm(numStations,outputFolder,unitNumber(1),&
 	   unitNumber(8),datimb,stationNumber,deficit_recent_antecedent_s,&
 	   sthreshIntensityDuration,sthreshAvgIntensity,runningIntens,&
-	   srunIntensity,in2mm,durs,stationLocation,TavgIntensity,sAWI)
+	   srunIntensity,in2mm,durs,stationLocation,TavgIntensity,sAWI,&
+           AWIThresh,fieldCap,checkS,checkA)
 	 if(forecast .eqv. .FALSE.) then
  	   call tabl(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datim,durs,sumAntecedent_s,&

@@ -4,7 +4,8 @@
 
 	subroutine alerthtm(numStations,outputFolder,ulog,unitNumber,&
  	 datimb,stationNumber,deficit,intensity,avgIntensity,runningIntens,&
- 	 antecedRainfall,in2mm,duration,stationLocation,TavgIntensity,sAWI)
+ 	 antecedRainfall,in2mm,duration,stationLocation,TavgIntensity,sAWI,&
+         AWIThresh,fieldCap,checkS,checkA)
  	 
 ! FORMAL ARGUMENTS
 	character, intent(in) 	       :: outputFolder*(*)
@@ -15,7 +16,9 @@
 	real, intent(in) 	       :: duration(numStations),in2mm
 	real, intent(in) 	       :: deficit(numStations),runningIntens
 	real, intent(in)	       :: intensity(numStations),avgIntensity(numStations),sAWI(numStations)
+	real, intent(in)               :: AWIThresh,fieldCap
 	integer, intent(in) 	       :: numStations,unitNumber,ulog,TavgIntensity
+        logical, intent(in)            :: checkS,checkA	
 	
 ! LOCAL VARIABLES
 	character (len=22)	     :: hexColor(4)
@@ -25,7 +28,7 @@
 	character (len=17),parameter :: r1='<tr align=center>'
 	character (len=4),parameter  :: h1='<th>',d1='<td>'
 	character (len=5),parameter  :: r2='</tr>',h2='</th>',d2='</td>'
-	real			     :: avgToRunning
+	real			     :: avgToRunning,AWI_low
 	integer 		     :: i,alertConditionRecentAntecedent(numStations)
 	integer 		     :: alertConditionID(numStations)
 	integer 		     :: alertConditionIA(numStations)
@@ -36,7 +39,6 @@
        alert_lev=(/' Null  ','Outlook',' Watch ','Warning'/)
 	hexColor=(/'<td bgcolor=#cccccc>','<td bgcolor=#ffff33>',&
 	&'<td bgcolor=#ff6600>','<td bgcolor=#ff0000>'/)
-	
 
 ! determine alert condition for Cumulative Recent & Antecedent threshold
 	do i=1,numStations	
@@ -48,23 +50,39 @@
 	  end if
 	end do
 	
+        if(checkA .and. .not. checkS) then
 ! determine alert condition for Intensity-Duration Threshold & AWI
-	do i = 1, numStations
-	  alertConditionID(i)=0
-	  if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
-	    alertConditionID(i)=1
-	    if(intensity(i) >1.0 .and. sAWI(i) >-0.1) then
-	      alertConditionID(i)=2
-	    else if(intensity(i) >=1.0 .and. sAWI(i) >0.02) then
-	      alertConditionID(i)=3
-	    end if
-	  end if
-	end do
+           AWI_low=-(AWIThresh+fieldCap)/2.
+           do i = 1, numStations
+        	     alertConditionID(i)=0
+        	     if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
+        	       alertConditionID(i)=1
+        	       if(intensity(i) >1.0 .and. sAWI(i) > AWI_low) then
+        	          alertConditionID(i)=2
+        	       else if(intensity(i) >=1.0 .and. sAWI(i) > AWIThresh) then
+        	         alertConditionID(i)=3
+        	       end if
+        	     end if
+        	   end do
+	else	
+! determine alert condition for Intensity-Duration Threshold alone
+	   do i = 1, numStations
+	     alertConditionID(i)=0
+	     if(duration(i)>0 .and. deficit(i) >=0.) then  ! threshold applicable only if duration>0
+	       alertConditionID(i)=1
+	       if(intensity(i) > 0.9 .and. intensity(i) < 1.0 ) then
+	         alertConditionID(i)=2
+	       else if(intensity(i) >= 1.0) then
+	         alertConditionID(i)=3
+	       end if
+	     end if
+	   end do
+	end if
 		
 ! determine alert condition for Intensity-Antecedent Precipitation Threshold
 	do i = 1, numStations
 	  alertConditionIA(i)=0
-	  if(deficit(i) > 0) then ! antecedent, in millimeters
+	  if(deficit(i) > 0) then ! antecedent
 	      alertConditionIA(i)=1
 	      avgToRunning = avgIntensity(i) / runningIntens
 	    if(avgToRunning >0.9 .and. avgToRunning < 1.0) then
