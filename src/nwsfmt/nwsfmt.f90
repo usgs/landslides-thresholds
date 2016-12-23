@@ -14,7 +14,7 @@
 	integer, allocatable::sta(:)
 	character (len=10):: thtime, vdate
 	character (len=8):: thdate,hms
-	character (len=3):: wkday,mnth,month(12) ! ,tz
+	character (len=3):: wkday,mnth,month(12),tz
 	character (len=31):: filin, outfile,infilt
 	character (len=31), allocatable:: infil(:),stlo(:)
 !	character (len=2), allocatable:: sta(:)
@@ -24,7 +24,7 @@
 	logical:: match,lsfil,lapnd,leap
 ! initialize variables	
 	call date_and_time(thdate,thtime)
-	vrsn='0.1.08'; vdate='06Nov2015' ! previous revision 15 Sep 2015
+	vrsn='0.1.09'; vdate='23Dec2016' ! previous revision 15 Sep 2015
 	u=(/11,12,13,14,15,16/)
 	lasday=(/31,28,31,30,31,30,31,31,30,31,30,31/)
 ! code that uses lasday needs a way to check for leap year *****************	
@@ -99,8 +99,10 @@
 	end if
   	close(u(6))
 ! open & read associated date file
-	open(u(4),file='date.txt',status='old')
-	read(u(4),*) wkday,mnth,day,hms,yr !,tz  !	read(u(4),*) wkday,mnth,day,hms,tz,yr
+	open(u(4),file='date.txt',status='old',err=40)
+	read(u(4),*,err=41,end=41) wkday,mnth,day,hms,yr,tz  !	read(u(4),*) wkday,mnth,day,hms,tz,yr
+   41	rewind(u(4))
+	read(u(4),*,err=42) wkday,mnth,day,hms,yr 
 	close(u(4))
 ! open & read inut file, recent data
 	file_loop: do j=1,nsta
@@ -109,21 +111,17 @@
 	write(u(1),*) 'Opening ', filin
 	open(u(3),file=trim(filin),status='old')
 	lcnt=0
-if(rph==1) then
+if(rph==1) then ! assumes NWS data format, without month or year
 	do i=1,lines
 	  read(u(3),*,err=10, end=10) da(i),hr(i),mnt(i),ppt(i)
 	  lcnt=lcnt+1
 	end do
-else
+else ! assumes data format with full date and time information
 	do i=1,lines
 	  read(u(3),*,err=10, end=10) year(i),mon(i),da(i),hr(i),mnt(i),ppt(i)
 	  lcnt=lcnt+1
 	end do
 end if
-!	do i=1,lines
-!	  read(u(3),*,err=10, end=10) da(i),hr(i),mnt(i),ppt(i)
-!	  lcnt=lcnt+1
-!	end do
    10	continue
    	close(u(3))
 if(rph==1) then
@@ -157,8 +155,8 @@ end if
 	open (u(5),file=trim(outfile),position=opsn,err=31)
 	dtimax=dltim(j)
 !
-! *** Decide what to do about stations that have readings on intervals shorter than one hour
-	do i=lcnt,1,-1
+! *** Decide what to do about NWS data in html format for stations that have readings on intervals shorter than one hour
+	do i=lcnt,1,-1 ! This sequence assumes readings (input) are listed in reverse chronological order (newest at beginning of file).
 ! check for leap year	
 	  leap=.false.
 	  if (mod(year(i),4)==0 .and. mod(year(i),100) /= 0 &
@@ -168,7 +166,7 @@ end if
      	  else
      	    lasday(2)=28
      	  end if
-! save data in fixed-width format for program 'thresh'     	  
+! Save data in fixed-width format for program 'thresh', with output in normal chronological order (oldest at beginning of file).     	  
 	  if(dtim(i)>(dltim(j)+0.5d0/(rph*24.d0))) then !Added rph* 11/6/2015, RLB
 	    if(dtim(i)>dtimax) dtimax=dtim(i)
 	    if(rph==1)write (u(5),'(i2.2,i4.4,i2.2,i2.2,i2.2,i4.4)',err=30)&
@@ -211,7 +209,7 @@ end if
 	end do
 	dltimnu(j)=dtimax
 if(rph>1) then
-	do i=1,lcnt
+	do i=1,lcnt  ! This sequence assumes readings (input) are listed in normal chronological order (oldest at top/beginning of file).
 	  if(dtim(i)>(dltim(j)+0.5d0/(float(rph)*24.d0))) then
 	      if(dtim(i)>dtimax) dtimax=dtim(i)
 	      ippt(i)=int(ppt(i)*100.)
@@ -251,7 +249,7 @@ end if
    	  write(*,*) 'lastfile created, restart program nwsfmt'
    	close(u(6))
    	close(u(1))
-   	stop
+   	stop '20'
   21   continue
    	  write(u(1),*) 'Program terminated, error reading "nwslast.txt" '
    	  write(u(1),*) 'delete "nwslast.txt", restart program nwsfmt'
@@ -259,6 +257,20 @@ end if
    	  write(*,*) 'delete "nwslast.txt", restart program nwsfmt'
    	close(u(6))
    	close(u(1))
-
+   	stop '21'
+  40   continue !Added 12/23/2016, RLB
+          write(u(1),*) 'Program terminated, error opening file date.txt'
+          write(u(1),*) 'Verify that file date.txt exists before running program.'
+          write(*,*) 'Program terminated, error opening file date.txt'
+          write(*,*) 'Verify that file date.txt exists before running program.'
+   	close(u(1))
+   	stop '40'
+  42   continue !Added 12/23/2016, RLB
+          write(u(1),*) 'Program terminated, error reading file date.txt'
+          write(u(1),*) 'Check format of file date.txt before running program.'
+          write(*,*) 'Program terminated, error opening file date.txt'
+          write(*,*) 'Check format of file date.txt before running program.'
+   	close(u(1))
+   	stop '41'
 	end program nwsfmt
  
