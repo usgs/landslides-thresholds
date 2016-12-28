@@ -8,6 +8,7 @@
 !  January 3 & 4, 2002 with subsequent revisions through 2008.
 ! Updated and revised by Jacob Vigil and Rex Baum, 2013 & 2014.
 ! Additional revisions by Sarah Fischer and Rex Baum, summer 2015.
+! Latest revisions by Rex Baum, December 2016.
 ! 		  
 ! VARIABLE NAMING CONVENTIONS
 !	These conventions are consistent throughout all files related to 
@@ -50,7 +51,7 @@
 	integer :: imid,tptr,xptr,timezoneOffset,sysYear
 	integer :: sysMinute,sysSeconds,lastDayOfMonth(12)
 	integer :: midnightVal,sumTintensity
-	integer :: maxDataGap,year ! ,sumPrecip
+	integer :: maxDataGap,year 
 	integer :: unitNumber(10),Tintensity,Trecent
 	integer :: Tantecedent,rph,numNewLines,fmins
 	integer :: ev_recent_antecedent,evid,evia,evira
@@ -123,7 +124,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='22 Dec 2016'; vrsn=' 1.0.016'
+     	revdate='28 Dec 2016'; vrsn=' 1.0.016'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -403,7 +404,6 @@
 	   
 	   write(*,*) 'Starting times:',tstormBeg1904(i),tstormEnd1904(i)
  	 
-!	   sumPrecip=0  ! initialize "sumPrecip" before starting a new station
 	   tlenx(i)=ctrHolder(i)
 	   AWICompOffset=numTimestampsHolder(i)+numNewLines !added 01/07/2008
 	   if(AWICompOffset<1 .or. AWICompOffset>stationPtr(i))then
