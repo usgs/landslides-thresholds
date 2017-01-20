@@ -30,7 +30,7 @@ A complete user guide for the program thresh is available as a USGS open-file re
 
 The program *thresh* and its companion utility programs, *nwsfmt*, and *tsthresh*, run from the command line and have limited user interaction.  Each program uses an initialization file that contains basic data needed to run the program as well as the path names of other input files.  The Python scripts are likewise designed to run from the command line.  Shell scripts (or Windows batch files) control and integrate the operation of programs in this package with Unix or Linux commands on the system to automate the process of tracking rainfall thresholds.  
 
-### Latest version (September 2016) ###
+### Latest version (January 2017) ###
 
 This release, 1.0.0a, is based on code that has been in use at the U.S. Geological Survey since 2006.  We began work to modernize the Fortran code in 2013.  Subsequently, in 2015, we began developing the python scripts used in processing files and plotting results.  
 
