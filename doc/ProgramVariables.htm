@@ -17,13 +17,13 @@
 <tr align=center><th>Variable Name</th><th>Type</th><th>Explanation</th></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> INTEGER </th></tr>
 <tr align=left><td><code> AWICompOffset </code></td><td> Integer </td><td> Offset used to shift location in computing AWI </td></tr>
-<tr align=left><td><code> AWIExceedCtr </code></td><td> Integer </td><td> Counter for exceedances of antecedent water index threshold </td></tr>
+<tr align=left><td><code> AWIExceedCtr </code></td><td> Integer </td><td> Counter for exceedance of antecedent water index threshold </td></tr>
 <tr align=left><td><code> AWIIntensCtr </code></td><td> Integer </td><td> Counter for combined exceedance of intensity duration threshold and antecedent water index </td></tr>
 <tr align=left><td><code> ctr </code></td><td> Integer </td><td> Counter for number of lines in rainfall data files </td></tr>
 <tr align=left><td><code> ctr_recent_antecedent </code></td><td> Integer </td><td> Counter for exceedance of <i>R</i>-day recent and previous <i>A-</i>day antecedent threshold </td></tr>
 <tr align=left><td><code> ctra </code></td><td> Integer </td><td> Counter for number of possible values of running average intensity </td></tr>
 <tr align=left><td><code> ctri </code></td><td> Integer </td><td> Counter for number of possible values of storm-average intensity (<i>ID</i>) or constant-duration intensity </td></tr>
-<tr align=left><td><code> ctrira  </code></td><td> Integer </td><td> Counter for combined exceedances of recent-antecedent threshold and running average rainfall intensity threshold </td></tr>
+<tr align=left><td><code> ctrira  </code></td><td> Integer </td><td> Counter for combined exceedance of recent-antecedent threshold and running average rainfall intensity threshold </td></tr>
 <tr align=left><td><code> ctria  </code></td><td> Integer </td><td> Counter for exceedance of running average rainfall intensity threshold, <i>I<sub>E</sub></i> </td></tr>
 <tr align=left><td><code> ctrid  </code></td><td> Integer </td><td> Counter for exceedance of storm-duration average intensity, <i>ID</i> threshold </td></tr>
 <tr align=left><td><code> cumAntecedentRainfallCtr </code></td><td> Integer </td><td> Counter for number of possible values of <i>A</i>-day cumulative antecedent precipitation </td></tr>
@@ -79,7 +79,7 @@
 <tr align=left><td><code> latestYear </code></td><td> Integer array </td><td> Year of latest data in rain gage input file </td></tr>
 <tr align=left><td><code> mins </code></td><td> Integer array </td><td> Minute value from timestamp in rain gage input file </td></tr>
 <tr align=left><td><code> timestampMonth </code></td><td> Integer array </td><td> Month value from timestamp in rain gage input file </td></tr>
-<tr align=left><td><code> precip </code></td><td> Integer array </td><td> Precipitation value (hundreths of an inch or tenths of millimeter) from rain gage input file </td></tr>
+<tr align=left><td><code> precip </code></td><td> Integer array </td><td> Precipitation value (hundredths of an inch or tenths of millimeter) from rain gage input file </td></tr>
 <tr align=left><td><code> pt_recent_antecedent </code></td><td> Integer array </td><td> Pointer used in tracking exceedance of the <i>R</i>-day and <i>A</i>-day cumulative rainfall amounts </td></tr>
 <tr align=left><td><code> ptawid </code></td><td> Integer array </td><td> Pointer used in tracking combined exceedance of the AWI and intensity-duration threshold </td></tr>
 <tr align=left><td><code> ptira </code></td><td> Integer array </td><td> Pointer used in tracking combined exceedance of the running average intensity and recent-antecedent precipitation threshold </td></tr>
@@ -147,7 +147,7 @@
 <tr align=left><td><code> sum3mx </code></td><td> Real </td><td> Maximum Trecent-hour computed rainfall intensity at a station for time period covered by the rain gage data file [OBSOLETE??]</td></tr>
 <tr align=left><td><code> upLim </code></td><td> Real </td><td> Upper duration limit for applying precipitation intensity duration threshold </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> REAL ARRAYS </th></tr>
-<tr align=left><td><code> AWI </code></td><td> real array </td><td> Antecendent Water Index (AWI) </td></tr>
+<tr align=left><td><code> AWI </code></td><td> real array </td><td> Antecedent Water Index (AWI) </td></tr>
 <tr align=left><td><code> AWI_0 </code></td><td> real array </td><td> Starting value of AWI retrieved from Thlast.txt </td></tr>
 <tr align=left><td><code> deficit_recent_antecedent </code></td><td> real array </td><td> All values of deficit or surplus of the <i>R</i>-day recent and prev. <i>A</i>-day antecedent precipitation threshold at current station</td></tr>
 <tr align=left><td><code> deficit_recent_antecedent_s </code></td><td> real array </td><td> Current (or latest) deficit or surplus of the <i>R</i>-day recent and prev. <i>A</i>-day antecedent precipitation threshold at each station </td></tr>

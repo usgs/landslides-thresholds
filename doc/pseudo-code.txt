@@ -49,7 +49,7 @@ Pseudo-code structure of program thresh.
 48		Step through cumulative precipitation and intensity computations for each file
 49	if [stats was chosen] then
 50		subroutine count_events
-51			Count number of threshold exceedances
+51			Count number of threshold exceedance
 52		Convert time-series arrays to 1D station series array for plotter output
 53	subroutine gnpts
 54		Create time-series plot file for each station
