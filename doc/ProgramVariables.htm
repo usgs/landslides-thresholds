@@ -14,24 +14,25 @@
     <body>
         <center><table>
  <caption><H1> Internal program variables in thresh.f90 </H1></caption>
+<tr align=left><td colspan="3"> [Math symbols are explained at the end of the table] </td></tr>
 <tr align=center><th>Variable Name</th><th>Type</th><th>Explanation</th></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> INTEGER </th></tr>
 <tr align=left><td><code> AWICompOffset </code></td><td> Integer </td><td> Offset used to shift location in computing AWI </td></tr>
 <tr align=left><td><code> AWIExceedCtr </code></td><td> Integer </td><td> Counter for exceedance of antecedent water index threshold </td></tr>
 <tr align=left><td><code> AWIIntensCtr </code></td><td> Integer </td><td> Counter for combined exceedance of intensity duration threshold and antecedent water index </td></tr>
 <tr align=left><td><code> ctr </code></td><td> Integer </td><td> Counter for number of lines in rainfall data files </td></tr>
-<tr align=left><td><code> ctr_recent_antecedent </code></td><td> Integer </td><td> Counter for exceedance of <i>R</i>-day recent and previous <i>A-</i>day antecedent threshold </td></tr>
+<tr align=left><td><code> ctr_recent_antecedent </code></td><td> Integer </td><td> Counter for exceedance of <i>R</i><sup>1</sup>-day recent and previous <i>A</i><sup>2</sup>-day antecedent threshold </td></tr>
 <tr align=left><td><code> ctra </code></td><td> Integer </td><td> Counter for number of possible values of running average intensity </td></tr>
-<tr align=left><td><code> ctri </code></td><td> Integer </td><td> Counter for number of possible values of storm-average intensity (<i>ID</i>) or constant-duration intensity </td></tr>
+<tr align=left><td><code> ctri </code></td><td> Integer </td><td> Counter for number of possible values of storm-average intensity (<i>I</i><sup>3</sup>) or constant-duration intensity(<i>I<sub>FD</sub></i><sup>4</sup>) </td></tr>
 <tr align=left><td><code> ctrira  </code></td><td> Integer </td><td> Counter for combined exceedance of recent-antecedent threshold and running average rainfall intensity threshold </td></tr>
-<tr align=left><td><code> ctria  </code></td><td> Integer </td><td> Counter for exceedance of running average rainfall intensity threshold, <i>I<sub>E</sub></i> </td></tr>
-<tr align=left><td><code> ctrid  </code></td><td> Integer </td><td> Counter for exceedance of storm-duration average intensity, <i>ID</i> threshold </td></tr>
+<tr align=left><td><code> ctria  </code></td><td> Integer </td><td> Counter for exceedance of running average rainfall intensity threshold, <i>I<sub>E</sub></i><sup>5</sup> </td></tr>
+<tr align=left><td><code> ctrid  </code></td><td> Integer </td><td> Counter for exceedance of storm-duration average intensity, (Intensity-Duration) threshold </td></tr>
 <tr align=left><td><code> cumAntecedentRainfallCtr </code></td><td> Integer </td><td> Counter for number of possible values of <i>A</i>-day cumulative antecedent precipitation </td></tr>
 <tr align=left><td><code> diffPtrOffset </code></td><td> Integer </td><td> Difference between minutes on local system (<code>sysMin</code>) and minutes in time stamp of recent data, used to set pointer to most recent data </td></tr>
 <tr align=left><td><code> ev_recent_antecedent </code></td><td> Integer </td><td> Number of continuous periods of threshold exceedance for the <i>R</i>-day and <i>A</i>-day antecedent precipitation threshold </td></tr>
 <tr align=left><td><code> evawid </code></td><td> Integer </td><td> Number of continuous periods of combined exceedance for the Intensity-Duration threshold and Antecedent Water Index</td></tr>
 <tr align=left><td><code> evira </code></td><td> Integer </td><td> Holds number of contiguous rows in an array that exceed the threshold </td></tr>
-<tr align=left><td><code> evia </code></td><td> Integer </td><td> Number of continuous periods of threshold exceedance for the <i>D<sub>f</sub></i>-hour running average intensity threshold </td></tr>
+<tr align=left><td><code> evia </code></td><td> Integer </td><td> Number of continuous periods of threshold exceedance for the <i>D<sub>f</sub></i><sup>6</sup>-hour running average intensity threshold </td></tr>
 <tr align=left><td><code> evid </code></td><td> Integer </td><td> Number of continuous periods of threshold exceedance for the intensity duration threshold </td></tr>
 <tr align=left><td><code> fmins </code></td><td> Integer </td><td> Minutes of latest time at last station listed in thresh_in.txt, used in setting <code>latestTime<code> </td></tr>
 <tr align=left><td><code> i </code></td><td> Integer </td><td> Loop index, mainly used for stepping through station numbers </td></tr>
@@ -60,13 +61,13 @@
 <tr align=left><td><code> Tantecedent </code></td><td> Integer </td><td> Number of hours of precipitation input data to compute the antecedent rainfall </td></tr>
 <tr align=left><td><code> TavgIntensity </code></td><td> Integer </td><td> Number of hours used in computing a running-average rainfall intensity </td></tr>
 <tr align=left><td><code> timezoneOffset </code></td><td> Integer </td><td> Number of hours difference between data logger clock and UTC or local time</td></tr>
-<tr align=left><td><code> Tintensity </code></td><td> Integer </td><td> Number of hours used in computing a running average intensity, if <code>Tintensity>0</code>, or storm-average intensity for duration of current storm, if <code>Tintensity==0</code>. </td></tr>
+<tr align=left><td><code> Tintensity </code></td><td> Integer </td><td> Number of hours used in computing a running-average (mean) intensity, if <code>Tintensity>0</code>; or compute storm-average intensity for duration of current storm, if <code>Tintensity==0</code>. </td></tr>
 <tr align=left><td><code> tptr </code></td><td> Integer </td><td> Auxiliary pointer used in computing precipitation sums for various time periods </td></tr>
 <tr align=left><td><code> tRainfallBegan  </code></td><td> Integer </td><td> Beginning time for rainfall for beginning of latest (or current) storm </td></tr>
 <tr align=left><td><code> tRainfallEnd </code></td><td> Integer </td><td> Ending time for rainfall for latest (or current) storm </td></tr>
 <tr align=left><td><code> Trecent </code></td><td> Integer </td><td> Number of hours of precipitation input data to compute the recent rainfall </td></tr>
 <tr align=left><td><code> tStormGap  </code></td><td> Integer </td><td> Holds running count of hours since end of most recent storm </td></tr>
-<tr align=left><td><code> xptr  </code></td><td> Integer </td><td> Auxiliary pointer used in computing various cumulative values (sumPrecip, sumTintensity, etc) </td></tr>
+<tr align=left><td><code> xptr  </code></td><td> Integer </td><td> Auxiliary pointer used in computing various cumulative values (<code>sumPrecip</code>, <code>sumTintensity</code>, etc) </td></tr>
 <tr align=left><td><code> year </code></td><td> Integer </td><td> Current year or the year of the data being analyzed </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> INTEGER ARRAYS </th></tr>
 <tr align=left><td><code> da </code></td><td> Integer array </td><td> Day of month value from timestamp in rain gage input file </td></tr>
@@ -84,11 +85,11 @@
 <tr align=left><td><code> ptawid </code></td><td> Integer array </td><td> Pointer used in tracking combined exceedance of the AWI and intensity-duration threshold </td></tr>
 <tr align=left><td><code> ptira </code></td><td> Integer array </td><td> Pointer used in tracking combined exceedance of the running average intensity and recent-antecedent precipitation threshold </td></tr>
 <tr align=left><td><code> ptia </code></td><td> Integer array </td><td> Pointer used in tracking exceedance of the running average rainfall intensity, <i>I<sub>E</sub></i> </td></tr>
-<tr align=left><td><code> ptid </code></td><td> Integer array </td><td> Pointer used in tracking exceedance of the running storm-duration average rainfall intensity </td></tr>
+<tr align=left><td><code> ptid </code></td><td> Integer array </td><td> Pointer used in tracking exceedance of the running storm-duration average rainfall intensity, <i>I</i> </td></tr>
 <tr align=left><td><code> stationPtr </code></td><td> Integer array </td><td> Pointer for each station </td></tr>
 <tr align=left><td><code> ctrHolder </code></td><td> Integer array </td><td> Holds counter values for each station </td></tr>
-<tr align=left><td><code> tlenx </code></td><td> Integer array </td><td> Holds a value twice the length of the plotting window, twin, provided sufficient data exist and used to manage starting point for computations in real-time operations, at end of program run, values are saved in last column of Thlast.txt </td></tr>
-<tr align=left><td><code> numTimestampsHolder </code></td><td> Integer array </td><td> Holds time stamps for last data as listed in the file 'thlast.txt' </td></tr>
+<tr align=left><td><code> tlenx </code></td><td> Integer array </td><td> Holds a value twice the length of the plotting window, <code>twin</code>, provided sufficient data exist and used to manage starting point for computations in real-time operations, at end of program run, values are saved in last column of Thlast.txt </td></tr>
+<tr align=left><td><code> numTimestampsHolder </code></td><td> Integer array </td><td> Holds time stamps for last data as listed in the file 'Thlast.txt' </td></tr>
 <tr align=left><td><code> tempStatNum </code></td><td> Integer array </td><td> Station number of corresponding data file (initialization data) </td></tr>
 <tr align=left><td><code> timestampYear </code></td><td> Integer array </td><td> Year value from timestamp in rain gage input file </td></tr>
 <tr align=left><td><code> unitNumber </code></td><td> Integer array </td><td> Unit number(s) of files connected to the program </td></tr>
@@ -133,18 +134,17 @@
 <tr align=left><td><code> AWIThresh </code></td><td> Real </td><td> Holds last computed value of antecedent wetness index from Thlast.txt </td></tr>
 <tr align=left><td><code> decayFactor </code></td><td> Real </td><td> Exponential decay factor for computing antecedent wetness index </td></tr>
 <tr align=left><td><code> drainConst </code></td><td> Real </td><td> Drainage constant for antecedent wetness index </td></tr>
-<tr align=left><td><code> fieldCap </code></td><td> Real </td><td> Field Capacity, <i>C<sub>f</sub></i>, for computing AWI </td></tr>
+<tr align=left><td><code> fieldCap </code></td><td> Real </td><td> Field Capacity, <i>C<sub>f</sub></i><sup>7</sup>, for computing AWI </td></tr>
 <tr align=left><td><code> in2mm </code></td><td> Real </td><td> Conversion factor for antecedent wetness index </td></tr>
 <tr align=left><td><code> intercept </code></td><td> Real </td><td> Recent-precipitation-(vertical-) axis intercept of <i>R</i>-day Recent/<i>A</i>-day Antecedent threshold </td></tr>
 <tr align=left><td><code> lowLim </code></td><td> Real </td><td> Lower duration limit for applying precipitation intensity duration threshold </td></tr>
 <tr align=left><td><code> polynomArr </code></td><td> Real </td><td> Coefficients of the fifth degree polynomial used to represent rainfall intensity and duration thresholds that are not adequately modeled by a power function </td></tr>
 <tr align=left><td><code> powerCoeff </code></td><td> Real </td><td> Coefficient of power-law-defined intensity-duration threshold </td></tr>
 <tr align=left><td><code> powerExp </code></td><td> Real </td><td> Exponent of power-law-defined intensity-duration threshold </td></tr>
-<tr align=left><td><code> rntsymx </code></td><td> Real </td><td> Maximum TavgIntensity-hour computed rainfall intensity at a station for time period covered by the rain gage data file </td></tr>
+<tr align=left><td><code> rntsymx </code></td><td> Real </td><td> Maximum <code>TavgIntensity</code>-hour computed rainfall intensity at a station for time period covered by the rain gage data file </td></tr>
 <tr align=left><td><code> runningIntens </code></td><td> Real </td><td> Running average intensity threshold, <i>I<sub>E</sub></i> </td></tr>
 <tr align=left><td><code> seasonalAntThresh </code></td><td> Real </td><td> Threshold value for defining wet conditions using the AWI </td></tr>
 <tr align=left><td><code> slope </code></td><td> Real </td><td> Slope of <i>R</i>-day Recent/<i>A</i>-day Antecedent precipitation threshold </td></tr>
-<tr align=left><td><code> sum3mx </code></td><td> Real </td><td> Maximum Trecent-hour computed rainfall intensity at a station for time period covered by the rain gage data file [OBSOLETE??]</td></tr>
 <tr align=left><td><code> upLim </code></td><td> Real </td><td> Upper duration limit for applying precipitation intensity duration threshold </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> REAL ARRAYS </th></tr>
 <tr align=left><td><code> AWI </code></td><td> real array </td><td> Antecedent Water Index (AWI) </td></tr>
@@ -162,8 +162,8 @@
 <tr align=left><td><code> sumAntecedent_s </code></td><td> real array </td><td> Current or latest value of cumulative <i>A</i>-day (<code>Tantededent</code>-hour) antecedent precipitation at each station </td></tr>
 <tr align=left><td><code> sumTrecent </code></td><td> real array </td><td> Cumulative <i>R</i>-day (<code>Trecent</code>-hour) precipitation at each line in the current data file </td></tr>
 <tr align=left><td><code> sumRecent_s </code></td><td> real array </td><td> Current of latest value of cumulative <i>R</i>-day (<code>Trecent</code>-hour) precipitation at each station </td></tr>
-<tr align=left><td><code> sthreshIntensityDuration </code></td><td> real array </td><td> Current or latest value of intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i>, at each station </td></tr>
-<tr align=left><td><code> threshAvgExceed </code></td><td> real array </td><td> Running average (over duration <code>TavgIntensity</code>) intensity exceedance index, <i>E<sub>I</sub></i>, at each line in the current data file </td></tr>
+<tr align=left><td><code> sthreshIntensityDuration </code></td><td> real array </td><td> Current or latest value of intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i><sup>8</sup>, at each station </td></tr>
+<tr align=left><td><code> threshAvgExceed </code></td><td> real array </td><td> Running average (over duration <code>TavgIntensity</code>) intensity exceedance index, <i>E<sub>ID,f</sub></i><sup>9</sup>, at each line in the current data file </td></tr>
 <tr align=left><td><code> srunIntensity </code></td><td> real array </td><td> Current or latest value of running average (over duration <code>TavgIntensity</code>) intensity exceedance index at each station </td></tr>
 <tr align=left><td><code> threshIntensityDuration </code></td><td> real array </td><td> Intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i>, at each line in the current data file </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> DOUBLE PRECISION </th></tr>
@@ -178,5 +178,16 @@
 <tr align=left><td><code> tstormBeg1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for the beginning of the current or most recent storm at each rain gage (i.e. imported from Thlast.txt or computed from recent data) </td></tr>
 <tr align=left><td><code> tstormEnd1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for the beginning of the current or most recent storm at each rain gage (i.e. imported from Thlast.txt or computed from recent data) </td></tr>
  </table></center>
+<ol type="1">
+  <li><i>R</i> : Number of days to compute recent precipitation </li>
+  <li><i>A</i> : Number of days to compute antecedent precipitation </li>
+  <li><i>I</i> : Storm-average precipitation Intensity </li>
+  <li><i>I<sub>FD</sub></i> : Constant- or fixed-duration precipitation intensity </li>
+  <li><i>I<sub>E</sub></i> : Running-average precipitation intensity threshold </li>
+  <li><i>D<sub>f</sub></i> : Duration, in hours, for computing the running-average intensity </li>
+  <li><i>C<sub>f</sub></i> : Field capacity, amount of water held by a column of soil after gravity drainage </li>
+  <li><i>E<sub>ID</sub></i> : Index for exceedance of the Intensity-Duration (ID) threshold </li>
+  <li><i>E<sub>ID,f</sub></i> : Index for exceedance of the Running-Average Intensity (ID) threshold of duration <i>D<sub>f</sub></i> </li>
+</ol>
         </body>
     </html>
