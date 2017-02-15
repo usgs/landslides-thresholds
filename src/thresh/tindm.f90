@@ -25,7 +25,7 @@
 	character (len=255) :: outputFile
 	character (len=10)  :: date,anteced,recent,mintensity,mduration
 	character (len=10)  :: mdeficit,mintensityDuration,mAWI,mrunningIntensity
-	character (len=10)  :: logRunIntensity,logStormIntensity 
+	character (len=10)  :: logStormIntensity !logRunIntensity,
 	character (len=3)   :: AntecedentHeader
 	character 	    :: pd,tb,cbrai
 	real	    	    :: maxDeficit,maxDuration,d_recent_antecedentmx,maxThreshIndex 

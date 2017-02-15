@@ -3,7 +3,7 @@ implicit none
 
 contains 
    !PURPOSE : 
-   !	  Tracks storms?
+   !	  Tracks storms and antecedent precipitation
    !
 	subroutine track_storm(diffPtrOffset,stationPtr,precip,resetAntMonth,&
 	resetAntDay,AWI,AWIconversion,evapConsts,timestampMonth,decayFactor,&
@@ -36,17 +36,15 @@ contains
    ! LOCAL VARIABLES
 	   real :: floatPrecip
 	   integer :: i, j
+	   logical :: flagStormEnd
 
    !-----------------------------
-	   ! compute antecedent water balance
-	   do i = (1 + diffPtrOffset), stationPtr
-	   
-!		if (precipUnit == 'mm') then  !Deleted 30 Oct 2015 RLB
-!			floatPrecip = float(precip(i))/254.
-!		else if (precipUnit == 'in') then
-!			floatPrecip = float(precip(i))/100.
-!		end if
-			floatPrecip = float(precip(i))
+      ! Initialize variables
+	   flagStormEnd = .true.
+      
+	   ! compute antecedent water balance and intensity
+	   MainLoop: do i = (1 + diffPtrOffset), stationPtr
+	     floatPrecip = float(precip(i))
 		
               ! Compute either antecedent Water Index (AWI) or Cumulative precipitation	   
 	      if(resetAntMonth * resetAntDay <= 0) then ! Reset date not given, so compute (AWI)
@@ -67,7 +65,6 @@ contains
 	            end if
 	         end if
 	      end if
-!	      write(*,*) i,AWI(i),floatPrecip
 	      ! Set no-data value for cells too close to beginning of file to 
 	      ! compute running average antecedent precip.
 	      if((i - TavgIntensity * rph)<0) runIntensity(i) = -99. 
@@ -82,7 +79,10 @@ contains
 	         if(TstormGap == minTStormGap * rph .and. precip(i)>0) then
 	            tRainfallBegan = i - 1
 	            trfbeg = eachDate1904(tRainfallBegan)
-	            if(trfbeg >= tstormBeg1904) tstormBeg1904 = trfbeg 
+	            if(trfbeg >= tstormBeg1904) then 
+                       tstormBeg1904 = trfbeg 
+                       flagStormEnd = .false.
+	            end if
 	         end if
 	      end if
 	      if(i == 1 .and. precip(i) > 0) then
@@ -105,9 +105,9 @@ contains
 	            if(tstormEnd1904 >= tstormBeg1904) then
 	               dur(i) = (tstormEnd1904 - tstormBeg1904) * 24.d0 ! storm duration in hours
 	               	 
-	               if(Tintensity == 0) then
+	               if(Tintensity == 0) then ! Storm-average intensity 
                        ! compute latest average precipitation intensity since beginning of storm	
-	                  do j = tRainfallBegan, i ! during first hours after 
+	                  PreliminaryIntensity: do j = tRainfallBegan, i ! during first hours after 
                                               ! rainfall ends, computes gradually decreasing intensity
 	                     xptr = j
                         ! check for insufficient data
@@ -119,7 +119,7 @@ contains
 	                     else
 	                        sumTintensity = sumTintensity + precip(xptr)
 	                     end if
-	                  end do
+	                  end do PreliminaryIntensity
 	                  if(dur(i) > 0 .and. sumTintensity >= 0) then
 	                     intensity(i)=float(sumTintensity) / &
 	                     ((eachDate1904(i) - tstormBeg1904) * 24.d0 * 100.) 
@@ -131,8 +131,36 @@ contains
 	            end if
 	         end if
 	      end if
-      end do
-         
+! 
+             ! Post-storm corrections of storm duration and average intensity.
+	      if((i - minTStormGap*rph) == tRainfallEnd) flagStormEnd=.false. ! Most recent storm has ended   
+	      if (.not. flagStormEnd) then ! Correct intensity & duration values after storm ends
+	         if(Tintensity == 0) then ! Storm-average intensity selected 
+	            sumTintensity=0
+	            CorrectedIntensity: do j = tRainfallBegan+1, tRainfallEnd
+	              xptr = j
+                     ! check for insufficient data
+	              if(xptr < 1) then
+	                 sumTintensity = -99
+                     ! check for no data
+	              else if(precip(xptr) < 0) then
+	                 sumTintensity = -99
+	              else
+	                 sumTintensity = sumTintensity + precip(xptr)
+	              end if
+	              dur(j) = (eachDate1904(j) - tstormBeg1904) * 24.d0 ! storm duration in hours
+	              intensity(j)=float(sumTintensity) / &
+	                 & ((eachDate1904(j) - tstormBeg1904) * 24.d0 * 100.) 
+	            end do CorrectedIntensity
+	            ! zero out post-storm duration and intensity
+	            do j = tRainfallEnd +1, tRainfallEnd + minTStormGap*rph 
+	               dur(j)=0 
+	               intensity(j)=0.
+	            end do
+	            flagStormEnd = .true.
+	         end if
+	      end if
+           end do MainLoop
         end subroutine track_storm
    ! END OF SUBROUTINE }}}
 
