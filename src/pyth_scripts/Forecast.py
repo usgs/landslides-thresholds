@@ -483,7 +483,7 @@ disclamers = ('\n with respect to the Intensity-Duration Index'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date & Time')
-ytext = ('Intensity-Duration Index, m')
+ytext = ('Intensity-Duration Index')
 
 init_plot('360-hour Intensity-Duration History and Forecast in Seattle, Washington, & vicinity,')
 

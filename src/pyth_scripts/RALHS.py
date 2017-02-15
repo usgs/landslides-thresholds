@@ -469,7 +469,7 @@ disclamers = ('\n with respect to the Intensity-Duration Index'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date & Time')
-ytext = ('Intensity-Duration Index, m')
+ytext = ('Intensity-Duration Index')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
 markers = [ ('b-', 'SCB'),
