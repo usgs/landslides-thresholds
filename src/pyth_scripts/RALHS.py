@@ -142,10 +142,10 @@ date_text = fin.read()
 fin.close()
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = { '01':('p', 'b', 'Marine View Dr. & 116th'),
-            '02':('D', 'm', 'Waterton Circle'),
-            '03':('*', 'c', 'Mukilteo Lighthouse Park'),
-            '04':('^', 'r', 'Mukilteo Wastewater')
+markers = { '01':('p', 'b', 'VH'),
+            '02':('D', 'm', 'LS'),
+            '03':('*', 'c', 'M1'),
+            '04':('^', 'r', 'M2')
             }
 
 # Set fontsize for plot
@@ -177,7 +177,7 @@ init_plot('360-hour precipitation history in Mukilteo, Washington')
 
 data01 = readfiles(['data/ThTSplot360hour01.txt'])
 for d in data01: # Trace 15-day history of conditions relative to threshold
-    plt.plot(d[2], d[3], label='Mukilteo, Marine View Drive, history')
+    plt.plot(d[2], d[3], label='Mukilteo, VH, history')
 
 data = readfiles(['data/ThSta01.txt'])
 for d in data:
@@ -196,7 +196,7 @@ init_plot('360-hour precipitation history in Mukilteo, Washington')
 
 data02 = readfiles(['data/ThTSplot360hour02.txt'])
 for d in data02: # Trace 15-day history of conditions relative to threshold
-    plt.plot(d[2], d[3], label='Mukilteo, Waterton Circle, history')
+    plt.plot(d[2], d[3], label='Mukilteo, LS, history')
 
 data = readfiles(['data/ThSta02.txt'])
 for d in data:
@@ -215,7 +215,7 @@ init_plot('360-hour precipitation history in Mukilteo, Washington')
 
 data03 = readfiles(['data/ThTSplot360hour03.txt'])
 for d in data03: # Trace 15-day history of conditions relative to threshold
-    plt.plot(d[2], d[3], label='Mukilteo Lighthouse Park, history')
+    plt.plot(d[2], d[3], label='M1, history')
 
 data = readfiles(['data/ThSta03.txt'])
 for d in data: # Trace 15-day history of conditions relative to threshold
@@ -234,7 +234,7 @@ init_plot('360-hour precipitation history in Mukilteo, Washington')
 
 data04 = readfiles(['data/ThTSplot360hour04.txt'])
 for d in data04: # Trace 15-day history of conditions relative to threshold
-    plt.plot(d[2], d[3], label='Mukilteo Wastewater, history')
+    plt.plot(d[2], d[3], label='M2, history')
 
 data = readfiles(['data/ThSta04.txt'])
 for d in data:
@@ -334,10 +334,10 @@ ytext = ('I: Average intensity, in/hr')
 
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = { '01':('p', 'b', 'Marine View Dr. & 116th'),
-            '02':('D', 'm', 'Waterton Circle'),
-            '03':('*', 'c', 'Mukilteo Lighthouse Park'),
-            '04':('^', 'r', 'Mukilteo Wastewater')
+markers = { '01':('p', 'b', 'VH'),
+            '02':('D', 'm', 'LS'),
+            '03':('*', 'c', 'M1'),
+            '04':('^', 'r', 'M2')
             }
 
 # Make plots of I-D threshold conditions
@@ -416,10 +416,10 @@ xtext = ('Date & Time')
 ytext = ('Antecedent Water Index, m')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = [ ('b-', 'Marine View'),
-           ('m-', 'Waterton Circle'),
-           ('c-', 'Mukilteo Lighthouse Park'),
-           ('r-', 'Mukilteo Wastewater')
+markers = [ ('b-', 'VH'),
+           ('m-', 'LS'),
+           ('c-', 'M1'),
+           ('r-', 'M2')
            ]
 
 # Make plots of AWI
@@ -472,8 +472,8 @@ xtext = ('Date & Time')
 ytext = ('Intensity-Duration Index')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = [ ('b-', 'SCB'),
-           ('m-', 'ALS'),
+markers = [ ('b-', 'VH'),
+           ('m-', 'LS'),
            ('c-', 'M1'),
            ('r-', 'M2')
            ]

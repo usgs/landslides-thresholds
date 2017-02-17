@@ -88,9 +88,9 @@ matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 init_plot('Battery voltage at all Stations')
 
-plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='b', label='SCB')
-plt.plot(column_0_MWatA, battery_volt_MWatA, linestyle='-', color='r', label='ALS-a')
-plt.plot(column_0_MVD116, battery_volt_MWatB, linestyle='-', color='g', label='ALS-b')
+plt.plot(column_0_MVD116, battery_volt_MVD116, linestyle='-', color='b', label='VH')
+plt.plot(column_0_MWatA, battery_volt_MWatA, linestyle='-', color='r', label='LS-a')
+plt.plot(column_0_MVD116, battery_volt_MWatB, linestyle='-', color='g', label='LS-b')
 plt.plot(column_0_MVD116, battery_volt_MLP, linestyle='-', color='m', label='M1')
 plt.plot(column_0_MVD116, battery_volt_MWWD, linestyle='-', color='c', label='M2')
 

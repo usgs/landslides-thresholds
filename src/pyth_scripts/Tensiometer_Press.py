@@ -103,9 +103,9 @@ corrTensPres_kPa_3_wca = corrTensPres_V_3 * tensMult + tensOffs
 # Draw and save plot
 init_plot('Tensiometer Pressure at Waterton Circle Station A')
 
-plt.plot(column_0, corrTensPres_kPa_1_wca, linestyle='-', color='b', label='2 110 cm')
-plt.plot(column_0, corrTensPres_kPa_2_wca, linestyle='-', color='r', label='3 110 cm')
-plt.plot(column_0, corrTensPres_kPa_3_wca, linestyle='-', color='g', alpha=0, label='4 100 cm')
+plt.plot(column_0, corrTensPres_kPa_1_wca, linestyle='-', color='b', alpha=0, label='2 110 cm')
+plt.plot(column_0, corrTensPres_kPa_2_wca, linestyle='-', color='r', alpha=0, label='3 110 cm')
+plt.plot(column_0, corrTensPres_kPa_3_wca, linestyle='-', color='g', label='4 100 cm')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
@@ -130,9 +130,9 @@ corrTensPres_kPa_3_wcb = corrTensPres_V_3 * tensMult + tensOffs
 # Draw and save plot
 init_plot('Tensiometer Pressure at Waterton Circle Station B')
 
-plt.plot(column_0, corrTensPres_kPa_1_wcb, linestyle='-', color='b', label='2 110 cm')
+plt.plot(column_0, corrTensPres_kPa_1_wcb, linestyle='-', color='b', alpha=0, label='2 110 cm')
 plt.plot(column_0, corrTensPres_kPa_2_wcb, linestyle='-', color='r', alpha=0, label='3 170 cm')
-plt.plot(column_0, corrTensPres_kPa_3_wcb, linestyle='-', color='g', label='4 177 cm')
+plt.plot(column_0, corrTensPres_kPa_3_wcb, linestyle='-', color='g', alpha=0, label='4 177 cm')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
@@ -151,7 +151,7 @@ def init_plot1(title, yMin=-90, yMax=25): # Set plot dimensions and paramters
     plt.grid()
 
 def end_plot1(name=None, cols=5):
-    plt.legend(loc=2, ncol=cols, fontsize=10, title='  Sensor Position & Depth, cm\nSCB         ALS-a         ALS-b')
+    plt.legend(loc=2, ncol=cols, fontsize=10, title='  Sensor Position & Depth, cm\nVH          LS-a          LS-b')
     if name:
         plt.savefig(name, bbox_inches='tight')
 
@@ -162,12 +162,12 @@ init_plot1('Tensiometer Pressure at Mukilteo Stations')
 plt.plot(column_0, corrTensPres_kPa_1_mvd, linestyle='-', color='b', label='2 110')
 plt.plot(column_0, corrTensPres_kPa_2_mvd, linestyle='-', color='r', label='3 110')
 plt.plot(column_0, corrTensPres_kPa_3_mvd, linestyle='-', color='g', label='4 100')
-plt.plot(column_0, corrTensPres_kPa_1_wca, linestyle='--', color='b', label='2 110')
-plt.plot(column_0, corrTensPres_kPa_2_wca, linestyle='--', color='r', label='3 110')
-plt.plot(column_0, corrTensPres_kPa_3_wca, linestyle='--', color='g', alpha=0, label='4 100')
-plt.plot(column_0, corrTensPres_kPa_1_wcb, linestyle='-.', color='b', label='2 110')
+plt.plot(column_0, corrTensPres_kPa_1_wca, linestyle='--', color='b', alpha=0, label='2 110')
+plt.plot(column_0, corrTensPres_kPa_2_wca, linestyle='--', color='r', alpha=0, label='3 110')
+plt.plot(column_0, corrTensPres_kPa_3_wca, linestyle='--', color='g', label='4 100')
+plt.plot(column_0, corrTensPres_kPa_1_wcb, linestyle='-.', color='b', alpha=0, label='2 110')
 plt.plot(column_0, corrTensPres_kPa_2_wcb, linestyle='-.', color='r', alpha=0, label='3 170')
-plt.plot(column_0, corrTensPres_kPa_3_wcb, linestyle='-.', color='g', label='4 177')
+plt.plot(column_0, corrTensPres_kPa_3_wcb, linestyle='-.', color='g', alpha=0, label='4 177')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())

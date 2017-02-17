@@ -293,7 +293,7 @@ def init_plot1(title, yMin=0, yMax=3):
     plt.grid()
 
 def end_plot1(name=None, cols=5):
-    plt.legend(loc=2, ncol=cols, fontsize=10, title='   Sensor Position & Depth, cm\nSCB         ALS-a         ALS-b')
+    plt.legend(loc=2, ncol=cols, fontsize=10, title='   Sensor Position & Depth, cm\nVH           LS-a           LS-b')
     if name:
         plt.savefig(name, bbox_inches='tight')
 
@@ -301,7 +301,7 @@ init_plot1('Water Level at Mukilteo Stations')
 
 plt.plot(column_0, lvl1_m_mvd, linestyle='-', color='b', label='1 178')
 plt.plot(column_0, lvl2_m_mvd, linestyle='-', color='r', label='5 297')
-plt.plot(column_0, lvl1_m_wca, linestyle='--', color='b', label='1 300')
+plt.plot(column_0, lvl1_m_wca, linestyle='--', color='b', alpha=0, label='1 300')
 plt.plot(column_0, lvl2_m_wca, linestyle='--', color='r', alpha=1, label='5 300')
 plt.plot(column_0, lvl1_m_wcb, linestyle='-.', color='b', label='1 300')
 plt.plot(column_0, lvl2_m_wcb, linestyle='-.', color='r', alpha=0, label='5 175') # alpha=0 hides plot of malfunctioning sensor
