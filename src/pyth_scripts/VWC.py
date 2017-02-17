@@ -168,7 +168,7 @@ def init_plot_all(title, yMin=0, yMax=0.6): # set plot parameters and dimensions
     plt.grid()
 
 def end_plot(name=None, cols=5):
-    plt.legend(loc=2, ncol=cols, fontsize=10, title='  Sensor Position & Depth, cm\nSCB         ALS-a         ALS-b')
+    plt.legend(loc=2, ncol=cols, fontsize=10, title='  Sensor Position & Depth, cm\nVH           LS-a         LS-b')
     if name:
         plt.savefig(name, bbox_inches='tight')
 
