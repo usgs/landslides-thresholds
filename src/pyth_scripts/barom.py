@@ -70,7 +70,7 @@ barometricPressure_raw = np.array(data)[0][:,1]
 barometricPressure_kPa=(barometricPressure_raw*0.240+500)*0.1
 
 # Draw and save plot
-init_plot('Barometric Pressure at Waterton Circle Station A')
+init_plot('Barometric Pressure at LS-a')
 
 plt.plot(column_0, barometricPressure_kPa, linestyle='-', color='b', label='Barometric pressure')
 

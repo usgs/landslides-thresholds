@@ -66,7 +66,7 @@ rain_tipCount = np.array(data)[0][:,1]
 # Compute Rainfall
 rain_in_mvd = rain_tipCount * 0.01
 # Draw plot
-init_plot('Rainfall at Marine View Dr. & 116 St. SW')
+init_plot('Rainfall at VH')
 
 plt.plot(column_0, rain_in_mvd, linestyle='-', color='b', label='Rainfall')
 
@@ -88,7 +88,7 @@ rain_tipCount = np.array(data)[0][:,1]
 #Compute Rainfall
 rain_in_mlp = rain_tipCount * 0.01
 # Draw plot
-init_plot('Rainfall at Mukilteo Lighthouse Park')
+init_plot('Rainfall at M1')
 
 plt.plot(column_0, rain_in_mlp, linestyle='-', color='b', label='Rainfall')
 
@@ -110,7 +110,7 @@ rain_tipCount = np.array(data)[0][:,1]
 # Compute Rainfall
 rain_in_mwwd = rain_tipCount * 0.01
 # Draw plots
-init_plot('Rainfall at Mukilteo Wastewater Plant')
+init_plot('Rainfall at M2')
 
 plt.plot(column_0, rain_in_mwwd, linestyle='-', color='b', label='Rainfall')
 
@@ -133,7 +133,7 @@ rain_tipCount = np.array(data)[0][:,1]
 rain_in_wca = rain_tipCount * 0.01
 
 # Import data and assign to arrays
-init_plot('Rainfall at Waterton Circle Station A')
+init_plot('Rainfall at LS-a')
 
 plt.plot(column_0, rain_in_wca, linestyle='-', color='b', label='Rainfall')
 
@@ -169,10 +169,10 @@ matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 # Draw plot of 15-minute rainfall for all stations
 init_plot1('Rainfall at Mukilteo Stations')
 
-plt.plot(column_0, rain_in_mvd, linestyle='-', color='b', alpha=0.75, label='SCB')
+plt.plot(column_0, rain_in_mvd, linestyle='-', color='b', alpha=0.75, label='VH')
 plt.plot(column_0, rain_in_mlp, linestyle='-', color='r', alpha=0.75, label='M1')
 plt.plot(column_0, rain_in_mwwd, linestyle='-', color='g', alpha=0.75, label='M2')
-plt.plot(column_0, rain_in_wca, linestyle='-', color='orange', alpha=0.75, label='ALS')
+plt.plot(column_0, rain_in_wca, linestyle='-', color='orange', alpha=0.75, label='LS')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())

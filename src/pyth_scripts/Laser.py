@@ -71,7 +71,7 @@ laserDistance_mm = laserDistance_raw*laserDistance_mult+laserDistance_Offs
 laserDistance_m = laserDistance_mm/1000.
 
 # Draw & save plot
-init_plot('Laser Distance at ALS')
+init_plot('Laser Distance at LS')
 
 plt.plot(column_0, laserDistance_m, linestyle='-', color='b', label='laser 1')
 

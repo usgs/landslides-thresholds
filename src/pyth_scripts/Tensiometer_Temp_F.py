@@ -76,7 +76,7 @@ font = {'family' : 'monospace',
 
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 # Draw and save plot
-init_plot('Tensiometer Temperature at Marine View Drive & 116 St. SW')
+init_plot('Tensiometer Temperature at VH')
 
 plt.plot(column_0, corrTensTemp_F_1, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensTemp_F_2, linestyle='-', color='r', label='3 110 cm')
@@ -108,7 +108,7 @@ corrTensTemp_F_2 = 32. + 9.*corrTensTemp_kPa_2/5.
 corrTensTemp_F_3 = 32. + 9.*corrTensTemp_kPa_3/5.
 
 # Draw and save plot
-init_plot('Tensiometer Temperature at Waterton Circle Station A')
+init_plot('Tensiometer Temperature at LS-a')
 
 plt.plot(column_0, corrTensTemp_F_1, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensTemp_F_2, linestyle='-', color='r', label='3 110 cm')
@@ -140,7 +140,7 @@ corrTensTemp_F_2 = 32. + 9.*corrTensTemp_kPa_2/5.
 corrTensTemp_F_3 = 32. + 9.*corrTensTemp_kPa_3/5.
 
 # Draw and save plot
-init_plot('Tensiometer Temperature at Waterton Circle Station B')
+init_plot('Tensiometer Temperature at LS-b')
 
 plt.plot(column_0, corrTensTemp_F_1, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensTemp_F_2, linestyle='-', color='r', alpha=0, label='3 170 cm')

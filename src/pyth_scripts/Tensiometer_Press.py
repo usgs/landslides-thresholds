@@ -74,7 +74,7 @@ corrTensPres_kPa_1_mvd = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2_mvd = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3_mvd = corrTensPres_V_3 * tensMult + tensOffs
 # Draw and save plot
-init_plot('Tensiometer Pressure at Marine View Drive & 116 St. SW')
+init_plot('Tensiometer Pressure at VH')
 
 plt.plot(column_0, corrTensPres_kPa_1_mvd, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensPres_kPa_2_mvd, linestyle='-', color='r', label='3 110 cm')
@@ -101,7 +101,7 @@ corrTensPres_kPa_1_wca = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2_wca = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3_wca = corrTensPres_V_3 * tensMult + tensOffs
 # Draw and save plot
-init_plot('Tensiometer Pressure at Waterton Circle Station A')
+init_plot('Tensiometer Pressure at LS-a')
 
 plt.plot(column_0, corrTensPres_kPa_1_wca, linestyle='-', color='b', alpha=0, label='2 110 cm')
 plt.plot(column_0, corrTensPres_kPa_2_wca, linestyle='-', color='r', alpha=0, label='3 110 cm')
@@ -128,7 +128,7 @@ corrTensPres_kPa_1_wcb = corrTensPres_V_1 * tensMult + tensOffs
 corrTensPres_kPa_2_wcb = corrTensPres_V_2 * tensMult + tensOffs
 corrTensPres_kPa_3_wcb = corrTensPres_V_3 * tensMult + tensOffs
 # Draw and save plot
-init_plot('Tensiometer Pressure at Waterton Circle Station B')
+init_plot('Tensiometer Pressure at LS-b')
 
 plt.plot(column_0, corrTensPres_kPa_1_wcb, linestyle='-', color='b', alpha=0, label='2 110 cm')
 plt.plot(column_0, corrTensPres_kPa_2_wcb, linestyle='-', color='r', alpha=0, label='3 170 cm')

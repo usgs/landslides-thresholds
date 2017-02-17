@@ -86,7 +86,7 @@ tstamp = num2date(column_0_mvd, tz=None)
 ts = Series(rain_in_mvd, index=tstamp)
 daily_in_mvd = ts.resample('d', how='sum')
 
-make_plot('Rainfall at Marine View Dr. & 116 St. SW', column_0_mvd, rain_in_mvd, daily_in_mvd.index, daily_in_mvd.values, name='MVD116_rain_in_day.png')
+make_plot('Rainfall at VH', column_0_mvd, rain_in_mvd, daily_in_mvd.index, daily_in_mvd.values, name='MVD116_rain_in_day.png')
 #
 ## ------------------------
 # Process data for Mukilteo Lighthouse Park
@@ -103,7 +103,7 @@ tstamp = num2date(column_0_mlp, tz=None)
 ts = Series(rain_in_mlp, index=tstamp)
 daily_in_mlp = ts.resample('d', how='sum')
 #
-make_plot('Rainfall at Mukilteo Lighthouse Park', column_0_mlp, rain_in_mlp, daily_in_mlp.index, daily_in_mlp.values, name='MLP_rain_in_day.png')
+make_plot('Rainfall at M1', column_0_mlp, rain_in_mlp, daily_in_mlp.index, daily_in_mlp.values, name='MLP_rain_in_day.png')
 #
 ## ------------------------
 # Process data for Mukilteo Wastewater Plant
@@ -120,7 +120,7 @@ tstamp = num2date(column_0_mwwd, tz=None)
 ts = Series(rain_in_mwwd, index=tstamp)
 daily_in_mwwd = ts.resample('d', how='sum')
 #
-make_plot('Rainfall at Mukilteo Wastewater Plant', column_0_mwwd, rain_in_mwwd, daily_in_mwwd.index, daily_in_mwwd.values, name='MWWD_rain_in_day.png')
+make_plot('Rainfall at M2', column_0_mwwd, rain_in_mwwd, daily_in_mwwd.index, daily_in_mwwd.values, name='MWWD_rain_in_day.png')
 #
 ## ------------------------
 # Process data for Waterton Circle (Active Landslide Area)
@@ -137,7 +137,7 @@ tstamp = num2date(column_0_wca, tz=None)
 ts = Series(rain_in_wca, index=tstamp)
 daily_in_wca = ts.resample('d', how='sum')
 #
-make_plot('Rainfall at Waterton Circle Station A', column_0_wca, rain_in_wca, daily_in_wca.index, daily_in_wca.values, name='MWatA_rain_in_day.png')
+make_plot('Rainfall at LS-a', column_0_wca, rain_in_wca, daily_in_wca.index, daily_in_wca.values, name='MWatA_rain_in_day.png')
 #
 # Define function to plot 15-minute and daily rainfall amounts for multiple stations
 def make_plot1(title, x1a, y1a, x1b, y1b, x1c, y1c, x1d, y1d, x2a, y2a, x2b, y2b, x2c, y2c, x2d, y2d, name=None, cols=4, yMin=0, yMax=0.5, y2Max=3.0):
@@ -150,14 +150,14 @@ def make_plot1(title, x1a, y1a, x1b, y1b, x1c, y1c, x1d, y1d, x2a, y2a, x2b, y2b
     host.set_ylim(yMin,yMax)
     par1.set_ylim(yMin,y2Max)
     host.grid()
-    p1a, = host.plot(x1a, y1a, linestyle='-', color='b', alpha=0.75, label='SCB 15-minute')
+    p1a, = host.plot(x1a, y1a, linestyle='-', color='b', alpha=0.75, label='VH 15-minute')
     p1b, = host.plot(x1b, y1b, linestyle='-', color='r', alpha=0.75, label='M1 15-minute')
     p1c, = host.plot(x1c, y1c, linestyle='-', color='g', alpha=0.75, label='M2 15-minute')
-    p1d, = host.plot(x1d, y1d, linestyle='-', color='orange', alpha=0.75, label='ALS 15-minute')
-    p2a, = par1.plot(x2a, y2a, 'bo', alpha = 0.5, label='SCB Daily')
+    p1d, = host.plot(x1d, y1d, linestyle='-', color='orange', alpha=0.75, label='LS 15-minute')
+    p2a, = par1.plot(x2a, y2a, 'bo', alpha = 0.5, label='VH Daily')
     p2b, = par1.plot(x2b, y2b, 'ro', alpha = 0.5, label='M1 Daily')
     p2c, = par1.plot(x2c, y2c, 'go', alpha = 0.5, label='M2 Daily')
-    p2d, = par1.plot(x2d, y2d, linestyle='', marker='o', color='orange', alpha = 0.5, label='ALS Daily')
+    p2d, = par1.plot(x2d, y2d, linestyle='', marker='o', color='orange', alpha = 0.5, label='LS Daily')
     
     host.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
     host.xaxis.set_major_locator(mdates.HourLocator())

@@ -70,7 +70,7 @@ rain_tipCount = np.array(data)[0][:,1]
 #Compute Rainfall
 rain_mm = rain_tipCount * 0.254
 
-init_plot('Rainfall at Marine View Dr. & 116 St. SW')
+init_plot('Rainfall at VH')
 
 plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
 
@@ -91,7 +91,7 @@ rain_tipCount = np.array(data)[0][:,1]
 #Compute Rainfall
 rain_mm = rain_tipCount * 0.254
 
-init_plot('Rainfall at Mukilteo Lighthouse Park')
+init_plot('Rainfall at M1')
 
 plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
 
@@ -112,7 +112,7 @@ rain_tipCount = np.array(data)[0][:,1]
 #Compute Rainfall
 rain_mm = rain_tipCount * 0.254
 
-init_plot('Rainfall at Mukilteo Wastewater Plant')
+init_plot('Rainfall at M2')
 
 plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
 
@@ -133,7 +133,7 @@ rain_tipCount = np.array(data)[0][:,1]
 #Compute Rainfall
 rain_mm = rain_tipCount * 0.254
 
-init_plot('Rainfall at Waterton Circle Station A')
+init_plot('Rainfall at LS-a')
 
 plt.plot(column_0, rain_mm, linestyle='-', color='b', label='Rainfall')
 

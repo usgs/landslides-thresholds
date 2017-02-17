@@ -74,7 +74,7 @@ corrTensTemp_kPa_2 = corrTensTemp_V_2 * tensMult + tensOffs
 corrTensTemp_kPa_3 = corrTensTemp_V_3 * tensMult + tensOffs
 
 # Draw and save plot
-init_plot('Tensiometer Temperature at Marine View Drive & 116 St. SW')
+init_plot('Tensiometer Temperature at VH')
 
 plt.plot(column_0, corrTensTemp_kPa_1, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensTemp_kPa_2, linestyle='-', color='r', label='3 110 cm')
@@ -101,7 +101,7 @@ corrTensTemp_kPa_1 = corrTensTemp_V_1 * tensMult + tensOffs
 corrTensTemp_kPa_2 = corrTensTemp_V_2 * tensMult + tensOffs
 corrTensTemp_kPa_3 = corrTensTemp_V_3 * tensMult + tensOffs
 # Draw and save plot
-init_plot('Tensiometer Temperature at Waterton Circle Station A')
+init_plot('Tensiometer Temperature at LS-a')
 
 plt.plot(column_0, corrTensTemp_kPa_1, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensTemp_kPa_2, linestyle='-', color='r', label='3 110 cm')
@@ -128,7 +128,7 @@ corrTensTemp_kPa_1 = corrTensTemp_V_1 * tensMult + tensOffs
 corrTensTemp_kPa_2 = corrTensTemp_V_2 * tensMult + tensOffs
 corrTensTemp_kPa_3 = corrTensTemp_V_3 * tensMult + tensOffs
 # Draw and save plot
-init_plot('Tensiometer Temperature at Waterton Circle Station B')
+init_plot('Tensiometer Temperature at LS-b')
 
 plt.plot(column_0, corrTensTemp_kPa_1, linestyle='-', color='b', label='2 110 cm')
 plt.plot(column_0, corrTensTemp_kPa_2, linestyle='-', color='r', alpha=0, label='3 170 cm ')

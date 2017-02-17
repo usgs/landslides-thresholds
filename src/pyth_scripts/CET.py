@@ -72,7 +72,7 @@ cetDistance_Offs = -14
 cetDistance_mm = cetDistance_raw*cetDistance_mult+cetDistance_Offs
 #cetDistance_m = cetDistance_mm/1000.
 
-init_plot('Extensometer Distance at ALS')
+init_plot('Extensometer Distance at LS')
 
 plt.plot(column_0, cetDistance_mm, linestyle='-', color='b', label='CET 1')
 

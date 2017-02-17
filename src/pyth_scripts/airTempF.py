@@ -74,7 +74,7 @@ airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000 data logger
 airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
 airTemp_degF = 9.*airTemp_degC/5. +32.
 
-init_plot('Air Temperature at Marine View Dr. & 116 St. SW')
+init_plot('Air Temperature at VH')
 
 plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
 
@@ -98,7 +98,7 @@ airTempRs_ohms = 23100*((airTempRaw/2500)/(1-(airTempRaw/2500))) # use for CR200
 airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
 airTemp_degF = 9.*airTemp_degC/5. +32.
 
-init_plot('Air Temperature at Mukilteo Lighthouse Park')
+init_plot('Air Temperature at M1')
 
 plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
 
@@ -122,7 +122,7 @@ airTempRs_ohms = 23100*((airTempRaw/2500)/(1-(airTempRaw/2500))) # use for CR200
 airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
 airTemp_degF = 9.*airTemp_degC/5. +32.
 
-init_plot('Air Temperature at Mukilteo Wastewater Plant')
+init_plot('Air Temperature at M2')
 
 plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
 
@@ -146,7 +146,7 @@ airTempRs_ohms = 23100*(airTempRaw/(1-airTempRaw)) # use for CR1000 data logger
 airTemp_degC = -39.17*np.log(airTempRs_ohms) + 410.43
 airTemp_degF = 9.*airTemp_degC/5. +32.
 
-init_plot('Air Temperature at Waterton Circle Station A')
+init_plot('Air Temperature at LS-a')
 
 plt.plot(column_0, airTemp_degF, linestyle='-', color='b', label='Air Temperature')
 
