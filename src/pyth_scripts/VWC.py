@@ -77,7 +77,7 @@ vwcEng_3_mvd = vwcRaw_3 * vwcMult + vwxOffs
 vwcEng_4_mvd = vwcRaw_4 * vwcMult + vwxOffs
 vwcEng_5_mvd = vwcRaw_5 * vwcMult + vwxOffs
 # Draw and save plot
-init_plot('Volumetric Water Content at Marine View Drive & 116 St. SW')
+init_plot('Volumetric Water Content at VH')
 
 plt.plot(column_0, vwcEng_1_mvd, linestyle='-', color='b', label='1 110 cm')
 plt.plot(column_0, vwcEng_2_mvd, linestyle='-', color='r', label='2 110 cm')
@@ -110,11 +110,11 @@ vwcEng_3_watA = vwcRaw_3 * vwcMult + vwxOffs
 vwcEng_4_watA = vwcRaw_4 * vwcMult + vwxOffs
 vwcEng_5_watA = vwcRaw_5 * vwcMult + vwxOffs
 # Draw and save plot
-init_plot('Volumetric Water Content at Waterton Circle Station A')
+init_plot('Volumetric Water Content at LS-a')
 
 plt.plot(column_0, vwcEng_1_watA, linestyle='-', color='b', label='1 20 cm')
-plt.plot(column_0, vwcEng_2_watA, linestyle='-', color='r', alpha=0, label='2 20 cm')
-plt.plot(column_0, vwcEng_3_watA, linestyle='-', color='g', alpha=0, label='3 80 cm')
+plt.plot(column_0, vwcEng_2_watA, linestyle='-', color='r', alpha=0.5, label='2 20 cm')
+plt.plot(column_0, vwcEng_3_watA, linestyle='-', color='g', alpha=0.5, label='3 80 cm')
 plt.plot(column_0, vwcEng_4_watA, linestyle='-', color='c', label='4 80 cm')
 plt.plot(column_0, vwcEng_5_watA, linestyle='-', color='m', label='5 85 cm')
 
@@ -143,13 +143,13 @@ vwcEng_3_watB = vwcRaw_3 * vwcMult + vwxOffs
 vwcEng_4_watB = vwcRaw_4 * vwcMult + vwxOffs
 vwcEng_5_watB = vwcRaw_5 * vwcMult + vwxOffs
 # Draw and save plot
-init_plot('Volumetric Water Content at Waterton Circle Station B')
+init_plot('Volumetric Water Content at LS-b')
 
 plt.plot(column_0, vwcEng_1_watB, linestyle='-', color='b', label='1 100 cm')
-plt.plot(column_0, vwcEng_2_watB, linestyle='-', color='r', alpha=0, label='2 20 cm')
-plt.plot(column_0, vwcEng_3_watB, linestyle='-', color='g', alpha=0, label='3 115 cm')
-plt.plot(column_0, vwcEng_4_watB, linestyle='-', color='c', alpha=0, label='4 115 cm')
-plt.plot(column_0, vwcEng_5_watB, linestyle='-', color='m', label='5 120 cm')
+plt.plot(column_0, vwcEng_2_watB, linestyle='-', color='r', alpha=0.5, label='2 20 cm')
+plt.plot(column_0, vwcEng_3_watB, linestyle='-', color='g', alpha=0.5, label='3 115 cm')
+plt.plot(column_0, vwcEng_4_watB, linestyle='-', color='c', alpha=0.5, label='4 115 cm')
+plt.plot(column_0, vwcEng_5_watB, linestyle='-', color='m', alpha=0.5, label='5 120 cm')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
@@ -197,7 +197,7 @@ plt.plot(column_0, vwcEng_1_watB, linestyle='-.', color='b', label='1 100')
 plt.plot(column_0, vwcEng_2_watB, linestyle='-.', color='r', alpha=0, label='2 20')
 plt.plot(column_0, vwcEng_3_watB, linestyle='-.', color='g', alpha=0, label='3 115')
 plt.plot(column_0, vwcEng_4_watB, linestyle='-.', color='c', alpha=0, label='4 115')
-plt.plot(column_0, vwcEng_5_watB, linestyle='-.', color='m', label='5 120')
+plt.plot(column_0, vwcEng_5_watB, linestyle='-.', color='m', alpha=0, label='5 120')
 
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m/%d\n%H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.HourLocator())
