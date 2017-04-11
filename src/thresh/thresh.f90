@@ -124,7 +124,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='15 Feb 2017'; vrsn=' 1.0.017'
+     	revdate='10 Apr 2017'; vrsn=' 1.0.018'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -640,7 +640,7 @@
  	   sumRecent_s,intsys,Tantecedent,Trecent)
 	   call read_colors(hexColors,colors,div,ndiv)
  	   call tablhtm(unitNumber(4),unitNumber(1),outputFolder,&
- 	   numStations,stationNumber,datimb,durs,&
+ 	   numStations,stationNumber,datimb,durs,sthreshIntensityDuration,&
  	   sumAntecedent_s,sumRecent_s,intsys,srunIntensity,stationLocation,&
  	   Tantecedent,Trecent,hexColors,colors,div,ndiv)
  	 end if

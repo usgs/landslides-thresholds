@@ -7,8 +7,9 @@ contains
 !	  in the thresh.exe program
 !
 	subroutine tablhtm(unitNumber,u1,outputFolder,numStations,&
-	stationNumber,dateTime,duration,sumAnteced,sumRecent,intensity,runningIntens,&
-	stationLocation,Tantecedent,Trecent,hexColors,colors,div,ndiv)
+	stationNumber,dateTime,duration,intensityDurationIndex,sumAnteced,&
+	sumRecent,intensity,runningIntens,stationLocation,Tantecedent,Trecent,&
+        hexColors,colors,div,ndiv)
 	implicit none
 		
 ! FORMAL ARGUMENTS
@@ -20,7 +21,7 @@ contains
 	character(*), intent(in)       :: stationNumber(numStations)
 	character, intent(in)	       :: outputFolder*(*)
 	real, intent(in)	       :: duration(numStations),sumAnteced(numStations)
-	real, intent(in)	       :: sumRecent(numStations)
+	real, intent(in)	       :: sumRecent(numStations),intensityDurationIndex(numStations)
 	real, intent(in)	       :: intensity(numStations),runningIntens(numStations)
 	integer, intent(in)	       :: numStations,unitNumber,u1,ndiv
 	integer, intent(in)	       :: Tantecedent,Trecent
@@ -74,11 +75,11 @@ contains
 	      write(recent,'(f7.2)') sumRecent(i)
 	    end if  
 	    
-	    test=intensity(i)
+	    test=intensityDurationIndex(i)
 	    clr=1
 	    if (test<0) then
 	      write(mintensity,'(a)') '---'
-	    else
+	    else ! Assign background colors to intensity based on intensity-duration index.
 	      write(mintensity,'(f7.3)') intensity(i)
 	      	do j=1,ndiv-1
 				if(test>div(j) .and. test<=div(j+1)) then
