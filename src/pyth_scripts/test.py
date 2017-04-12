@@ -126,7 +126,7 @@ matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 init_plot('Current conditions near Seattle, Washington,')
 data = readfiles(glob.glob('data/ThSta*.txt'))
 
-for i, d in enumerate(data): assign makrers and generate scatter plot 
+for i, d in enumerate(data): # assign markers and generate scatter plot 
     plt.scatter(d[2], d[3],
                 marker=markers[str(d[1])][0],
                 c=markers[str(d[1])][1],
