@@ -270,7 +270,7 @@ def end_plot(name=None, cols=3):
     if name:
         plt.savefig(name, bbox_inches='tight')
 
-disclamers = ('\n with respect to precipitation indensity and duration threshold'
+disclamers = ('\n with respect to precipitation intensity and duration threshold'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
