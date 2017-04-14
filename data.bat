@@ -5,7 +5,7 @@ REM Edit paths for system where the batch file will be running
 REM *****************##########################*****************************
       @echo off
       setlocal
-      path=C:\cygwin64\bin;C:\Users\USERNAME\AppData\Local\Continuum\Anaconda;C:\Users\USERNAME\AppData\Local\Continuum\Anaconda\Scripts;C:\Users\Public\Documents\LandslideThresholds\bin\unx;%PATH%
+      path=C:\cygwin64\bin;C:\Users\USERNAME\AppData\Local\Continuum\Anaconda;C:\Users\USERNAME\AppData\Local\Continuum\Anaconda\Scripts;C:\Users\USERNAME\Documents\LandslideThresholds\bin\unx;%PATH%
 echo %date% > data_log.txt
 
 REM C:\Campbellsci\LoggerNet
