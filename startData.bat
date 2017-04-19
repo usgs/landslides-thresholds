@@ -11,7 +11,7 @@ echo %date% > start_data_log.txt
 cd data\RALHS
 rm Data\*.txt
 
-REM Export last 14 days to text files and reformat for plotting:
+REM Export all data to text files and reformat for plotting:
 
 cat C:\Campbellsci\LoggerNet\waMLP_rawData_15m.dat > temp.txt
 grep -v [a-z] temp.txt | grep [0-9] | tr -d "[\042]" | tr -s "[\054]" "[\011]" > waMLP_14d.txt
