@@ -42,7 +42,6 @@
 <tr align=left><td><code> maxDataGap </code></td><td> Integer </td><td> Maximum length in number of lines for data gaps, used to initialize array <code> ctrHolder </code> </td></tr>
 <tr align=left><td><code> maxLines </code></td><td> Integer </td><td> Used to set length of arrays for time-series input and output data </td></tr>
 <tr align=left><td><code> midnightVal </code></td><td> Integer </td><td> Flag to compensate for differences in timestamp conventions </td></tr>
-<tr align=left><td><code> minTStormGap </code></td><td> Integer </td><td> Number of hours of no rainfall needed to separate storms in computing the intensity-duration threshold </td></tr>
 <tr align=left><td><code> nlo20  </code></td><td> Integer </td><td> Used to set length of pointer arrays for instances of threshold exceedance. </td></tr>
 <tr align=left><td><code> numNewLines  </code></td><td> Integer </td><td> Number of lines of new data since last run of program (i.e. number of lines between last and newest) </td></tr>
 <tr align=left><td><code> numPlotPoints </code></td><td> Integer </td><td> Number of values saved to a text file formatted for use by plotting routines </td></tr>
@@ -59,9 +58,7 @@
 <tr align=left><td><code> sysSec  </code></td><td> Integer </td><td> System second </td></tr>
 <tr align=left><td><code> sysYear  </code></td><td> Integer </td><td> System year </td></tr>
 <tr align=left><td><code> Tantecedent </code></td><td> Integer </td><td> Number of hours of precipitation input data to compute the antecedent rainfall </td></tr>
-<tr align=left><td><code> TavgIntensity </code></td><td> Integer </td><td> Number of hours used in computing a running-average rainfall intensity </td></tr>
 <tr align=left><td><code> timezoneOffset </code></td><td> Integer </td><td> Number of hours difference between data logger clock and UTC or local time</td></tr>
-<tr align=left><td><code> Tintensity </code></td><td> Integer </td><td> Number of hours used in computing a running-average (mean) intensity, if <code>Tintensity>0</code>; or compute storm-average intensity for duration of current storm, if <code>Tintensity==0</code>. </td></tr>
 <tr align=left><td><code> tptr </code></td><td> Integer </td><td> Auxiliary pointer used in computing precipitation sums for various time periods </td></tr>
 <tr align=left><td><code> tRainfallBegan  </code></td><td> Integer </td><td> Beginning time for rainfall for beginning of latest (or current) storm </td></tr>
 <tr align=left><td><code> tRainfallEnd </code></td><td> Integer </td><td> Ending time for rainfall for latest (or current) storm </td></tr>
@@ -138,6 +135,7 @@
 <tr align=left><td><code> in2mm </code></td><td> Real </td><td> Conversion factor for antecedent wetness index </td></tr>
 <tr align=left><td><code> intercept </code></td><td> Real </td><td> Recent-precipitation-(vertical-) axis intercept of <i>R</i>-day Recent/<i>A</i>-day Antecedent threshold </td></tr>
 <tr align=left><td><code> lowLim </code></td><td> Real </td><td> Lower duration limit for applying precipitation intensity duration threshold </td></tr>
+<tr align=left><td><code> minTStormGap </code></td><td> Real </td><td> Number of hours of no rainfall needed to separate storms in computing the intensity-duration threshold </td></tr>
 <tr align=left><td><code> polynomArr </code></td><td> Real </td><td> Coefficients of the fifth degree polynomial used to represent rainfall intensity and duration thresholds that are not adequately modeled by a power function </td></tr>
 <tr align=left><td><code> powerCoeff </code></td><td> Real </td><td> Coefficient of power-law-defined intensity-duration threshold </td></tr>
 <tr align=left><td><code> powerExp </code></td><td> Real </td><td> Exponent of power-law-defined intensity-duration threshold </td></tr>
@@ -145,38 +143,40 @@
 <tr align=left><td><code> runningIntens </code></td><td> Real </td><td> Running average intensity threshold, <i>I<sub>E</sub></i> </td></tr>
 <tr align=left><td><code> seasonalAntThresh </code></td><td> Real </td><td> Threshold value for defining wet conditions using the AWI </td></tr>
 <tr align=left><td><code> slope </code></td><td> Real </td><td> Slope of <i>R</i>-day Recent/<i>A</i>-day Antecedent precipitation threshold </td></tr>
+<tr align=left><td><code> TavgIntensity </code></td><td> Real </td><td> Number of hours used in computing a running-average rainfall intensity </td></tr>
+<tr align=left><td><code> Tintensity </code></td><td> Real </td><td> Number of hours used in computing a running-average (mean) intensity, if <code>Tintensity>0</code>; or compute storm-average intensity for duration of current storm, if <code>Tintensity==0</code>. </td></tr>
 <tr align=left><td><code> upLim </code></td><td> Real </td><td> Upper duration limit for applying precipitation intensity duration threshold </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> REAL ARRAYS </th></tr>
-<tr align=left><td><code> AWI </code></td><td> real array </td><td> Antecedent Water Index (AWI) </td></tr>
-<tr align=left><td><code> AWI_0 </code></td><td> real array </td><td> Starting value of AWI retrieved from Thlast.txt </td></tr>
-<tr align=left><td><code> deficit_recent_antecedent </code></td><td> real array </td><td> All values of deficit or surplus of the <i>R</i>-day recent and prev. <i>A</i>-day antecedent precipitation threshold at current station</td></tr>
-<tr align=left><td><code> deficit_recent_antecedent_s </code></td><td> real array </td><td> Current (or latest) deficit or surplus of the <i>R</i>-day recent and prev. <i>A</i>-day antecedent precipitation threshold at each station </td></tr>
-<tr align=left><td><code> dur </code></td><td> real array </td><td> Storm duration at each line in the current data file </td></tr>
-<tr align=left><td><code> durs </code></td><td> real array </td><td> Current or latest storm duration at each station </td></tr>
-<tr align=left><td><code> evapConsts </code></td><td> real array </td><td> Monthly average evapotranspiration in terms of hourly rates (Divide monthly amount of evapotranspiration by number of hours in the month.)</td></tr>
-<tr align=left><td><code> intensity </code></td><td> real array </td><td> Storm-average rainfall intensity at each line in the current data file </td></tr>
-<tr align=left><td><code> intsys </code></td><td> real array </td><td> Current of latest value of storm-average rainfall intensity at each station </td></tr>
-<tr align=left><td><code> runIntensity </code></td><td> real array </td><td> Running average TavgIntensity-hourly rainfall intensity at each line in the current data file </td></tr>
-<tr align=left><td><code> srunIntensity </code></td><td> real array </td><td> Current or latest value of running average TavgIntensity-hourly rainfall intensity at each station </td></tr>
-<tr align=left><td><code> sumTantecedent </code></td><td> real array </td><td> Cumulative <i>A</i>-day (<code>Tantededent</code>-hour) antecedent precipitation at each line in the current data file </td></tr>
-<tr align=left><td><code> sumAntecedent_s </code></td><td> real array </td><td> Current or latest value of cumulative <i>A</i>-day (<code>Tantededent</code>-hour) antecedent precipitation at each station </td></tr>
-<tr align=left><td><code> sumTrecent </code></td><td> real array </td><td> Cumulative <i>R</i>-day (<code>Trecent</code>-hour) precipitation at each line in the current data file </td></tr>
-<tr align=left><td><code> sumRecent_s </code></td><td> real array </td><td> Current of latest value of cumulative <i>R</i>-day (<code>Trecent</code>-hour) precipitation at each station </td></tr>
-<tr align=left><td><code> sthreshIntensityDuration </code></td><td> real array </td><td> Current or latest value of intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i><sup>8</sup>, at each station </td></tr>
-<tr align=left><td><code> threshAvgExceed </code></td><td> real array </td><td> Running average (over duration <code>TavgIntensity</code>) intensity exceedance index, <i>E<sub>ID,f</sub></i><sup>9</sup>, at each line in the current data file </td></tr>
-<tr align=left><td><code> srunIntensity </code></td><td> real array </td><td> Current or latest value of running average (over duration <code>TavgIntensity</code>) intensity exceedance index at each station </td></tr>
-<tr align=left><td><code> threshIntensityDuration </code></td><td> real array </td><td> Intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i>, at each line in the current data file </td></tr>
+<tr align=left><td><code> AWI </code></td><td> Real array </td><td> Antecedent Water Index (AWI) </td></tr>
+<tr align=left><td><code> AWI_0 </code></td><td> Real array </td><td> Starting value of AWI retrieved from Thlast.txt </td></tr>
+<tr align=left><td><code> deficit_recent_antecedent </code></td><td> Real array </td><td> All values of deficit or surplus of the <i>R</i>-day recent and prev. <i>A</i>-day antecedent precipitation threshold at current station</td></tr>
+<tr align=left><td><code> deficit_recent_antecedent_s </code></td><td> Real array </td><td> Current (or latest) deficit or surplus of the <i>R</i>-day recent and prev. <i>A</i>-day antecedent precipitation threshold at each station </td></tr>
+<tr align=left><td><code> dur </code></td><td> Real array </td><td> Storm duration at each line in the current data file </td></tr>
+<tr align=left><td><code> durs </code></td><td> Real array </td><td> Current or latest storm duration at each station </td></tr>
+<tr align=left><td><code> evapConsts </code></td><td> Real array </td><td> Monthly average evapotranspiration in terms of hourly rates (Divide monthly amount of evapotranspiration by number of hours in the month.)</td></tr>
+<tr align=left><td><code> intensity </code></td><td> Real array </td><td> Storm-average rainfall intensity at each line in the current data file </td></tr>
+<tr align=left><td><code> intsys </code></td><td> Real array </td><td> Current of latest value of storm-average rainfall intensity at each station </td></tr>
+<tr align=left><td><code> runIntensity </code></td><td> Real array </td><td> Running average TavgIntensity-hourly rainfall intensity at each line in the current data file </td></tr>
+<tr align=left><td><code> srunIntensity </code></td><td> Real array </td><td> Current or latest value of running average TavgIntensity-hourly rainfall intensity at each station </td></tr>
+<tr align=left><td><code> sumTantecedent </code></td><td> Real array </td><td> Cumulative <i>A</i>-day (<code>Tantededent</code>-hour) antecedent precipitation at each line in the current data file </td></tr>
+<tr align=left><td><code> sumAntecedent_s </code></td><td> Real array </td><td> Current or latest value of cumulative <i>A</i>-day (<code>Tantededent</code>-hour) antecedent precipitation at each station </td></tr>
+<tr align=left><td><code> sumTrecent </code></td><td> Real array </td><td> Cumulative <i>R</i>-day (<code>Trecent</code>-hour) precipitation at each line in the current data file </td></tr>
+<tr align=left><td><code> sumRecent_s </code></td><td> Real array </td><td> Current of latest value of cumulative <i>R</i>-day (<code>Trecent</code>-hour) precipitation at each station </td></tr>
+<tr align=left><td><code> sthreshIntensityDuration </code></td><td> Real array </td><td> Current or latest value of intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i><sup>8</sup>, at each station </td></tr>
+<tr align=left><td><code> threshAvgExceed </code></td><td> Real array </td><td> Running average (over duration <code>TavgIntensity</code>) intensity exceedance index, <i>E<sub>ID,f</sub></i><sup>9</sup>, at each line in the current data file </td></tr>
+<tr align=left><td><code> srunIntensity </code></td><td> Real array </td><td> Current or latest value of running average (over duration <code>TavgIntensity</code>) intensity exceedance index at each station </td></tr>
+<tr align=left><td><code> threshIntensityDuration </code></td><td> Real array </td><td> Intensity-duration threshold exceedance index, <i>E<sub>ID</sub></i>, at each line in the current data file </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> DOUBLE PRECISION </th></tr>
-<tr align=left><td><code> trfbeg </code></td><td> double precision </td><td> Determines the starting time of a storm in the track_storm subroutine </td></tr>
-<tr align=left><td><code> trfend </code></td><td> double precision </td><td> Determines the ending time of a storm in the track_storm subroutine </td></tr>
-<tr align=left><td><code> dgap </code></td><td> double precision </td><td> Hours between storms in the track_storm subroutine </td></tr>
+<tr align=left><td><code> trfbeg </code></td><td> Double Precision </td><td> Determines the starting time of a storm in the track_storm subroutine </td></tr>
+<tr align=left><td><code> trfend </code></td><td> Double Precision </td><td> Determines the ending time of a storm in the track_storm subroutine </td></tr>
+<tr align=left><td><code> dgap </code></td><td> Double Precision </td><td> Hours between storms in the track_storm subroutine </td></tr>
 <tr align=center><th colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'> DOUBLE PRECISION ARRAYS </th></tr>
 <tr align=center><td colspan="3" style='border:1px solid black;padding:0in 6pt 0in 6pt'>  These arrays represent the date using days since January 1, 1904, with time since midnight as a decimal fraction, for example, 11:59:00 a.m. January 31, 2017 is 41304.499305555556 (1904 date serial number format) </td></tr>
-<tr align=left><td><code> eachDate1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for each line of data read from the current rain gage file </td></tr>
-<tr align=left><td><code> last1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for the last value from each rain gage (i.e. imported from Thlast.txt) </td></tr>
-<tr align=left><td><code> newest1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for the last value from most recent data (i.e. imported from the rain gage data file) </td></tr>
-<tr align=left><td><code> tstormBeg1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for the beginning of the current or most recent storm at each rain gage (i.e. imported from Thlast.txt or computed from recent data) </td></tr>
-<tr align=left><td><code> tstormEnd1904 </code></td><td> double precision array </td><td> Time and date in 1904 date serial number format for the beginning of the current or most recent storm at each rain gage (i.e. imported from Thlast.txt or computed from recent data) </td></tr>
+<tr align=left><td><code> eachDate1904 </code></td><td> Double Precision array </td><td> Time and date in 1904 date serial number format for each line of data read from the current rain gage file </td></tr>
+<tr align=left><td><code> last1904 </code></td><td> Double Precision array </td><td> Time and date in 1904 date serial number format for the last value from each rain gage (i.e. imported from Thlast.txt) </td></tr>
+<tr align=left><td><code> newest1904 </code></td><td> Double Precision array </td><td> Time and date in 1904 date serial number format for the last value from most recent data (i.e. imported from the rain gage data file) </td></tr>
+<tr align=left><td><code> tstormBeg1904 </code></td><td> Double Precision array </td><td> Time and date in 1904 date serial number format for the beginning of the current or most recent storm at each rain gage (i.e. imported from Thlast.txt or computed from recent data) </td></tr>
+<tr align=left><td><code> tstormEnd1904 </code></td><td> Double Precision array </td><td> Time and date in 1904 date serial number format for the beginning of the current or most recent storm at each rain gage (i.e. imported from Thlast.txt or computed from recent data) </td></tr>
  </table></center>
 <ol type="1">
   <li><i>R</i> : Number of days to compute recent precipitation </li>
