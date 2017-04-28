@@ -17,6 +17,7 @@ contains
    ! FORMAL ARGUMENTS
 	   real, intent(in)    		:: AWIconversion, evapConsts(12)
 	   real, intent(in)    		:: decayFactor, drainConst, fieldCap
+	   real, intent(in)             :: TavgIntensity, minTStormGap, Tintensity
 	   real, intent(out)   		:: runIntensity(maxLines)
 	   real, intent(out)   		:: dur(maxLines), intensity(maxLines)
 	   real, intent(inout) 		:: AWI(maxLines)
@@ -26,16 +27,16 @@ contains
 	   real (double), intent(inout) :: tstormEnd1904
 	   integer, intent(in)  	:: diffPtrOffset, stationPtr, precip(maxLines)
 	   integer, intent(in)  	:: resetAntMonth, resetAntDay, da(maxLines)
-	   integer, intent(in)  	:: hr(maxLines),TavgIntensity,rph
-	   integer, intent(in)  	:: minTStormGap, numStations, maxLines
-	   integer, intent(in)  	:: timestampMonth(maxLines), Tintensity
+	   integer, intent(in)  	:: hr(maxLines),rph
+	   integer, intent(in)  	:: numStations, maxLines
+	   integer, intent(in)  	:: timestampMonth(maxLines) 
 	   integer, intent(out) 	:: tRainfallBegan, tRainfallEnd, sumTintensity
 	   integer, intent(out) 	:: TstormGap, xptr
 	   character (len=2), intent(in) :: precipUnit
 
    ! LOCAL VARIABLES
 	   real :: floatPrecip
-	   integer :: i, j
+	   integer :: i, j, AvgIntensityCounts,StormGapMinCounts
 	   logical :: flagStormEnd
 
    !-----------------------------
@@ -66,17 +67,19 @@ contains
 	         end if
 	      end if
 	      ! Set no-data value for cells too close to beginning of file to 
-	      ! compute running average antecedent precip.
-	      if((i - TavgIntensity * rph)<0) runIntensity(i) = -99. 
+	      ! compute running average antecedent precip. 
+              AvgIntensityCounts=ceiling(TavgIntensity*float(rph))
+	      if((i - AvgIntensityCounts)<0) runIntensity(i) = -99. 
 	      sumTintensity = 0
 	   
-	      ! Determine starting time of a storm
-	      if((i - minTStormGap*rph) >= 1) then
+	      ! Determine starting time of a storm 
+              StormGapMinCounts=ceiling(minTStormGap*float(rph))
+	      if((i - StormGapMinCounts) >= 1) then
 	         TstormGap = 0
-	         do j = 1, minTStormGap * rph
+	         do j = 1, StormGapMinCounts
 	            if (precip(i - j) == 0) TstormGap = TstormGap + 1
 	         end do
-	         if(TstormGap == minTStormGap * rph .and. precip(i)>0) then
+	         if(TstormGap == StormGapMinCounts .and. precip(i)>0) then
 	            tRainfallBegan = i - 1
 	            trfbeg = eachDate1904(tRainfallBegan)
 	            if(trfbeg >= tstormBeg1904) then 
@@ -105,7 +108,7 @@ contains
 	            if(tstormEnd1904 >= tstormBeg1904) then
 	               dur(i) = (tstormEnd1904 - tstormBeg1904) * 24.d0 ! storm duration in hours
 	               	 
-	               if(Tintensity == 0) then ! Storm-average intensity 
+	               if(Tintensity == 0.) then ! Storm-average intensity 
                        ! compute latest average precipitation intensity since beginning of storm	
 	                  PreliminaryIntensity: do j = tRainfallBegan, i ! during first hours after 
                                               ! rainfall ends, computes gradually decreasing intensity
@@ -133,9 +136,9 @@ contains
 	      end if
 ! 
              ! Post-storm corrections of storm duration and average intensity.
-	      if((i - minTStormGap*rph) == tRainfallEnd) flagStormEnd=.false. ! Most recent storm has ended   
+	      if((i - StormGapMinCounts) == tRainfallEnd) flagStormEnd=.false. ! Most recent storm has ended   
 	      if (.not. flagStormEnd) then ! Correct intensity & duration values after storm ends
-	         if(Tintensity == 0) then ! Storm-average intensity selected 
+	         if(Tintensity == 0.) then ! Storm-average intensity selected 
 	            sumTintensity=0
 	            CorrectedIntensity: do j = tRainfallBegan+1, tRainfallEnd
 	              xptr = j
@@ -153,7 +156,7 @@ contains
 	                 & ((eachDate1904(j) - tstormBeg1904) * 24.d0 * 100.) 
 	            end do CorrectedIntensity
 	            ! zero out post-storm duration and intensity
-	            do j = tRainfallEnd +1, tRainfallEnd + minTStormGap*rph 
+	            do j = tRainfallEnd +1, tRainfallEnd + StormGapMinCounts 
 	               dur(j)=0 
 	               intensity(j)=0.
 	            end do
@@ -178,7 +181,7 @@ contains
 	implicit none
 
    ! FORMAL ARGUMENTS
-	real, intent(in)    :: intercept,slope
+	real, intent(in)    :: intercept,slope,Tintensity,TavgIntensity
 	real, intent(in)    :: AWI(*),in2mm,powerCoeff,id_index_factor
 	real, intent(in)    :: duration(*),powerExp,polynomArr(*),AWIThresh
 	real, intent(in)    :: runningIntens, xVals(intervals+1), yVals(intervals+1)
@@ -187,7 +190,7 @@ contains
 	real, intent(out)   :: threshAvgExceed(maxLines), sumTantecedent(maxLines)
 	real, intent(inout) :: awimx
 	integer, intent(in)    :: stationPtr, tlenx, Trecent, maxLines
-	integer, intent(in)    :: rph, precip(*),Tintensity,TavgIntensity
+	integer, intent(in)    :: rph, precip(*)
 	integer, intent(in)    :: Tantecedent,nlo20, intervals
 	integer, intent(out)   :: pt_recent_antecedent(*),ptira(*)
 	integer, intent(out)   :: ptid(*),ptawid(*),ptia(*)
@@ -199,7 +202,7 @@ contains
    ! LOCAL VARIABLES
    real    :: m, b
 	integer :: i, j, x, sumTavgIntensity
-	integer :: ssumTrecent, ssumTantecedent
+	integer :: ssumTrecent, ssumTantecedent,AvgIntensityCounts,IntensityCounts
    !------------------------
 	   do i=(1 + stationPtr - tlenx),stationPtr
 	      ssumTrecent = 0
@@ -226,34 +229,36 @@ contains
                end if
             end do
          end if
-         if(Tintensity > 0) then
-            ! compute latest "Tintensity"-hour precipitation intensity (this is a running average intensity)	
-            do j = 1, Tintensity * rph 
+         if(Tintensity > 0.) then
+            ! compute latest "Tintensity"-hour precipitation intensity (this is a running average intensity)
+           IntensityCounts=ceiling(Tintensity*float(rph))
+           do j = 1, IntensityCounts 
                xptr = tptr - j + 1
                ! check for insufficient data
                if(xptr < 1) then
-                  sumTintensity = -9900 * Tintensity
+                  sumTintensity = -9900 * ceiling(Tintensity)
                   exit
                else if(precip(xptr) < 0) then	! check for no data
-                  sumTintensity = -9900 * Tintensity
+                  sumTintensity = -9900 * ceiling(Tintensity)
                   exit
                else
                   sumTintensity = sumTintensity + precip(xptr)
                end if
             end do
          end if
-         if(TavgIntensity < 0) then
+         if(TavgIntensity < 0.) then
          	runIntensity = -99.         		  
          else 		  
             ! compute latest "TavgIntensity"-hour precipitation (running average) intensity 	
-            do j = 1, TavgIntensity * rph 
+            AvgIntensityCounts=ceiling(TavgIntensity*float(rph))
+            do j = 1, AvgIntensityCounts 
                xptr = tptr - j + 1
                ! check for insufficient data
                if(xptr < 1) then
-                  sumTavgIntensity = -9900 * TavgIntensity
+                  sumTavgIntensity = -9900 * ceiling(TavgIntensity)
                   exit
                else if(precip(xptr) < 0) then	! check for no data
-                  sumTavgIntensity = -9900 * TavgIntensity
+                  sumTavgIntensity = -9900 * ceiling(TavgIntensity)
                   exit
                else
                   sumTavgIntensity = sumTavgIntensity + precip(xptr)
@@ -279,16 +284,16 @@ contains
             end do
          end if
          
-         sumTrecent(i) = float(ssumTrecent) / 100
-         sumTantecedent(i) = float(ssumTantecedent) / 100
+         sumTrecent(i) = float(ssumTrecent) / 100.
+         sumTantecedent(i) = float(ssumTantecedent) / 100.
          
          if(sumTantecedent(i) >= 0) cumRainfall=cumRainfall+1 ! count number of possible values of Cumulative Antecedent total
             
-         if(Tintensity > 0) &
-            intensity(i) = float(sumTintensity) / (float(Tintensity * rph) * 100)
+         if(Tintensity > 0.) &
+            intensity(i) = float(sumTintensity) / (Tintensity*float(rph)*100.)
             
-         if(TavgIntensity > 0) &
-            runIntensity(i) = float(sumTavgIntensity) / (float(TavgIntensity*rph) * 100)
+         if(TavgIntensity > 0.) &
+            runIntensity(i) = float(sumTavgIntensity) / (TavgIntensity*float(rph)*100.)
             
          if(intensity(i) >= 0) ctri = ctri + 1 ! count number of possible values of intensity
             
@@ -361,16 +366,18 @@ contains
    	implicit none
    	
    	! FORMAL ARGUMENTS
-           integer, intent(in)  :: rph,minTStormGap, event_pointer(*)
+           real, intent(in)  :: minTStormGap
+           integer, intent(in)  :: rph, event_pointer(*)
            integer, intent(out) :: event, counter
         ! LOCAL VARIABLES
-           integer :: i, exceeded
+           integer :: i, exceeded, StormGapMinCounts
 
    !------------------
    	   event = 1
    	   do i = 2, counter
    	      exceeded = event_pointer(i) - event_pointer(i-1)
-   	      if( exceeded > rph * minTStormGap) then
+              StormGapMinCounts=ceiling(minTStormGap*float(rph))
+   	      if( exceeded > StormGapMinCounts) then
    	         event = event + 1
    	      end if
    	   end do
@@ -666,4 +673,24 @@ contains
 	   	  read(*,*)
 	   	  stop
    	  end subroutine error2 !}}}
+   ! PURPOSE:
+   		    !Condenses code in getinfo.f90, this is a standard error
+   		    !message that will print and exit thresh from within.
+   		    !Used primarily when a value from thresh_in.txt is different from
+   		    !what the program expects.
+   	  subroutine error3(uout,var) !{{{
+   	  implicit none
+   	     !FORMAL ARGUMENTS
+   	     integer, intent(in) :: uout
+   	     character(*), intent(in) :: var
+   	     !------------------------------------------
+   	      write(uout,*) var,' must be an integer.'
+   			write(uout,*) 'Thresh exited due to an incompatible value.'
+   			write(*,*) var,' must be an integer.'
+   			write(*,*) 'Edit thresh_in.txt and restart thresh.'
+   			write(*,*) 'Press Enter key to exit program.'
+   			read(*,*)
+   			stop
+   	     
+   	  end subroutine error3!}}}
 end module 

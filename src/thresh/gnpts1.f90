@@ -21,8 +21,8 @@
 	real, intent(in)         :: anteced(n),recent(n),intensity(n),in2mm
 	real, intent(in)         :: duration(n),runningIntens(n),AWI(n)
 	real, intent(in)         :: deficit(n),intensityDuration(n),avgIntensity(n)
-	real, intent(in)			 :: lowLim, upLim
-	integer, intent(in)      :: n,year(n),minTStormGap,TavgIntensity,Tantecedent,Trecent
+	real, intent(in)		 :: lowLim, upLim,minTStormGap,TavgIntensity
+	integer, intent(in)      :: n,year(n),Tantecedent,Trecent
 	integer, intent(in)      :: month(n),day(n),hour(n),minute(n),precip(n)
 	integer, intent(in)      :: uout,ulog,ctrHolder,rph,nlo20,pt(nlo20)
         logical, intent(in)      :: checkS,checkA	
@@ -33,13 +33,13 @@
 	character (len=10)  :: date,manteced,mrecent,mintensity,mduration
 	character (len=10)  :: mrunningIntens,mprecip,mdeficit,mavgIntensity
 	character (len=10)  :: mintensityDuration,mAWI
-	character (len=10)  :: logRunIntensity,logStormIntensity 
-	character (len=5)   :: time,hrly
+	character (len=10)  :: logRunIntensity,logStormIntensity,hrly 
+	character (len=5)   :: time
 	character (len=3)   :: AntecedentHeader
 	character 	    :: pd = char(35),tb = char(9)
 	real            :: floatPrecip
 	logical         :: intensLogic1, durLow, durHigh, runningIntensLogic
-	integer		    :: j,tptr,tptrm1
+	integer		    :: j,tptr,tptrm1,StormGapMinCounts
 
 !------------------------------	
 
@@ -57,7 +57,7 @@
   	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//outputFile
 
 ! Create file header to identify rainfall threshold type.  	
-   write(hrly,'(i5)') TavgIntensity
+   write(hrly,'(F8.3)') TavgIntensity
    hrly=adjustl(hrly)
    select case (trim(adjustl(xid)))
    case('ExRA_'); header='Recent & Antecedent'
@@ -88,6 +88,7 @@
 
 ! Read data and write time-series plot file
    tptrm1=pt(1)-1
+   StormGapMinCounts = ceiling(minTStormGap*float(rph))
    do j=1,ctrHolder
       tptr=pt(j)
       !initialize mdurflag, intensLogic, durLow, durHigh
@@ -96,8 +97,8 @@
       durLow              = duration(tptr) < lowLim
       durHigh             = duration(tptr) > upLim
       runningIntensLogic  = runningIntens(tptr)<=0
-      
-      if(tptr-tptrm1>rph*minTStormGap) then
+!
+      if(tptr-tptrm1>StormGapMinCounts) then
          write(uout,*) ''
       end if
       write(time,'(i2.2,a1,i2.2)') hour(tptr), ':',minute(tptr)

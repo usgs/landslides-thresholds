@@ -52,13 +52,13 @@
 	integer :: sysMinute,sysSeconds,lastDayOfMonth(12)
 	integer :: midnightVal,sumTintensity
 	integer :: maxDataGap,year 
-	integer :: unitNumber(10),Tintensity,Trecent
+	integer :: unitNumber(10),Trecent
 	integer :: Tantecedent,rph,numNewLines,fmins
 	integer :: ev_recent_antecedent,evid,evia,evira
 	integer :: evawid,resetAntMonth,resetAntDay
 	integer :: tRainfallBegan,tRainfallEnd
-	integer :: TstormGap,minTStormGap
-	integer :: TavgIntensity,numPlotPoints,numPlotPoints2,numPlotPoints3
+	integer :: TstormGap
+	integer :: numPlotPoints,numPlotPoints2,numPlotPoints3
 	integer :: AWICompOffset,intervals
 	integer :: ctr_recent_antecedent,ctrid,ctria,cumAntecedentRainfallCtr,ctra
 	integer :: ctri,AWIExceedCtr,AWIIntensCtr
@@ -111,6 +111,7 @@
  	real :: AWIconversion,evapConsts(12),AWIThresh,seasonalAntThresh
  	real :: awimx,sumRecentmx,rntsymx
  	real :: polynomArr(6),upLim, lowLim, date_dif
+        real :: minTStormGap,Tintensity,TavgIntensity 
 
 	real (double),allocatable:: eachDate1904(:),last1904(:)
 	real (double),allocatable:: newest1904(:)
@@ -124,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='10 Apr 2017'; vrsn=' 1.0.018'
+     	revdate='27 Apr 2017'; vrsn=' 1.0.019'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)

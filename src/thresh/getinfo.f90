@@ -31,15 +31,15 @@ contains
 	      character (len=*),intent(out) :: outputFolder
 	      character (len=*),intent(out) :: thresholdUnit,fcUnit,precipUnit
 	      character (len=*),intent(out) :: plotFormat
-	      real,intent(out)		:: slope,intercept,powerCoeff
-	      real,intent(out)     :: polynomArr(6),runningIntens,AWIThresh
-	      real,intent(out)		:: powerExp,fieldCap,drainConst,evapConst(12)
-	      real,intent(out)		:: seasonalAntThresh,upLim,lowLim
-	      integer,intent(in)	:: sysYear
+	      real,intent(out)	:: slope,intercept,powerCoeff
+	      real,intent(out)  :: polynomArr(6),runningIntens,AWIThresh
+	      real,intent(out)	:: powerExp,fieldCap,drainConst,evapConst(12)
+	      real,intent(out)	:: seasonalAntThresh,upLim,lowLim
+	      real,intent(out) 	:: minTStormGap,Tintensity,TavgIntensity
+	      integer,intent(in)	   :: sysYear
 	      integer,intent(out)  :: uout,numStations,rph
 	      integer,intent(inout)  :: maxLines
-	      integer,intent(out)	:: Trecent,Tantecedent,Tintensity
-	      integer,intent(out) 	:: minTStormGap,TavgIntensity
+	      integer,intent(out)  :: Trecent,Tantecedent
 	      integer,intent(out)  :: maxDataGap,numPlotPoints,numPlotPoints2
 	      integer,intent(out)  :: resetAntMonth,resetAntDay
 	      integer,intent(out)  :: timezoneOffset,year,midnightVal
@@ -57,6 +57,7 @@ contains
 	      character (len = 255) :: tempDataLoc
 	      character (len = 260) :: command
 	      integer   :: i, lineCtr, thresh_in=22, iostatus, temp_maxLines
+	      real      :: tol,tol_remain,test_val
 	      logical   :: exists !, checkS, checkA
 
    !------------------------------
@@ -317,8 +318,29 @@ contains
 	      	stop
 	      end if
 	      	         
-	   !minTstormGap should be greater than zero.
-	      if(minTstormGap <= 0) call error1(uout,'Hours_Between_Storms','zero')
+	   !minTstormGap should be at least 1 minute.
+	      if(minTstormGap < 1./60.) call error1(uout,'Hours_Between_Storms','zero')
+	   
+	   !minTstormGap*rph should be at least 1 and an integer.
+	      tol=3599./3600.; tol_remain=1.d0-tol
+	      test_val=minTstormGap*float(rph)
+	      if(test_val < tol) call error1(uout,'Hours_Between_Storms*Readings_Per_Hour','one')
+	      if(mod(test_val,1.) >= tol_remain) &
+                &call error3(uout,'Hours_Between_Storms*Readings_Per_Hour')
+	   
+	   !Tintensity*rph should be at least 1 and an integer.
+	      test_val=Tintensity*float(rph)
+	      if(test_val<tol .and. test_val>tol_remain) & ! Allow for Tintensity == 0.
+                &call error1(uout,'Intensity_hours*Readings_Per_Hour','one')
+	      if(mod(test_val,1.) >= tol_remain) &
+                &call error3(uout,'Intensity_hours*Readings_Per_Hour')
+	   
+	   !TaveIntensity*rph should be at least 1 and an integer.
+	      test_val=TavgIntensity*float(rph)
+	      if(test_val<tol) &
+                &call error1(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour','one')
+	      if(mod(test_val,1.) >= tol_remain) &
+                &call error3(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour')
 	   
 		!maxDataGap should be at least 1   		
 	      if(maxDataGap < 1) maxDataGap = 1
@@ -429,13 +451,13 @@ contains
    ! Write variable values to file uout
 	      write(uout,"(A19,I2)")                  'Number of stations ',numStations
 	      write(uout,"(A29,I6)")                  'Maximum number of data lines ',maxLines
-	      write(uout,"(A,I2)")                    'Readings per  hour ',rph
+	      write(uout,"(A,I2)")                    'Readings per hour ',rph
 	      write(uout,"(A,A2)")	       'Precipitation data units ', precipUnit
 	      write(uout,"(A,I6)")                    'Length of recent time ',Trecent
 	      write(uout,"(A,I6)")                    'Length of antecedent time ',Tantecedent
-	      write(uout,"(A,I2)")                    'Intensity hours ',Tintensity
-	      write(uout,"(A,I2)")                    'Hours between storms ',minTStormGap
-	      write(uout,"(A,I2)")                    'Running average intensity hours ',TAvgIntensity
+	      write(uout,"(A,F8.3)")                    'Intensity hours ',Tintensity
+	      write(uout,"(A,F8.3)")                    'Hours between storms ',minTStormGap
+	      write(uout,"(A,F8.3)")                    'Running average intensity hours ',TAvgIntensity
 	      write(uout,"(A,I4)")                    'Maximum gap in data lines ',maxDataGap
 	      write(uout,"(A,I6)")                    'Plot lines for long plot ',numPlotPoints
 	      write(uout,"(A,I6)")                    'Plot lines for short plot ',numPlotPoints2

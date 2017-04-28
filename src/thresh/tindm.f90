@@ -10,13 +10,13 @@
 	implicit none
 	
 ! FORMAL ARGUMENTS
-	integer, intent(in)  :: n,year(n),TavgIntensity,Tantecedent,Trecent
+	integer, intent(in)  :: n,year(n),Tantecedent,Trecent
 	integer, intent(in)  :: month(n),day(n),hour(n)
 	integer, intent(in)  :: uout,ulog,stationPtr,uout2
 	real, intent(in)     :: sumTantecedent(n),sumTrecent(n),intensity(n),in2mm
 	real, intent(in)     :: duration(n),AWI(n),avgIntensity
 	real, intent(in)     :: deficit(n),intensityDuration(n),runningIntens(n)
-	character,intent(in) :: xid*(*)
+	character,intent(in) :: xid*(*),TavgIntensity
 	character,intent(in) :: outputFolder*(*),plotFile*(*),stationNumber*(*)
 	character,intent(in) :: stationLocation*(*)
         logical, intent(in)   :: checkS,checkA	

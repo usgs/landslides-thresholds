@@ -18,10 +18,11 @@
 	real, intent(in)      :: sumTantecedent(n),sumTrecent(n),intensity(n),in2mm
 	real, intent(in)      :: duration(n),runningIntens(n),AWI(n)
 	real, intent(in)      :: deficit(n),intensityDuration(n),avgIntensity(n)
+	real, intent(in)      :: TavgIntensity
 	integer, intent(in)   :: n,year(n)
 	integer, intent(in)   :: month(n),day(n),hour(n),minute(n),precip(n)
 	integer, intent(in)   :: uout,ulog,ctrHolder,stationPtr
-	integer, intent(in)   :: rph,TavgIntensity,Tantecedent,Trecent
+	integer, intent(in)   :: rph,Tantecedent,Trecent
         logical, intent(in)   :: checkS,checkA	
 	
 ! LOCAL VARIABLES
@@ -30,8 +31,8 @@
 	character (len=10)  :: date,msumTantecedent,msumTrecent,mintensity
 	character (len=10)  :: mduration,mrunningIntens,mprecip,mdeficit
 	character (len=10)  :: mavgIntensity,mintensityDuration,mAWI
-	character (len=10)  :: logRunIntensity,logStormIntensity 
-	character (len=5)   :: time,hrly
+	character (len=10)  :: logRunIntensity,logStormIntensity,hrly 
+	character (len=5)   :: time 
 	character (len=3)   :: AntecedentHeader
 	character           :: pd = char(35),tb = char(9)
 	real                :: floatPrecip 
@@ -48,7 +49,7 @@
            AntecedentHeader='CAP' !Cumulative Annual Precipitation
         end if
 
-   write(hrly,'(i5)') TavgIntensity
+   write(hrly,'(F8.3)') TavgIntensity
    hrly=adjustl(hrly)
    
    ! Writing data values to variables for use in constructing outputFile

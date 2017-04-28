@@ -15,8 +15,8 @@
 	character, intent(in) :: stationLocation*(*)
 	character (len=2), intent(in) :: precipUnit
 	real, intent(in)      :: sumAnteced(n),sumRecent(n),intensity(n)
-	real, intent(in)      :: stormDuration(n),AWI(n),runIntensity(n)
-	integer, intent(in)   :: n,TavgIntensity
+	real, intent(in)      :: stormDuration(n),AWI(n),runIntensity(n),TavgIntensity
+	integer, intent(in)   :: n
 	integer, intent(in)   :: uout,ulog,ctrHolder,stationPtr,Tantecedent,Trecent
 	integer, intent(in)   :: year(n),month(n),day(n),hour(n),minute(n),precip(n)
         logical, intent(in)   :: checkS,checkA	

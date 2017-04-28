@@ -16,8 +16,8 @@
 	real, intent(in) 	       :: duration(numStations),in2mm
 	real, intent(in) 	       :: deficit(numStations),runningIntens
 	real, intent(in)	       :: intensity(numStations),avgIntensity(numStations),sAWI(numStations)
-	real, intent(in)               :: AWIThresh,fieldCap
-	integer, intent(in) 	       :: numStations,unitNumber,ulog,TavgIntensity
+	real, intent(in)               :: AWIThresh,fieldCap,TavgIntensity
+	integer, intent(in) 	       :: numStations,unitNumber,ulog
         logical, intent(in)            :: checkS,checkA	
 	
 ! LOCAL VARIABLES

@@ -62,8 +62,9 @@ contains
 	   real, intent(in)          :: runningIntens(numStations)
 	   real, intent(in)         :: sumRecent(numStations)
 	   real, intent(in)         :: intensity(numStations), in2mm
+	   real, intent(in)         :: Tintensity, TavgIntensity
 	   integer, intent(in)      :: numStations, unitNumber
-	   integer, intent(in)      :: ulog, Tintensity, TavgIntensity
+	   integer, intent(in)      :: ulog 
 	
     ! LOCAL VARIABLES
 	   character :: pd = char(35), tb = char(9)
@@ -78,7 +79,7 @@ contains
     ! Open outputFile and write its data
   	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
 	   write (unitNumber,*) pd,time,' ',date
-	   if (Tintensity>0) then
+	   if (Tintensity>0.) then
 	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,'Recent',tb,&
 	     Tintensity,'-hr Intensity (in)',tb,Tintensity,'-hr Intensity (mm)',tb,&
 	     'Duration (hrs)',tb,TavgIntensity,'-hr Running Ave. Intensity (in)',&
@@ -137,10 +138,10 @@ contains
 	   character, intent(in)    :: outputFolder*(*)
 	   character, intent(in)    :: time*(*),date*(*)
 	   character(*), intent(in) :: stationNumber(numStations)
-	   real, intent(in)         :: sumAntecedent(numStations),in2mm
+	   real, intent(in)         :: sumAntecedent(numStations),in2mm,Tintensity,TavgIntensity
 	   real, intent(in)         :: sumRecent(numStations),runningIntens(numStations)
 	   real, intent(in)         :: intensity(numStations),durs(numStations)
-	   integer, intent(in)      :: numStations,unitNumber,ulog,Tintensity,TavgIntensity
+	   integer, intent(in)      :: numStations,unitNumber,ulog
  	   integer, intent(in)      :: Tantecedent,Trecent
 	
 	
