@@ -24,6 +24,7 @@
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile='ThAlert.txt'
 	character (len=7)   :: alert_lev(4)
+	character (len=8)   :: TavgIntensityF 
 	character 	    :: tb = char(9)
 	real		    :: avgToRunning,AWI_low
 	integer 	    :: i,alertConditionRecentAntecedent(numStations)
@@ -88,6 +89,8 @@
 	end do
 	
 ! tab-delimited file listing most recent alert conditions at all stations
+        write(TavgIntensityF,'(F8.3)') TavgIntensity
+        TavgIntensityF=adjustl(TavgIntensityF)
   	outputFile=trim(outputFolder)//trim(outputFile)
   	open(unitNumber,file=outputFile,status='unknown',&
   	position='rewind',err=125)
@@ -96,7 +99,7 @@
 	                     tb,'Time and Date',&
 	                     tb,'Recent/Antecedent',&
 	                     tb,'Intensity-Duration',&
-	                     tb,TavgIntensity,'-hr Running Average Intensity'
+	                     tb,trim(TavgIntensityF),'-hr Running Average Intensity'
 	                     
 	do i=1,numStations
 	  write(unitNumber,*) tb,trim(stationNumber(i)),&

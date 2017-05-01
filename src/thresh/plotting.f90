@@ -8,12 +8,12 @@ contains
     ! PURPOSE:
     !	  Writes a file listing most recent conditons at all stations for 
     !   plotting by interactive graphing programs,"dgrs" using separate symbols for each.
-	subroutine dgrs(numStations,outputFolder,ulog,&
-	 &dgOutputfile,unitNumber,stationNumber,sumAnteced,sumRecent,Trecent)
+	subroutine dgrs(numStations,outputFolder,ulog,dgOutputfile,&
+	 &unitNumber,stationNumber,sumAnteced,sumRecent,Trecent,precipUnit)
 	implicit none
 	
     ! FORMAL ARGUMENTS
-	   character, intent(in)    :: outputFolder*(*)
+	   character, intent(in)    :: outputFolder*(*),precipUnit*(*)
 	   character, intent(in)    :: dgOutputfile*(*)
 	   character(*), intent(in) :: stationNumber(numStations)
 	   real, intent(in)         :: sumAnteced(numStations),sumRecent(numStations)
@@ -29,7 +29,7 @@ contains
   	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
   	   write(unitNumber,*)& 
      	     (tb,'Recent Conditons at Station',trim(stationNumber(i)),&
-     	     tb,Trecent,'-hr Precip. at Station',trim(stationNumber(i)), i=1,numStations)
+     	     tb,Trecent,'-hr Precip. at Station (',precipUnit,') ',trim(stationNumber(i)), i=1,numStations)
  	   write(unitNumber,'(100(a1,f7.2,a1,f7.2):)')(tb,sumAnteced(i),tb,sumRecent(i), i=1,numStations)
  	   close(unitNumber)	
 	   return
@@ -51,11 +51,11 @@ contains
    !	  others are selected
 	subroutine gnp1(numStations,outputFolder,ulog,defaultOutputFile,&
 	unitNumber,time,date,stationNumber,sumAnteced,sumRecent,intensity,durs,&
-	runningIntens,in2mm,Tintensity,TavgIntensity)
+	runningIntens,in2mm,Tintensity,TavgIntensity,precipUnit)
 	implicit none
 
    ! FORMAL ARGUMENTS
-	   character, intent(in)    :: outputFolder*(*)
+	   character, intent(in)    :: outputFolder*(*),precipUnit
 	   character, intent(in)    :: defaultOutputFile*(*), time*(*), date*(*)
 	   character(*), intent(in) :: stationNumber(numStations)
 	   real, intent(in)         :: sumAnteced(numStations), durs(numStations)
@@ -69,8 +69,9 @@ contains
     ! LOCAL VARIABLES
 	   character :: pd = char(35), tb = char(9)
 	   integer   :: i
-	   real      :: logintensity,mmIntensity,avgmmIntensity
+	   real      :: logintensity,logRunIntensity
 	   character (len=255) :: outputFile
+	   character (len=8)   :: TavgIntensityF,TintensityF ! Formatted duration 
 	
     !------------------------------	
     ! Store the output file's location in outputFile
@@ -79,38 +80,31 @@ contains
     ! Open outputFile and write its data
   	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
 	   write (unitNumber,*) pd,time,' ',date
+    !------------------------------	
+           write(TavgIntensityF,'(F8.3)') TavgIntensity
+           TavgIntensityF=adjustl(TavgIntensityF)
 	   if (Tintensity>0.) then
-	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,'Recent',tb,&
-	     Tintensity,'-hr Intensity (in)',tb,Tintensity,'-hr Intensity (mm)',tb,&
-	     'Duration (hrs)',tb,TavgIntensity,'-hr Running Ave. Intensity (in)',&
-	     tb,'Log10 ',Tintensity,'-hr Intensity (mm)'
+	     write(TintensityF,'(F8.3)') Tintensity
+	     TintensityF=adjustl(TintensityF)
+	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,'Recent',tb,'(',&
+	     trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,'Log10(',trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,&
+	     'Duration (hrs)',tb,trim(TavgIntensityF),'-hr Running Ave. Intensity (',precipUnit,')',&
+	     tb,'Log10 (',trim(TavgIntensityF),'-hr Intensity) (',precipUnit,')'
 	   else
 	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,&
-	     'Recent',tb,'Average Intensity (in)',tb,'Average Intensity (mm)',&
-	     tb,'Duration (hrs)',tb,TavgIntensity,&
-	     '-hr Running Ave. Intensity (in)',tb,'Log10 Average Intensity (mm)'
+	     'Recent',tb,'Average Intensity (',precipUnit,')',tb,'Log10 Average Intensity (',precipUnit,')',&
+	     tb,'Duration (hrs)',tb,trim(TavgIntensityF),&
+	     '-hr Intensity (',precipUnit,')',tb,'Log10 (',trim(TavgIntensityF),'-hr Intensity) (',precipUnit,')'
 	   end if
      
 	   do i=1,numStations
-	     if (intensity(i)*in2mm<1.d0) then
-     	       logintensity = 0.
-	     else 
-     	       logintensity = log10(intensity(i)*in2mm)
-	     end if
-	     if (intensity(i)<0.) then
-	       mmIntensity = intensity(i)
-	     else
-	       mmIntensity = intensity(i)*in2mm
-	     end if
-	     if (runningIntens(i)<0.) then
-	       avgmmIntensity = runningIntens(i)
-	     else
-	       avgmmIntensity = runningIntens(i) !*in2mm
-	     end if
+     	     logintensity = 0.; logRunIntensity = 0.
+	     if (intensity(i)>0.) logintensity = log10(intensity(i))
+	     if (runningIntens(i)>0.) logRunIntensity = log10(runningIntens(i))
 	     write(unitNumber,'(a1,a8,a1,f7.2,a1,f7.2,a1,f7.3,a1,f7.3,a1,f8.2,&
 	     &a1,f7.3,a1,f7.3)')tb,trim(stationNumber(i)),tb,sumAnteced(i),tb,&
-	     &sumRecent(i),tb,intensity(i),tb,mmIntensity,tb,durs(i),tb,&
-	     &avgmmIntensity,tb,logintensity
+	     &sumRecent(i),tb,intensity(i),tb,logintensity,tb,durs(i),tb,&
+	     &runningIntens(i),tb,logRunIntensity
 	   end do
   	   close(unitNumber)
 	   write(*,*) 'Finished gnp1 plot file'
@@ -131,11 +125,11 @@ contains
     !	
 	subroutine gnp2(numStations,outputFolder,ulog,unitNumber,&
 	time,date,stationNumber,sumAntecedent,sumRecent,intensity,durs,runningIntens,&
-	in2mm,Tintensity,TavgIntensity,Tantecedent,Trecent)
+	in2mm,Tintensity,TavgIntensity,Tantecedent,Trecent,precipUnit)
 	implicit none
 	
     ! FORMAL ARGUMENTS
-	   character, intent(in)    :: outputFolder*(*)
+	   character, intent(in)    :: outputFolder*(*),precipUnit*(*)
 	   character, intent(in)    :: time*(*),date*(*)
 	   character(*), intent(in) :: stationNumber(numStations)
 	   real, intent(in)         :: sumAntecedent(numStations),in2mm,Tintensity,TavgIntensity
@@ -148,10 +142,13 @@ contains
     ! LOCAL VARIABLES
 	   character           :: pd = char(35), tb = char(9)
 	   character (len=255) :: outputFile
-	   real                :: logintensity,mmIntensity,avgmmIntensity
+	   character (len=8)   :: TavgIntensityF,TintensityF ! Formatted duration
+	   real                :: logintensity,logRunIntensity
 	   integer             :: i
 
     !------------------------------	
+     write(TavgIntensityF,'(F8.3)') TavgIntensity
+     TavgIntensityF=adjustl(TavgIntensityF)
     ! save each station in a separate tab-delimited file for plotting by gnuplot, "gnp2"
  	   do i=1,numStations
     ! Create an output file for each station
@@ -160,42 +157,30 @@ contains
  	     write (unitNumber,*) pd,time,' ',date
  	  
  	     if(Tintensity>0) then
+	       write(TintensityF,'(F8.3)') TintensityF
+	       TintensityF=adjustl(TintensityF)
  	       write (unitNumber,*) pd,tb,' Station',tb,&
  	       Tantecedent,'-hr Previous Total',tb,Trecent,'-hr Total',tb,&
- 	       Tintensity,'-hr Intensity (in)',tb,&
- 	       Tintensity,'-hr Intensity (mm)',tb,'Duration (hrs)',tb,&
- 	       TavgIntensity,'-hr Running Ave. Intensity (in)',tb,&
- 	       'Log10 ',Tintensity,'-hr Intensity (mm)'
+ 	       '(',trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,&
+ 	       'log10(',trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,'Duration (hrs)',tb,&
+ 	       trim(TavgIntensityF),'-hr Running Ave. Intensity (',precipUnit,')',tb,&
+ 	       'Log10 (',trim(TavgIntensityF),'-hr Running Ave. Intensity) (',precipUnit,')'
  	     else
  	       write (unitNumber,*) pd,tb,' Station',tb,&
  	       Tantecedent,'-hr Previous Total',tb,Trecent,'-hr Total',tb,&
- 	       'Average Intensity (in)',tb,'Average Intensity (mm)',tb,&
-	       'Duration (hrs)',tb,TavgIntensity,'-hr Running Ave. Intensity (in)',&
-	       tb,'Log10 Average Intensity (mm)'
+ 	       'Average Intensity (',precipUnit,')',tb,'Log10 Average Intensity (',precipUnit,')',tb,&
+	       'Duration (hrs)',tb,trim(TavgIntensityF),'-hr Running Ave. Intensity (',precipUnit,')',&
+	       tb,'Log10 Running Ave. Intensity (',precipUnit,')'
  	     end if
  	  
-	     if(intensity(i)*in2mm<1.d0) then
-           logintensity=0.
-	     else 
-     	     logintensity=log10(intensity(i)*in2mm)
-	     end if
-	  
-	     if(intensity(i)<0.) then
-	        mmIntensity=intensity(i)
-	     else
-	        mmIntensity=intensity(i)*in2mm
-	     end if
-	  
-	     if(runningIntens(i)<0.) then
-	        avgmmIntensity=runningIntens(i)
-	     else
-	        avgmmIntensity=runningIntens(i) !*in2mm
-	     end if
+    	     logintensity = 0.; logRunIntensity = 0.
+	     if (intensity(i)>0.) logintensity = log10(intensity(i))
+	     if (runningIntens(i)>0.) logRunIntensity = log10(runningIntens(i))
 	  
  	     write(unitNumber,'(a1,a8,a1,f7.2,a1,f7.2,a1,f7.3,a1,f7.3,a1,f8.2,&
 	       &a1,f7.3,a1,f7.3)')tb,trim(stationNumber(i)),tb,&
 	       sumAntecedent(i),tb,sumRecent(i),tb,intensity(i),tb,&
-	       mmIntensity,tb,durs(i),tb,avgmmIntensity,tb,logintensity
+	       logintensity,tb,durs(i),tb,runningIntens(i),tb,logRunIntensity
   	     close(unitNumber)
 	   end do
 	

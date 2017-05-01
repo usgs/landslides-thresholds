@@ -6,7 +6,8 @@
 	subroutine tindm(ulog,uout,uout2,n,stationNumber,stationPtr,&
 	year,month,day,hour,sumTantecedent,sumTrecent,intensity,duration,&
 	deficit,intensityDuration,outputFolder,plotFile,stationLocation,in2mm,xid,AWI,&
-	runningIntens,TavgIntensity,avgIntensity,Tantecedent,Trecent,checkS,checkA)
+	runningIntens,TavgIntensity,avgIntensity,Tantecedent,Trecent,precipUnit,&
+        checkS,checkA)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -14,11 +15,11 @@
 	integer, intent(in)  :: month(n),day(n),hour(n)
 	integer, intent(in)  :: uout,ulog,stationPtr,uout2
 	real, intent(in)     :: sumTantecedent(n),sumTrecent(n),intensity(n),in2mm
-	real, intent(in)     :: duration(n),AWI(n),avgIntensity
+	real, intent(in)     :: duration(n),AWI(n),avgIntensity,TavgIntensity
 	real, intent(in)     :: deficit(n),intensityDuration(n),runningIntens(n)
-	character,intent(in) :: xid*(*),TavgIntensity
+	character,intent(in) :: xid*(*)
 	character,intent(in) :: outputFolder*(*),plotFile*(*),stationNumber*(*)
-	character,intent(in) :: stationLocation*(*)
+	character,intent(in) :: stationLocation*(*),precipUnit*(*)
         logical, intent(in)   :: checkS,checkA	
 
 ! LOCAL VARIABLES
@@ -26,6 +27,7 @@
 	character (len=10)  :: date,anteced,recent,mintensity,mduration
 	character (len=10)  :: mdeficit,mintensityDuration,mAWI,mrunningIntensity
 	character (len=10)  :: logStormIntensity !logRunIntensity,
+	character (len=8)   :: TavgIntensityF 
 	character (len=3)   :: AntecedentHeader
 	character 	    :: pd,tb,cbrai
 	real	    	    :: maxDeficit,maxDuration,d_recent_antecedentmx,maxThreshIndex 
@@ -37,7 +39,7 @@
 	tb=char(9) ! tab character
 
 ! Set text for heading of Antecedent precipitation column
-  	if(checkS) then
+   	if(checkS) then
   	   AntecedentHeader='SAP' !Seasonal Antecedent Precipitation
         else if (checkA) then
            AntecedentHeader='AWI' !Antecedent Wetness Index
@@ -56,15 +58,18 @@
 	open(uout2,file=outputFile,status='unknown',position='rewind',err=125)
      	
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.
+        write(TavgIntensityF,'(F8.3)') TavgIntensity
+        TavgIntensityF=adjustl(TavgIntensityF)
 	un(1) = uout; un(2) = uout2
 	  do k=1,2
 	  write(un(k),*) pd,' Maximum Daily Values for Thresholds '
-	  write(un(k),*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation)
+	  write(un(k),*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation),&
+            &' Precipitation units: ', precipUnit
 	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-hr Precip.',&
             tb,Trecent,'-hr Precip.',tb,'Rec./Antec. Index',tb,&
 	    'Intensity',tb,'Log10(Intensity)',tb,&
 	    'Duration',tb,'Intensity-Duration Index',tb,&
-	    AntecedentHeader,tb,TavgIntensity,'-hr Intensity',tb,&
+	    AntecedentHeader,tb,trim(TavgIntensityF),'-hr Intensity',tb,&
 	    'Combined Rec./Antec. & Intensity Index'
 	  end do
 	  

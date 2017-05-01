@@ -14,7 +14,7 @@
 ! FORMAL ARGUMENTS
 	character, intent(in) :: outputFolder*(*),timeSeriesPlotFile*(*),stationNumber*(*)
 	character, intent(in) :: stationLocation*(*)
-	character (len=2), intent(in) :: precipUnit
+	character, intent(in) :: precipUnit*(*)
 	real, intent(in)      :: sumTantecedent(n),sumTrecent(n),intensity(n),in2mm
 	real, intent(in)      :: duration(n),runningIntens(n),AWI(n)
 	real, intent(in)      :: deficit(n),intensityDuration(n),avgIntensity(n)
@@ -31,7 +31,8 @@
 	character (len=10)  :: date,msumTantecedent,msumTrecent,mintensity
 	character (len=10)  :: mduration,mrunningIntens,mprecip,mdeficit
 	character (len=10)  :: mavgIntensity,mintensityDuration,mAWI
-	character (len=10)  :: logRunIntensity,logStormIntensity,hrly 
+	character (len=10)  :: logRunIntensity,logStormIntensity 
+	character (len=8)   :: TavgIntensityF 
 	character (len=5)   :: time 
 	character (len=3)   :: AntecedentHeader
 	character           :: pd = char(35),tb = char(9)
@@ -49,8 +50,8 @@
            AntecedentHeader='CAP' !Cumulative Annual Precipitation
         end if
 
-   write(hrly,'(F8.3)') TavgIntensity
-   hrly=adjustl(hrly)
+   write(TavgIntensityF,'(F8.3)') TavgIntensity
+   TavgIntensityF=adjustl(TavgIntensityF)
    
    ! Writing data values to variables for use in constructing outputFile
    write(mhour,'(i7,a4)') ctrHolder,'hour'
@@ -63,7 +64,8 @@
 	
    ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
 	write(uout,*) pd,' Time-Series Plot File for Rainfall Thresholds'
-	write(uout,*) pd,' Station ',trim(stationNumber),': ', trim(stationLocation)
+	write(uout,*) pd,' Station ',trim(stationNumber),': ', trim(stationLocation),&
+          &' Precipitation units: ', precipUnit
 	write(uout,*) pd,' Time & Date',tb,&
 	              'Hourly Precip.',tb,&
 	              Tantecedent,'-hr Precip.',tb,&
@@ -71,11 +73,11 @@
 	              'Intensity',tb,&
 	              'Log10(Intensity)',tb,&
 	              'Duration',tb,&
-	              'Log10('//trim(hrly)//'-hr Intensity)',tb,&
-	              trim(hrly)//'-hr Intensity',tb,&
+	              'Log10('//trim(TavgIntensityF)//'-hr Intensity)',tb,&
+	              trim(TavgIntensityF)//'-hr Intensity',tb,&
 	              'Recent/Antecedent Index',tb,&
 	              'Intensity-Duration Index',tb,&
-	              TavgIntensity,'-hr Intensity Index',tb,&
+	              trim(TavgIntensityF),'-hr Intensity Index',tb,&
 	              AntecedentHeader
 	  
 	do j=(1+stationPtr-ctrHolder*rph),stationPtr

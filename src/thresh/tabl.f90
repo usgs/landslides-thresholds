@@ -5,11 +5,11 @@
 !
 	subroutine tabl(unitNumber,u1,outputFolder,numStations,&
 	stationNumber,dateTime,duration,sumAnteced,sumRecent,intensity,&
-	Tantecedent,Trecent)
+	Tantecedent,Trecent,precipUnit)
 	implicit none
 	
 ! FORMAL ARGUMENTS
-	character, intent(in)	       :: outputFolder*(*)
+	character, intent(in)	       :: outputFolder*(*),precipUnit*(*)
 	character (len=17), intent(in) :: dateTime(numStations)
 	character(*), intent(in)       :: stationNumber(numStations)
 	real, intent(in)	       :: duration(numStations),sumAnteced(numStations)
@@ -31,6 +31,8 @@
   	open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
   	
 ! Write to file
+	write (unitNumber,*) 'Current Conditions by Station'
+	write(unitNumber,*) 'Precipitation units: ',precipUnit
 	write(unitNumber,'(a10,12x,i3,a14,12x,i2,a10,12x,a9,12x,a8,12x,a11)')&
           'Rain gauge',Tantecedent,'-hr Antecedent',Trecent,'-hr Recent',&
           'Intensity','Duration','Time & Date'

@@ -17,7 +17,7 @@
 	character, intent(in)    :: outputFolder*(*),plotFile*(*),stationNumber*(*)
 	character, intent(in)    :: stationLocation*(*)
 	character, intent(inout) :: xid*(*)
-	character (len=2), intent(in) :: precipUnit
+	character, intent(in)    :: precipUnit*(*)
 	real, intent(in)         :: anteced(n),recent(n),intensity(n),in2mm
 	real, intent(in)         :: duration(n),runningIntens(n),AWI(n)
 	real, intent(in)         :: deficit(n),intensityDuration(n),avgIntensity(n)
@@ -33,7 +33,8 @@
 	character (len=10)  :: date,manteced,mrecent,mintensity,mduration
 	character (len=10)  :: mrunningIntens,mprecip,mdeficit,mavgIntensity
 	character (len=10)  :: mintensityDuration,mAWI
-	character (len=10)  :: logRunIntensity,logStormIntensity,hrly 
+	character (len=10)  :: logRunIntensity,logStormIntensity 
+	character (len=8)   :: TavgIntensityF 
 	character (len=5)   :: time
 	character (len=3)   :: AntecedentHeader
 	character 	    :: pd = char(35),tb = char(9)
@@ -57,20 +58,21 @@
   	outputFile=trim(outputFolder)//trim(plotFile)//trim(adjustl(xid))//outputFile
 
 ! Create file header to identify rainfall threshold type.  	
-   write(hrly,'(F8.3)') TavgIntensity
-   hrly=adjustl(hrly)
+   write(TavgIntensityF,'(F8.3)') TavgIntensity
+   TavgIntensityF=adjustl(TavgIntensityF)
    select case (trim(adjustl(xid)))
    case('ExRA_'); header='Recent & Antecedent'
    case('ExID_'); header='Intensity-Duration'
    case('ExIDA'); header='Int.-Dur. & Ant. Water'
-   case('ExIR_'); header=trim(hrly)//'-hr Intensity'
+   case('ExIR_'); header=trim(TavgIntensityF)//'-hr Intensity'
    case('ExIRA'); header='Intensity & Cumulative'
    end select
    open(uout,file=outputFile,status='unknown',position='rewind',err=125)
 	
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
    write(uout,*) pd,' Times of exceedance for rainfall threshold: '//header
-   write(uout,*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation)
+   write(uout,*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation),&
+    &' Precipitation units: ', precipUnit
    write(uout,*) pd,' Time & Date',tb,&
                  'Hourly Precip.',tb,&
                  Tantecedent,'-hr Precip.',tb,&
@@ -78,11 +80,11 @@
                  'Intensity',tb,&
                  'Log10(Intensity)',tb,&
                  'Duration',tb,&
-	         'Log10('//trim(hrly)//'-hr Intensity)',tb,&
-                 trim(hrly)//'-hr Intensity',tb,&
+	         'Log10('//trim(TavgIntensityF)//'-hr Intensity)',tb,&
+                 trim(TavgIntensityF)//'-hr Intensity',tb,&
                  'Recent/Antecedent Index',tb,&
                  'Intensity-Duration Index',tb,&
-                 TavgIntensity,'-hr Intensity Index',tb,&
+                 trim(TavgIntensityF),'-hr Intensity Index',tb,&
                  AntecedentHeader,tb,&
                  'Duration Descripton'
 

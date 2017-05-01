@@ -13,7 +13,7 @@
 ! FORMAL ARGUMENTS
 	character, intent(in) :: outputFolder*(*),archiveFile*(*),stationNumber*(*)
 	character, intent(in) :: stationLocation*(*)
-	character (len=2), intent(in) :: precipUnit
+	character, intent(in) :: precipUnit*(*)
 	real, intent(in)      :: sumAnteced(n),sumRecent(n),intensity(n)
 	real, intent(in)      :: stormDuration(n),AWI(n),runIntensity(n),TavgIntensity
 	integer, intent(in)   :: n
@@ -26,6 +26,7 @@
 	character (len=12)  :: sNumber
 	character (len=10)  :: date,msumAnteced,msumRecent,mintensity
 	character (len=10)  :: mstormDuration,mrunIntensity,mAWI,mprecip
+	character (len=8)   :: TavgIntensityF 
 	character (len=6)   :: pn
 	character (len=5)   :: time
 	character (len=3)   :: AntecedentHeader
@@ -37,6 +38,8 @@
 !------------------------------	
 	sNumber = adjustl(trim(stationNumber))// '.txt'
   	outputFile=trim(outputFolder)//trim(archiveFile)//trim(sNumber)
+        write(TavgIntensityF,'(F8.3)') TavgIntensity
+        TavgIntensityF=adjustl(TavgIntensityF)
 
 ! Set text for heading of Antecedent precipitation column
   	if(checkS) then
@@ -59,14 +62,15 @@
 ! Write heading if writing a new file (position=rewind); skip if appending to an old one.     
      	if(pn=='rewind') then
 	  write(uout,*) pd,' Archive of Rainfall Totals for Comparison with Thresholds'
-	  write(uout,*) pd,' Station ',trim(stationNumber) ,': ',trim(stationLocation)
+	  write(uout,*) pd,' Station ',trim(stationNumber) ,': ',trim(stationLocation),&
+	    &' Precipitation units: ', precipUnit
 	  write(uout,*) pd,' Time & Date',&
                    tb,'Hourly Precip.',&
                    tb,Tantecedent,'-hr Antecedent Precip.',&
                    tb,Trecent,'-hr Precip.',&
                    tb,'Intensity',&
                    tb,'Duration',&
-                   tb,TavgIntensity,'-hr Intensity',&
+                   tb,trim(TavgIntensityF),'-hr Intensity',&
                    tb,AntecedentHeader
      	end if
 

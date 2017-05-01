@@ -25,6 +25,7 @@
 	character (len=7) 	     :: alert_lev(4) !,color(4) 
 	character 		     :: tb = char(9)
 	character (len=255) 	     :: outputFile='ThAlert.htm'
+	character (len=8)            :: TavgIntensityF 
 	character (len=17),parameter :: r1='<tr align=center>'
 	character (len=4),parameter  :: h1='<th>',d1='<td>'
 	character (len=5),parameter  :: r2='</tr>',h2='</th>',d2='</td>'
@@ -94,6 +95,8 @@
 	end do
 	
 ! file in html-table format listing most recent alert conditions at all stations
+        write(TavgIntensityF,'(F8.3)') TavgIntensity
+        TavgIntensityF=adjustl(TavgIntensityF)
   	outputFile=trim(outputFolder)//trim(outputFile)
   	open(unitNumber,file=outputFile,status='unknown',&
      	position='rewind',err=125)
@@ -103,7 +106,7 @@
 	'</caption>'
 	write (unitNumber,*) r1,h1,'Rain gauge',h2,h1,'Vicinity',h2,h1,&
         'Time & Date',h2,h1,'Recent/Antecedent',h2,h1,'Intensity-Duration',&
-        h2,h1,TavgIntensity,'-hr Running Average Intensity',h2,r2
+        h2,h1,trim(TavgIntensityF),'-hr Running Average Intensity',h2,r2
 	do i=1,numStations
 	  write(unitNumber,*) &
           r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&

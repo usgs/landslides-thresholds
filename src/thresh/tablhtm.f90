@@ -9,7 +9,7 @@ contains
 	subroutine tablhtm(unitNumber,u1,outputFolder,numStations,&
 	stationNumber,dateTime,duration,intensityDurationIndex,sumAnteced,&
 	sumRecent,intensity,runningIntens,stationLocation,Tantecedent,Trecent,&
-        hexColors,colors,div,ndiv)
+        hexColors,colors,div,ndiv,precipUnit)
 	implicit none
 		
 ! FORMAL ARGUMENTS
@@ -19,7 +19,7 @@ contains
 	character (len=6), allocatable, intent(in) :: colors(:)
 	real, allocatable, intent(in)  :: div(:)
 	character(*), intent(in)       :: stationNumber(numStations)
-	character, intent(in)	       :: outputFolder*(*)
+	character, intent(in)	       :: outputFolder*(*),precipUnit*(*)
 	real, intent(in)	       :: duration(numStations),sumAnteced(numStations)
 	real, intent(in)	       :: sumRecent(numStations),intensityDurationIndex(numStations)
 	real, intent(in)	       :: intensity(numStations),runningIntens(numStations)
@@ -37,10 +37,6 @@ contains
 	
 !------------------------------	
 
-! colors white=#ffffff gray=#cccccc violet=#6600cc
-! blue=#0000ff light blue=#33ffff green=#00ff00
-! yellow=#ffff00 orange=#ff6600 red=#ff0000 magenta=#ff00ff 
-
 ! Create output file	
   	outputFile=trim(outputFolder)//outputFile
   	
@@ -52,9 +48,9 @@ contains
 	write (unitNumber,*) '<caption>Current Conditions by Station</caption>'
 	write(unitNumber,*) r1,h1,'Rain Gauge',h2,h1,&
 	  'Vicinity of <br>Rain Gauge',h2,h1,&
-          Tantecedent,'-hr Antecedent Total<br>(inches)',h2,h1,&
-          Trecent,'-hr RecentTotal<br>(inches)',h2,h1,&
-          'Average<br>Intensity<br>(inches/hour)',h2,&
+          Tantecedent,'-hr Antecedent Total<br>(',precipUnit,')',h2,h1,&
+          Trecent,'-hr RecentTotal<br>(',precipUnit,')',h2,h1,&
+          'Average<br>Intensity<br>(',precipUnit,'/hour)',h2,&
           h1,'Duration of<br>Current Storm<br>(hours)',h2,h1,'Time & Date',h2,r2
 
 ! Assign proper values to each variable. Used to fill the table.

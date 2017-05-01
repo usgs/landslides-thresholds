@@ -21,7 +21,7 @@ contains
 	   interSwitch,intervals,polySwitch,precipUnit,forecast,checkS,checkA) !{{{
 	   use data_analysis !contains check_SAT, check_AWI, check_switches,
 	                     !check_antMonth_antDay,set_power_limits,set_poly_limits
-	                     !error1, and error2
+	                     !error1, error2, and error3
 	   implicit none
 	                     		  
    ! FORMAL ARGUMENTS

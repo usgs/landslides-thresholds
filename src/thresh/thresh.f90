@@ -125,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='27 Apr 2017'; vrsn=' 1.0.019'
+     	revdate='01 May 2017'; vrsn=' 1.0.020'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -570,42 +570,42 @@
  	  end if
  	   
 ! Create time series listings of threshold exceedance values
-	   if(stats) then	  
- 	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
+	  if(stats) then	  
+ 	     call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctr_recent_antecedent,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,pt_recent_antecedent,maxLines,'ExRA_',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
- 	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
+ 	     call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrid,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptid,nlo20,'ExID_',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
- 	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
+ 	     call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),AWIIntensCtr,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptawid,nlo20,'ExIDA',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
- 	      call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
+ 	     call gnpts1(unitNumber(1),unitNumber(5),maxLines,&
  	      stationNumber(i),ctrira,timestampYear,&
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesExceedFile,stationLocation(i),in2mm,&
  	      rph,ptira,nlo20,'ExIRA',AWI,minTStormGap,TavgIntensity,&
  	      Tantecedent,Trecent,lowLim,upLim,precipUnit,checkS,checkA)
- 	      call tindm(unitNumber(1),unitNumber(5),unitNumber(10),maxLines,&
+ 	     call tindm(unitNumber(1),unitNumber(5),unitNumber(10),maxLines,&
  	      stationNumber(i),stationPtr(i),timestampYear,timestampMonth,&
  	      da,hr,sumTantecedent,sumTrecent,intensity,dur,&
  	      deficit_recent_antecedent,threshIntensityDuration,outputFolder,timeSeriesExceedFile,&
  	      stationLocation(i),in2mm,'Max',AWI,runIntensity,TavgIntensity,runningIntens,&
- 	      Tantecedent,Trecent,checkS,checkA)
-	   end if
+ 	      Tantecedent,Trecent,precipUnit,checkS,checkA)
+	  end if
 	end do !}}}
 
 	! use plotFormat to choose output format for plotting 
@@ -614,14 +614,14 @@
 	   if(plotFormat=='gnp1') call gnp1(numStations,outputFolder,&
 	      unitNumber(1),defaultOutputFile,unitNumber(6),latestTime,fdat,&
 	      stationNumber,sumAntecedent_s,sumRecent_s,intsys,durs,srunIntensity,in2mm,&
-	      Tintensity,TavgIntensity) 
+	      Tintensity,TavgIntensity,precipUnit) 
 	   if(plotFormat=='gnp2') call gnp2(numStations,outputFolder,&
 	      unitNumber(1),unitNumber(6),latestTime,fdat,stationNumber,sumAntecedent_s,&
 	      sumRecent_s,intsys,durs,srunIntensity,in2mm,Tintensity,TavgIntensity,&
-	      Tantecedent,Trecent)
+	      Tantecedent,Trecent,precipUnit)
 	   if(plotFormat=='dgrs') call dgrs(numStations,outputFolder,&
 	      unitNumber(1),dgOutputfile,unitNumber(6),stationNumber,sumAntecedent_s,&
-	      sumRecent_s,Trecent)
+	      sumRecent_s,Trecent,precipUnit)
   
 ! the next files and formatted text, are created no matter what
 ! output format is selected for plotting
@@ -638,12 +638,12 @@
 	 if(forecast .eqv. .FALSE.) then
  	   call tabl(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datim,durs,sumAntecedent_s,&
- 	   sumRecent_s,intsys,Tantecedent,Trecent)
+ 	   sumRecent_s,intsys,Tantecedent,Trecent,precipUnit)
 	   call read_colors(hexColors,colors,div,ndiv)
  	   call tablhtm(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datimb,durs,sthreshIntensityDuration,&
  	   sumAntecedent_s,sumRecent_s,intsys,srunIntensity,stationLocation,&
- 	   Tantecedent,Trecent,hexColors,colors,div,ndiv)
+ 	   Tantecedent,Trecent,hexColors,colors,div,ndiv,precipUnit)
  	 end if
 	end if
 	
