@@ -125,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='01 May 2017'; vrsn=' 1.0.020'
+     	revdate='13 July 2017'; vrsn=' 1.0.021'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -171,7 +171,7 @@
 	
 ! precipitation input data stored as hundredths of an inch
 	select case (fcUnit)
-  		case ('mt'); AWIconversion=25.4/100000.
+  		case ('m'); AWIconversion=25.4/100000.
   	   	case ('in'); AWIconversion=1./100.
   	   	case default; AWIconversion=1.
 	end select
@@ -472,19 +472,19 @@
  	      write (unitNumber(1),*) '--------------- Threshhold statistics ---------------' 
  	      write (unitNumber(1),*) 'Threshold hours                   Total    Exceedance'	 
  	      write (unitNumber(1),*) 'Recent/antecedent                 ',cumAntecedentRainfallCtr, ctr_recent_antecedent	 
- 	      write (unitNumber(1),*) 'Recent/antecedent & ',TavgIntensity,'-hr Intensity',cumAntecedentRainfallCtr, ctrira	 
+ 	      write (unitNumber(1),*) 'Recent/antecedent & ',TavgIntensity,'-h Intensity',cumAntecedentRainfallCtr, ctrira	 
  	      write (unitNumber(1),*) 'Intensity-Duration           ',ctri, ctrid	 
  	      write (unitNumber(1),*) 'Maximum Intensity, ',sumRecentmx,', ',Trecent,'-hour Duration (Trecent)' 
  	      write (unitNumber(1),*) 'Maximum Intensity, ',rntsymx,', ',TavgIntensity,'-hour Duration (TavgIntensity)' 
  	      write (unitNumber(1),*) 'Antecedent Water Index       ','-- ',AWIExceedCtr
  	      write (unitNumber(1),*) 'Antecedent Water Index & Intensity-Duration ',AWIIntensCtr
- 	      write (unitNumber(1),*) TavgIntensity,'-hr Intensity        ',ctra, ctria
+ 	      write (unitNumber(1),*) TavgIntensity,'-h Intensity        ',ctra, ctria
  	      write (unitNumber(1),*) '** Number of Continuous Periods Above Threshold **' 
- 	      write (unitNumber(1),*) Trecent,'-hr/',Tantecedent,'-hr                             ',ev_recent_antecedent	 
+ 	      write (unitNumber(1),*) Trecent,'-h/',Tantecedent,'-h                             ',ev_recent_antecedent	 
  	      write (unitNumber(1),*) 'Intensity-Duration                       ',evid	 
  	      write (unitNumber(1),*) 'Intensity-Duration & Antecedent Water    ',evawid	 
- 	      write (unitNumber(1),*) TavgIntensity,'-hr Intensity                    ',evia
- 	      write (unitNumber(1),*) Trecent,'-hr/',Tantecedent,'-hr & ',TavgIntensity,'-hr Intensity  ',evira
+ 	      write (unitNumber(1),*) TavgIntensity,'-h Intensity                    ',evia
+ 	      write (unitNumber(1),*) Trecent,'-h/',Tantecedent,'-h & ',TavgIntensity,'-h Intensity  ',evira
  	      write (unitNumber(1),*) '' 
  	      write (unitNumber(1),*) 'Max. Antecedent Water Index ',awimx
  	      write (unitNumber(1),*) '--------------- ********************* ---------------' 

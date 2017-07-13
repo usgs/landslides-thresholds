@@ -46,12 +46,12 @@ contains
 !Writing HTML headers and column names
      	write (unitNumber,*) '<center><table border=1 width=90%>'
 	write (unitNumber,*) '<caption>Current Conditions by Station</caption>'
-	write(unitNumber,*) r1,h1,'Rain Gauge',h2,h1,&
-	  'Vicinity of <br>Rain Gauge',h2,h1,&
-          Tantecedent,'-hr Antecedent Total<br>(',precipUnit,')',h2,h1,&
-          Trecent,'-hr RecentTotal<br>(',precipUnit,')',h2,h1,&
+	write(unitNumber,*) r1,h1,'Rain Gage',h2,h1,&
+	  'Vicinity of <br>Rain Gage',h2,h1,&
+          Tantecedent,'-h Antecedent Total<br>(',precipUnit,')',h2,h1,&
+          Trecent,'-h RecentTotal<br>(',precipUnit,')',h2,h1,&
           'Average<br>Intensity<br>(',precipUnit,'/hour)',h2,&
-          h1,'Duration of<br>Current Storm<br>(hours)',h2,h1,'Time & Date',h2,r2
+          h1,'Duration of<br>Current Storm<br>(hours)',h2,h1,'Time and Date',h2,r2
 
 ! Assign proper values to each variable. Used to fill the table.
 	do i=1,numStations

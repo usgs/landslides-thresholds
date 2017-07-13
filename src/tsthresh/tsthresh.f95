@@ -1,13 +1,12 @@
 ! Program to compute maximum "threat score," and other ROC statistics for optimizing decision thresholds
 ! Rex L. Baum, USGS, 19 May 2016
-! latest revision 3 June 2016
 program tsthresh
 implicit none
 integer:: count_rf_sort, count_sli_rf_sort,num_incr,u(4),i,j,k
 integer:: num_pairs,line_ctr,itsmax,dec_count,patlen
 integer, allocatable:: count_rf_incr_excd(:),count_sli_incr_excd(:)
 real, allocatable:: rf_sort(:), sli_rf_sort(:), rf_incr(:)
-real, allocatable:: ts(:), tp_rate(:), fp_rate(:)
+real, allocatable:: ts(:), tp_rate(:), fp_rate(:), tss(:)
 real:: rfmax, rfmin, tsmax, Y, tp, tn, fp, fn, temp, fac_10, auc
 character (len=255):: rf_sort_fil, rf_sli_sort_fil,junk,outfil
 character (len=224):: out_path
@@ -20,7 +19,7 @@ u=(/11,12,13,14/)
 ans=.false.; l_zero=.false.
 cm=char(44)
 ! latest version and date
-vrsn='1.0.03'; bldate='14Apr2017'
+vrsn='1.0.04'; bldate='02Jun2017'
 ! Read input files of sorted rainfall totals for entire time period and for landslides occuring during that period
 ! Read list of input file pairs from a text file
 write(*,*) 'tsthresh, version ', trim(vrsn), ', built ', bldate
@@ -131,7 +130,7 @@ do k=1, num_pairs
     61 continue
     close(u(3))
     allocate(count_rf_incr_excd(num_incr),count_sli_incr_excd(num_incr),ts(num_incr),rf_incr(num_incr))
-    allocate(tp_rate(num_incr),fp_rate(num_incr))
+    allocate(tp_rate(num_incr),fp_rate(num_incr),tss(num_incr))
     count_rf_incr_excd=0; count_sli_incr_excd=0; ts=0;tsmax=0
     auc=0.
     write(u(4),*,err=180)  'rf_incr(i), tp, Y (=tp+fp), fn, tn'
@@ -156,10 +155,11 @@ do k=1, num_pairs
         tp=float(count_sli_rf_sort)-fn
         fp=Y-tp
         tn=float(count_rf_incr_excd(i)-count_sli_incr_excd(i))
-        tp_rate(i)=tp/(tp+fn)
-        fp_rate(i)=fp/(fp+tn)
+        tp_rate(i)=tp/(tp+fn) ! true positive rate (Sensitivity)
+        fp_rate(i)=fp/(fp+tn) ! false positive rate (1-Specificity)
         write(u(4),*,err=180)  rf_incr(i), cm, tp, cm, Y, cm, fn, cm, tn
-        ts(i)=tp/(Y+fn)
+        ts(i)=tp/(Y+fn) ! Threat score
+        tss(i)=tp_rate(i)-fp_rate(i) ! True Skill Statistic (Sensitivity - (1-Specificity)), Added 6/2/2017, RLB
         if(ts(i)>tsmax) then
             tsmax=ts(i)
             itsmax=i
@@ -171,9 +171,9 @@ do k=1, num_pairs
 !    tsmax=maxval(ts)
     write(u(4),*,err=180) 'Identifier, tsmax, rf_incr(itsmax) : ', identifier(k), tsmax, rf_incr(itsmax)
     write(u(4),*,err=180) 'Area under ROC curve (AUC): ', auc
-    write(u(4),*,err=180) 'Cumulative rainfall' , cm,'TS ', cm, 'TP rate ', cm, 'FP rate'
+    write(u(4),*,err=180) 'Cumulative rainfall' , cm,'TS ', cm, 'TP rate ', cm, 'FP rate ', cm, 'TSS'
     do i=1,num_incr                 
-        write(u(4),*,err=180) rf_incr(i), cm, ts(i), cm, tp_rate(i), cm, fp_rate(i)
+        write(u(4),*,err=180) rf_incr(i), cm, ts(i), cm, tp_rate(i), cm, fp_rate(i), cm, tss(i)
     end do
     deallocate(rf_sort,sli_rf_sort,count_rf_incr_excd,count_sli_incr_excd,ts,rf_incr)
     deallocate(tp_rate,fp_rate)

@@ -64,13 +64,13 @@
 	  write(uout,*) pd,' Archive of Rainfall Totals for Comparison with Thresholds'
 	  write(uout,*) pd,' Station ',trim(stationNumber) ,': ',trim(stationLocation),&
 	    &' Precipitation units: ', precipUnit
-	  write(uout,*) pd,' Time & Date',&
+	  write(uout,*) pd,' Time and Date',&
                    tb,'Hourly Precip.',&
-                   tb,Tantecedent,'-hr Antecedent Precip.',&
-                   tb,Trecent,'-hr Precip.',&
+                   tb,Tantecedent,'-h Antecedent Precip.',&
+                   tb,Trecent,'-h Precip.',&
                    tb,'Intensity',&
                    tb,'Duration',&
-                   tb,trim(TavgIntensityF),'-hr Intensity',&
+                   tb,trim(TavgIntensityF),'-h Intensity',&
                    tb,AntecedentHeader
      	end if
 

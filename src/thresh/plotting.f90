@@ -29,7 +29,7 @@ contains
   	   open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
   	   write(unitNumber,*)& 
      	     (tb,'Recent Conditons at Station',trim(stationNumber(i)),&
-     	     tb,Trecent,'-hr Precip. at Station (',precipUnit,') ',trim(stationNumber(i)), i=1,numStations)
+     	     tb,Trecent,'-h Precip. at Station (',precipUnit,') ',trim(stationNumber(i)), i=1,numStations)
  	   write(unitNumber,'(100(a1,f7.2,a1,f7.2):)')(tb,sumAnteced(i),tb,sumRecent(i), i=1,numStations)
  	   close(unitNumber)	
 	   return
@@ -86,15 +86,15 @@ contains
 	   if (Tintensity>0.) then
 	     write(TintensityF,'(F8.3)') Tintensity
 	     TintensityF=adjustl(TintensityF)
-	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,'Recent',tb,'(',&
-	     trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,'Log10(',trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,&
-	     'Duration (hrs)',tb,trim(TavgIntensityF),'-hr Running Ave. Intensity (',precipUnit,')',&
-	     tb,'Log10 (',trim(TavgIntensityF),'-hr Intensity) (',precipUnit,')'
+	     write (unitNumber,*) pd,tb,'Rain Gage',tb,'Antecedent',tb,'Recent',tb,'(',&
+	     trim(TintensityF),'-h Intensity) (',precipUnit,')',tb,'Log10(',trim(TintensityF),'-h Intensity) (',precipUnit,')',tb,&
+	     'Duration (h)',tb,trim(TavgIntensityF),'-h Running Ave. Intensity (',precipUnit,')',&
+	     tb,'Log10 (',trim(TavgIntensityF),'-h Intensity) (',precipUnit,')'
 	   else
-	     write (unitNumber,*) pd,tb,'Rain gauge',tb,'Antecedent',tb,&
+	     write (unitNumber,*) pd,tb,'Rain Gage',tb,'Antecedent',tb,&
 	     'Recent',tb,'Average Intensity (',precipUnit,')',tb,'Log10 Average Intensity (',precipUnit,')',&
-	     tb,'Duration (hrs)',tb,trim(TavgIntensityF),&
-	     '-hr Intensity (',precipUnit,')',tb,'Log10 (',trim(TavgIntensityF),'-hr Intensity) (',precipUnit,')'
+	     tb,'Duration (h)',tb,trim(TavgIntensityF),&
+	     '-h Intensity (',precipUnit,')',tb,'Log10 (',trim(TavgIntensityF),'-h Intensity) (',precipUnit,')'
 	   end if
      
 	   do i=1,numStations
@@ -160,16 +160,16 @@ contains
 	       write(TintensityF,'(F8.3)') TintensityF
 	       TintensityF=adjustl(TintensityF)
  	       write (unitNumber,*) pd,tb,' Station',tb,&
- 	       Tantecedent,'-hr Previous Total',tb,Trecent,'-hr Total',tb,&
- 	       '(',trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,&
- 	       'log10(',trim(TintensityF),'-hr Intensity) (',precipUnit,')',tb,'Duration (hrs)',tb,&
- 	       trim(TavgIntensityF),'-hr Running Ave. Intensity (',precipUnit,')',tb,&
- 	       'Log10 (',trim(TavgIntensityF),'-hr Running Ave. Intensity) (',precipUnit,')'
+ 	       Tantecedent,'-h Previous Total',tb,Trecent,'-h Total',tb,&
+ 	       '(',trim(TintensityF),'-h Intensity) (',precipUnit,')',tb,&
+ 	       'log10(',trim(TintensityF),'-h Intensity) (',precipUnit,')',tb,'Duration (h)',tb,&
+ 	       trim(TavgIntensityF),'-h Running Ave. Intensity (',precipUnit,')',tb,&
+ 	       'Log10 (',trim(TavgIntensityF),'-h Running Ave. Intensity) (',precipUnit,')'
  	     else
  	       write (unitNumber,*) pd,tb,' Station',tb,&
- 	       Tantecedent,'-hr Previous Total',tb,Trecent,'-hr Total',tb,&
+ 	       Tantecedent,'-h Previous Total',tb,Trecent,'-h Total',tb,&
  	       'Average Intensity (',precipUnit,')',tb,'Log10 Average Intensity (',precipUnit,')',tb,&
-	       'Duration (hrs)',tb,trim(TavgIntensityF),'-hr Running Ave. Intensity (',precipUnit,')',&
+	       'Duration (h)',tb,trim(TavgIntensityF),'-h Running Ave. Intensity (',precipUnit,')',&
 	       tb,'Log10 Running Ave. Intensity (',precipUnit,')'
  	     end if
  	  

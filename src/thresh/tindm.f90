@@ -65,11 +65,11 @@
 	  write(un(k),*) pd,' Maximum Daily Values for Thresholds '
 	  write(un(k),*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation),&
             &' Precipitation units: ', precipUnit
-	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-hr Precip.',&
-            tb,Trecent,'-hr Precip.',tb,'Rec./Antec. Index',tb,&
+	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-h Precip.',&
+            tb,Trecent,'-h Precip.',tb,'Rec./Antec. Index',tb,&
 	    'Intensity',tb,'Log10(Intensity)',tb,&
 	    'Duration',tb,'Intensity-Duration Index',tb,&
-	    AntecedentHeader,tb,trim(TavgIntensityF),'-hr Intensity',tb,&
+	    AntecedentHeader,tb,trim(TavgIntensityF),'-h Intensity',tb,&
 	    'Combined Rec./Antec. & Intensity Index'
 	  end do
 	  

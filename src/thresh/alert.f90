@@ -95,11 +95,11 @@
   	open(unitNumber,file=outputFile,status='unknown',&
   	position='rewind',err=125)
 	write (unitNumber,*) ' Current Alert Levels by Station and Threshold'
-	write (unitNumber,*) tb,'Rain gauge',&
+	write (unitNumber,*) tb,'Rain Gage',&
 	                     tb,'Time and Date',&
 	                     tb,'Recent/Antecedent',&
 	                     tb,'Intensity-Duration',&
-	                     tb,trim(TavgIntensityF),'-hr Running Average Intensity'
+	                     tb,trim(TavgIntensityF),'-h Running Average Intensity'
 	                     
 	do i=1,numStations
 	  write(unitNumber,*) tb,trim(stationNumber(i)),&
