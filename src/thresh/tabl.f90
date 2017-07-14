@@ -66,11 +66,8 @@
 	write(*,*) 'Finished current condtions text table'
 	return
 	
-! DISPLAY ERROR MESSAGE
-  125	write(*,*) 'Error opening file ',trim(outputFile)	
-  	write(*,*) 'Press Enter key to exit program.'
-  	read(*,*)
-  	write(u1,*) 'Error opening file ',trim(outputFile)		
+! SAVES ERROR MESSAGE TO LOG FILE
+  125	write(u1,*) 'Error opening file ',trim(outputFile)		
   	close (u1)
 	stop
 	end subroutine tabl

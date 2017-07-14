@@ -305,7 +305,7 @@ contains
    		  
    	! temp_maxLines should be greater than zero. Thresh will exit otherwise.
    		if(temp_maxLines <= 0) then 
-                   call error1(uout,'Number_Of_Data_Lines','zero')
+                   call error1(uout,'Number_Of_Data_Lines','zero',stats)
                 else if (temp_maxLines < maxLines) then
                    temp_maxLines=maxLines
                    write(*,*) 'Number_Of_Data_Lines reset to default, ',maxLines
@@ -340,28 +340,28 @@ contains
 	      end if
 	      	         
 	   !minTstormGap should be at least 1 minute.
-	      if(minTstormGap < 1./60.) call error1(uout,'Hours_Between_Storms','zero')
+	      if(minTstormGap < 1./60.) call error1(uout,'Hours_Between_Storms','zero',stats)
 	   
 	   !minTstormGap*rph should be at least 1 and an integer.
 	      tol=3599./3600.; tol_remain=1.d0-tol
 	      test_val=minTstormGap*float(rph)
-	      if(test_val < tol) call error1(uout,'Hours_Between_Storms*Readings_Per_Hour','one')
+	      if(test_val < tol) call error1(uout,'Hours_Between_Storms*Readings_Per_Hour','one',stats)
 	      if(mod(test_val,1.) >= tol_remain) &
-                &call error3(uout,'Hours_Between_Storms*Readings_Per_Hour')
+                &call error3(uout,'Hours_Between_Storms*Readings_Per_Hour',stats)
 	   
 	   !Tintensity*rph should be at least 1 and an integer.
 	      test_val=Tintensity*float(rph)
 	      if(test_val<tol .and. test_val>tol_remain) & ! Allow for Tintensity == 0.
-                &call error1(uout,'Intensity_hours*Readings_Per_Hour','one')
+                &call error1(uout,'Intensity_hours*Readings_Per_Hour','one',stats)
 	      if(mod(test_val,1.) >= tol_remain) &
-                &call error3(uout,'Intensity_hours*Readings_Per_Hour')
+                &call error3(uout,'Intensity_hours*Readings_Per_Hour',stats)
 	   
 	   !TaveIntensity*rph should be at least 1 and an integer.
 	      test_val=TavgIntensity*float(rph)
 	      if(test_val<tol) &
-                &call error1(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour','one')
+                &call error1(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour','one',stats)
 	      if(mod(test_val,1.) >= tol_remain) &
-                &call error3(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour')
+                &call error3(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour',stats)
 	   
 		!maxDataGap should be at least 1   		
 	      if(maxDataGap < 1) maxDataGap = 1
@@ -400,7 +400,7 @@ contains
 	      
 	   !Ensuring that resetAntMonth and resetAntDay have meaningful values. Thresh
 	   !will exit otherwise.
-	   	call check_antMonth_antDay(uout,year,resetAntMonth,resetAntDay)
+	   	call check_antMonth_antDay(uout,year,resetAntMonth,resetAntDay,stats)
 	   		  	      
 	   !Setting proper value for midnightVal. Default is midnight = 0
 	      if(midnightVal /= 1) midnightVal = 0
@@ -410,11 +410,11 @@ contains
 	   		plotformat = 'gnp1'	  
 	      end if
 	   !Ensuring there aren't multiple ID thresholds turned on.
-	      call check_switches(uout,powerSwitch,polySwitch,interSwitch)
+	      call check_switches(uout,powerSwitch,polySwitch,interSwitch,stats)
 	      
 	   !Checks and calculations on upLim and lowLim for powerSwitch
 	      if(powerSwitch) then
-	      	call set_power_limits(uout,lowLim,upLim)
+	      	call set_power_limits(uout,lowLim,upLim,stats)
 	      	if(powerCoeff == 0) then
 	      	if(stats)then
 	      	      write(*,*) "Power coefficient cannot equal zero. This would result"
@@ -429,7 +429,7 @@ contains
 	      	   stop
 	      	end if
 	      else if(polySwitch) then
-	         call set_poly_limits(uout,lowLim,upLim)
+	         call set_poly_limits(uout,lowLim,upLim,stats)
 	      else if(interSwitch) then
 	      	if(intervals == 0) then
 	      		write(uout,*) "Linear interpolating intervals must be greater than &
@@ -618,7 +618,7 @@ contains
     !    and state at each station (rain gage).
     !	  
       subroutine read_thlast(threshLog,outputFolder,stationNumber,numStations,&
-	   lastStorm,tstormBeg,tstormEnd,AWI_0,timestampHldr)!{{{
+	   lastStorm,tstormBeg,tstormEnd,AWI_0,timestampHldr,stats)!{{{
 	   implicit none
 	   integer,parameter :: double=kind(1d0)
       ! FORMAL ARGUMENTS
@@ -629,6 +629,7 @@ contains
 	      real, intent(out)             :: AWI_0(numStations)
 	      integer, intent(out)          :: timestampHldr(numStations)
 	      integer, intent(in)           :: numStations,threshLog
+	      logical                       ::stats
 		   
       ! LOCAL VARIABLES
     	   character (len=255) :: pathThlast
@@ -699,19 +700,25 @@ contains
     	   end if
     	   return
     	   
-    	   100 write(*,*) 'Error opening file ', pathThlast, '.'
-    	       write(*,*) 'Program exited.'
-    	       write(threshLog,*) 'Error opening file ', pathThlast, '.'
+    	   100 write(threshLog,*) 'Error opening file ', pathThlast, '.'
     	       write(threshLog,*) 'Program exited.'
-    	       write(*,*) 'Press Enter key to exit program.'
-    	       read(*,*) 
+    	       close(threshLog)
+    	       if(stats) then
+                  write(*,*) 'Error opening file ', pathThlast, '.'
+    	          write(*,*) 'Program exited.'
+    	          write(*,*) 'Press Enter key to exit program.'
+    	          read(*,*) 
+    	       end if
     	       stop    	   
-    	   105 write(*,*) 'Error reading file ', pathThlast, '.'
-    	       write(*,*) 'Program exited'
-    	       write(threshLog,*) 'Error reading file ', pathThlast, '.'
+    	   105 write(threshLog,*) 'Error reading file ', pathThlast, '.'
     	       write(threshLog,*) 'Program exited.'
-    	       write(*,*) 'Press Enter key to exit program.'
-    	       read(*,*) 
+    	       close(threshLog)
+    	       if(stats) then
+                  write(*,*) 'Error reading file ', pathThlast, '.'
+    	          write(*,*) 'Program exited'
+    	          write(*,*) 'Press Enter key to exit program.'
+    	          read(*,*) 
+    	       end if
     	       stop
 	end subroutine read_thlast
 ! END OF SUBROUTINE}}}
@@ -719,12 +726,12 @@ contains
    ! PURPOSE:
    !	  Reads from each station's individual data file. Sets stationPtr(i) in
    !    thresh.
-	subroutine read_station_file(file, dataLocation, rph, lgyr, maxLines,&
-	fileName, tyear,month, day, hour, precip, ctr, sysYear, sysMonth,&
-	sysDay, sysHour, sysMinute, stationPtr, year, minute, uout, ctrHolder,&
-	sumTrecent, sumTantecedent, intensity, sumRecent_s, sumAntecedent_s,&
-                intsys, deficit_recent_antecedent_s, sthreshIntensityDuration,&
-                sthreshAvgIntensity, latestMonth, latestDay, latestHour, latestMinute,forecast)!{{{
+        subroutine read_station_file(file, dataLocation, rph, lgyr, maxLines,&
+        fileName, tyear,month, day, hour, precip, ctr, sysYear, sysMonth,&
+        sysDay, sysHour, sysMinute, stationPtr, year, minute, uout, ctrHolder,&
+        sumTrecent, sumTantecedent, intensity, sumRecent_s, sumAntecedent_s,&
+        intsys, deficit_recent_antecedent_s, sthreshIntensityDuration,&
+        sthreshAvgIntensity, latestMonth, latestDay, latestHour, latestMinute,forecast,stats)!{{{
 	implicit none
 
 	! FORMAL ARGUMENTS
@@ -733,7 +740,7 @@ contains
 	   integer, intent(in)  :: sysMinute, year, maxLines, uout
 	   integer, intent(out) :: tyear(maxLines),month(maxLines),day(maxLines),hour(maxLines)
 	   integer, intent(out) :: precip(maxLines),ctr,minute(maxLines),stationPtr
-	   logical, intent(in)  :: forecast
+	   logical, intent(in)  :: forecast,stats
 	   logical :: lgyr
 	   ! Arguments associated only with error statement
 	   real, intent(out)    :: sumTrecent(*), sumTantecedent(*),intensity(*)
@@ -804,10 +811,15 @@ contains
 
            120 return
 
-	   140 write(*,*) 'Error reading file ', fileName
-  	       write(*,*) 'at line ', i
-  	       write(*,*) 'Press Enter key to exit program.'
-  	       read(*,*)
+	   140 write(uout,*) 'Error reading file ', fileName		
+  	       write(uout,*) 'at line ', i
+  	       close (uout)
+  	       if(stats)then
+                  write(*,*) 'Error reading file ', fileName
+  	          write(*,*) 'at line ', i
+  	          write(*,*) 'Press Enter key to exit program.'
+  	          read(*,*)
+  	       end if
   	       write(uout,*) 'Error reading file ', fileName		
   	       write(uout,*) 'at line ', i
   	       close (uout)
@@ -828,19 +840,20 @@ contains
 	       latestDay = -99
 	       latestHour = -99
 	       latestMinute = -99
-  	end subroutine
+  	end subroutine read_station_file
  ! END OF SUBROUTINE}}}
 
    ! PURPOSE:
    !	  Reads interpolating_points.txt. This file contains duration and
    !	  cumulative precipitation pairs. The values from interpolating_points.txt
    !	  are stored in xVal, yVal.
-   subroutine read_interpolating_points(xVal,yVal,intervals) !{{{
+   subroutine read_interpolating_points(xVal,yVal,intervals,stats,ulog) !{{{
    implicit none
    
    ! FORMAL ARGUMENTS
    real 		:: xVal(*), yVal(*)
-   integer 	:: intervals
+   integer 	:: intervals,ulog
+   logical, intent(in):: stats
    ! LOCAL VARIABLES
    character(len=23), parameter :: FILENAME="interpolatingPoints.txt"
    real 		:: m, b
@@ -857,13 +870,22 @@ contains
          xycounter = xycounter + 1
       end do
       
+      close(unit)
+      
       if (intervals+1 /= xycounter) then
-      		write(*,*) "The file ", FILENAME, " has the incorrect number of points."
-      		write(*,*) "The number of data points should be equal to"
-      		write(*,*) "the number of intervals+1."
-      		write(*,*) "Press Enter key to exit program."
-      		read(*,*)
-      		stop
+         if(stats)then
+      	    write(*,*) "The file ", FILENAME, " has the incorrect number of points."
+      	    write(*,*) "The number of data points should be equal to"
+      	    write(*,*) "the number of intervals+1."
+      	    write(*,*) "Press Enter key to exit program."
+      	    read(*,*)
+         end if
+      	 write(ulog,*) "The file ", FILENAME, " has the incorrect number of points."
+      	 write(ulog,*) "The number of data points should be equal to"
+      	 write(ulog,*) "the number of intervals+1."
+      	 write(ulog,*) 'Program exited due to this error.'
+      	 close(ulog)
+      	 stop
       end if
       
       !Extending lower bound.
@@ -881,16 +903,27 @@ contains
       return
 	! Error statement needed for incorrect number of intervals in interpolatingPoints.txt
       
-      100 write(*,*)"The file ", FILENAME, " could not be opened."
-      	 write(*,*)"Ensure that the file exists in the same directory as"
-      	 write(*,*)"Thresh."
-      	 write(*,*)'Press Enter key to exit program.'
-      	 read(*,*)
+      100 write(ulog,*)"The file ", FILENAME, " could not be opened."
+      	 write(ulog,*)"Ensure that the file exists in the same directory as"
+      	 write(ulog,*)"thresh_in.txt.  Program exited due to this error."
+      	 close(ulog)
+      	 if(stats)then
+            write(*,*)"The file ", FILENAME, " could not be opened."
+      	    write(*,*)"Ensure that the file exists in the same directory as"
+      	    write(*,*)"thresh_in.txt"
+      	    write(*,*)'Press Enter key to exit program.'
+      	    read(*,*)
+      	 end if
       	 stop
       110 write(*,*) "Error reading ", FILENAME, "at line ", xycounter
-      	  write(*,*)"Press Enter key to exit program."
-      	  read(*,*)
-      	  stop
+      	 write(ulog,*)"Program exited due to this error."
+      	 close(ulog)
+      	 if(stats)then
+             write(*,*) "Error reading ", FILENAME, "at line ", xycounter
+      	     write(*,*)"Press Enter key to exit program."
+      	     read(*,*)
+      	 end if
+      	 stop
    end subroutine read_interpolating_points !}}}
  			
 end module

@@ -179,10 +179,10 @@
    return
 
 ! DISPLAY ERROR MESSAGE
-   125  write(*,*) 'Error opening file ',outputFile	
+   125  write(*,*) 'Error opening file ',trim(outputFile	)
         write(*,*) 'Press Enter key to exit program.'
         read(*,*)
-        write(ulog,*) 'Error opening file ',outputFile		
+        write(ulog,*) 'Error opening file ',trim(outputFile)
         close (ulog)
         stop
    end subroutine gnpts1

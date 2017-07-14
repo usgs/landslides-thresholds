@@ -120,11 +120,8 @@
 	write(*,*) 'Finished alert status HTML page'
 	return
 	
-! DISPLAYS ERROR MESSAGE
-  125	write(*,*) 'Error opening file ',outputFile	
-  	write(*,*) 'Press Enter key to exit program.'
-  	read(*,*)
-  	write(ulog,*) 'Error opening file ',outputFile		
+! WRITES ERROR MESSAGE TO LOG FILE
+  125	write(ulog,*) 'Error opening file ',trim(outputFile)		
   	close (ulog)
 	stop
 	end subroutine alerthtm

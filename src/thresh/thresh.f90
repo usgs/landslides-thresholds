@@ -125,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='13 July 2017'; vrsn=' 1.0.021'
+     	revdate='14 July 2017'; vrsn=' 1.0.022'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)
@@ -201,7 +201,7 @@
 ! if using linearly interpolated defined threshold, perform relevant tasks.
 	if(interSwitch) then
 	   allocate(xVals(intervals + 1), yVals(intervals + 1))
-	   call read_interpolating_points(xVals,yVals,intervals)
+	   call read_interpolating_points(xVals,yVals,intervals,stats,unitNumber(1))
 	   lowLim = xVals(1)
 	   upLim = xVals(intervals+1)
 	end if
@@ -248,7 +248,7 @@
 	
 ! Call subroutine read_thlast to read Thlast.txt to set starting times based on previous data. 
 	call read_thlast(unitNumber(1),outputFolder,stationNumber,numStations,&
-	last1904,tstormBeg1904,tstormEnd1904,AWI_0,numTimestampsHolder)
+	last1904,tstormBeg1904,tstormEnd1904,AWI_0,numTimestampsHolder,stats)
  	
 ! if data files list precipitation at the end of each hour, 1-24 convert current
 ! hour to 24 for time between midnight and 1:00 a.m. for matching most recent
@@ -320,7 +320,7 @@
 	   stationPtr(i), year, mins, unitNumber(1),ctrHolder(i),sumTrecent,&
 	   sumTantecedent, intensity, sumRecent_s(i), sumAntecedent_s(i), intsys(i),&
 	   deficit_recent_antecedent_s(i),sthreshIntensityDuration(i), sthreshAvgIntensity(i),&
-	   latestMonth(i), latestDay(i), latestHour(i), latestMinute(i),forecast)  
+	   latestMonth(i), latestDay(i), latestHour(i), latestMinute(i),forecast,stats)  
 	
 
 ! set pointer to end of file if no times match the current system time	
@@ -531,7 +531,7 @@
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,stationLocation(i),in2mm,rph,&
- 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA,stats)
 	   else if (stationPtr(i)>=numPlotPoints2*rph .and. numPlotPoints>0) then
 	   	  numPlotPoints3=stationPtr(i)/rph   ! replaced ctrHolder(i) with numPlotPoints3 7/29/2015, RLB
  	      call gnpts(unitNumber(1),unitNumber(5),maxLines,&
@@ -539,7 +539,7 @@
  	      timestampMonth,da,hr,mins,sumTantecedent,sumTrecent,intensity,&
  	      dur,precip,runIntensity,AWI,deficit_recent_antecedent,threshIntensityDuration,&
  	      threshAvgExceed,outputFolder,timeSeriesPlotFile,stationLocation(i),in2mm,rph,&
- 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA,stats)
 	   end if
 	   
 ! Create or update short-term time-series plot file for each station	
@@ -551,7 +551,7 @@
  	         dur,precip,runIntensity,AWI,deficit_recent_antecedent,&
  	         threshIntensityDuration,threshAvgExceed,outputFolder,timeSeriesPlotFile,&
                  stationLocation(i),in2mm,rph,TavgIntensity,Tantecedent,Trecent,precipUnit,&
-                 checkS,checkA)
+                 checkS,checkA,stats)
  	      end if
 	   end if
 	   
@@ -565,7 +565,7 @@
  	      stationPtr(i),timestampYear,timestampMonth,da,hr,mins,&
  	      sumTantecedent,sumTrecent,intensity,dur,precip,&
  	      runIntensity,AWI,outputFolder,archiveFile,stationLocation(i),&
- 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA)
+ 	      TavgIntensity,Tantecedent,Trecent,precipUnit,checkS,checkA,stats)
  	   end if
  	  end if
  	   
@@ -639,7 +639,7 @@
  	   call tabl(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datim,durs,sumAntecedent_s,&
  	   sumRecent_s,intsys,Tantecedent,Trecent,precipUnit)
-	   call read_colors(hexColors,colors,div,ndiv)
+	   call read_colors(hexColors,colors,div,ndiv,unitNumber(1))
  	   call tablhtm(unitNumber(4),unitNumber(1),outputFolder,&
  	   numStations,stationNumber,datimb,durs,sthreshIntensityDuration,&
  	   sumAntecedent_s,sumRecent_s,intsys,srunIntensity,stationLocation,&
@@ -673,17 +673,23 @@
 	stop
 	
 ! Error handling for read statements
-        125 write(*,*) 'Error opening file ',outputFile	
-  	    write(*,*) 'Press Enter key to exit program.'
-  	    read(*,*)
-  	    write(unitNumber(1),*) 'Error opening file ',outputFile		
+        125 write(unitNumber(1),*) 'Error opening file ',trim(outputFile)	
+            write(unitNumber(1),*) 'Program exited due to this error.'	
   	    close (unitNumber(1))
+  	    if(stats)then
+               write(*,*) 'Error opening file ',trim(outputFile)
+  	       write(*,*) 'Press Enter key to exit program.'
+  	       read(*,*)
+  	    end if
 	    stop
-        130 write(*,*) 'Error opening file ',pathThlast	
-   	    write(*,*) 'Press Enter key to exit program.'
-  	    read(*,*)
-  	    write(unitNumber(1),*) 'Error opening file ',pathThlast		
+        130 write(unitNumber(1),*) 'Error opening file ',trim(pathThlast)
+            write(unitNumber(1),*) 'Program exited due to this error.'	
   	    close (unitNumber(1))
+  	    if(stats)then
+               write(*,*) 'Error opening file ',trim(pathThlast)
+   	       write(*,*) 'Press Enter key to exit program.'
+  	       read(*,*)
+  	    end if
 	    stop
 
 	end program thresh

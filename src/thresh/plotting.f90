@@ -34,11 +34,8 @@ contains
  	   close(unitNumber)	
 	   return
 	
-    ! DISPLAYS ERROR MESSAGE
-           125	write(*,*) 'Error opening file ',outputFile	
-                write(*,*) 'Press Enter key to exit program.'
-                read(*,*)
-                write(ulog,*) 'Error opening file ',outputFile	,'.'	
+    ! SAVES ERROR MESSAGE TO LOG FILE
+           125	write(ulog,*) 'Error opening file ',trim(outputFile),'.'	
                 write(ulog,*) 'Thresh exited due to this error.'
                 close (ulog)
                 stop
@@ -110,11 +107,8 @@ contains
 	   write(*,*) 'Finished gnp1 plot file'
 	   return
 	
-    ! DISPLAYS ERROR MESSAGE
-           125	write(*,*) 'Error opening file ',outputFile	
-           	write(*,*) 'Press Enter key to exit program.'
-           	read(*,*)
-           	write(ulog,*) 'Error opening file ',outputFile		
+    ! SAVES ERROR MESSAGE TO LOG FILE
+           125	write(ulog,*) 'Error opening file ',trim(outputFile)
            	close (ulog)
            	stop
 	end subroutine gnp1
@@ -187,11 +181,8 @@ contains
 	   write(*,*) 'Finished gnp2 plot files'
 	   return
 	
-    ! DISPLAYS ERROR MESSAGE
-           125	write(*,*) 'Error opening file ',outputFile	
-           	write(*,*) 'Press Enter key to exit program.'
-           	read(*,*)
-           	write(ulog,*) 'Error opening file ',outputFile		
+    ! SAVES ERROR MESSAGE TO LOG FILE
+           125	write(ulog,*) 'Error opening file ',trim(outputFile)
            	close (ulog)
            	stop
 	end subroutine gnp2

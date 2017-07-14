@@ -7,7 +7,7 @@
 	stationPtr,year,month,day,hour,minute,sumAnteced,&
 	sumRecent,intensity,stormDuration,precip,runIntensity,AWI,outputFolder,&
 	archiveFile,stationLocation,TavgIntensity,Tantecedent,Trecent,precipUnit,&
-        checkS,checkA)
+        checkS,checkA,stats)
 	implicit none
 	
 ! FORMAL ARGUMENTS
@@ -19,7 +19,7 @@
 	integer, intent(in)   :: n
 	integer, intent(in)   :: uout,ulog,ctrHolder,stationPtr,Tantecedent,Trecent
 	integer, intent(in)   :: year(n),month(n),day(n),hour(n),minute(n),precip(n)
-        logical, intent(in)   :: checkS,checkA	
+        logical, intent(in)   :: checkS,checkA,stats	
 	
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile
@@ -119,10 +119,12 @@ write(*,*) '!## stationPtr, ctrHolder ##! ', stationPtr,ctrHolder
 	return
 	
 ! DISPLAYS ERROR MESSAGE
-  125	write(*,*) 'Error opening file ',outputFile	
-  	write(*,*) 'Press Enter key to exit program.'
-  	read(*,*) 
-  	write(ulog,*) 'Error opening file ',outputFile		
-  	close (ulog)
-	stop
-	end subroutine arcsav
+  125   write(ulog,*) 'Error opening file ',trim(outputFile)
+        close (ulog)
+        if(stats)then
+           write(*,*) 'Error opening file ',trim(outputFile)
+           write(*,*) 'Press Enter key to exit program.'
+           read(*,*)
+        end if
+        stop
+        end subroutine arcsav

@@ -107,11 +107,8 @@ contains
 	write(*,*) 'Finished current condtions HTML table'
 	return
 	
-! DISPLAYS ERROR MESSAGE
-  125	write(*,*) 'Error opening file ',outputFile	
-  	write(*,*) 'Press Enter key to exit program.'
-  	read(*,*)
-  	write(u1,*) 'Error opening file ',outputFile		
+! SAVES ERROR MESSAGE TO LOG FILE
+  125	write(u1,*) 'Error opening file ',trim(outputFile)
   	close (u1)
 	stop
 	end subroutine tablhtm
@@ -120,7 +117,7 @@ contains
 !	  Provides the user with an option to choose colors for tablhtm
 !	  
 !
-subroutine read_colors(hexColors,colors,div,ndiv)
+subroutine read_colors(hexColors,colors,div,ndiv,uout)
 implicit none
 
 !FORMAL ARGUMENTS
@@ -128,6 +125,7 @@ character (len=22), allocatable, intent(out)  :: hexColors(:)
 character (len=6), allocatable, intent(out) :: colors(:)	
 real, allocatable, intent(out) :: div(:)
 integer, intent(out) :: ndiv
+integer, intent(in)  :: uout
 
 ! LOCAL VARIABLES
 character(len=10), parameter :: FILENAME="Colors.txt"
@@ -151,10 +149,10 @@ do i=1,ndiv+1
 end do
 
 if (colorcounter /= ndiv+1) then
-	write(*,*) "The file ", FILENAME, " has the incorrect number of colors."
-	write(*,*) "The number of colors should be equal to the number of divisions"
-	write(*,*) "plus one. Press Enter key to exit program."
-	read(*,*)
+	write(uout,*) "The file ", FILENAME, " has the incorrect number of colors."
+	write(uout,*) "The number of colors should be equal to the number of divisions"
+	write(uout,*) "plus one."
+	close(uout)
 	stop
 end if
 
@@ -164,11 +162,10 @@ do i=1,ndiv
 end do
 
 if (divcounter /= ndiv) then
-	write(*,*) "The file ", FILENAME, " has the incorrect number of divisions."
-	write(*,*) "The number of divisions should be equal to the number entered"
-	write(*,*) "At the beginning of Colors.txt."
-	write(*,*) "Press Enter key to exit program."
-	read(*,*)
+	write(uout,*) "The file ", FILENAME, " has the incorrect number of divisions."
+	write(uout,*) "The number of divisions should be equal to the number entered"
+	write(uout,*) "at the beginning of Colors.txt."
+	close(uout)
 	stop
 end if
 	
@@ -176,11 +173,10 @@ close(unit)
 return
 
 !DISPLAYS ERROR MESSAGE
-100 write(*,*)"The file ", FILENAME, " could not be opened."
-    write(*,*)"Ensure that the file exists in the same directory as"
-    write(*,*)"Thresh."
-    write(*,*)'Press Enter key to exit program.'
-    read(*,*)
+100 write(uout,*)"The file ", FILENAME, " could not be opened."
+    write(uout,*)"Ensure that the file exists in the same directory as"
+    write(uout,*)"the file thresh_in.txt."
+    close(uout)
     stop
 end subroutine read_colors
 end module
