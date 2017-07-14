@@ -77,14 +77,14 @@ def end_plot(name=None,cols=5): # Set plot legend and output
 disclaimers = ('\nUSGS PROVISIONAL DATA'
                '\nSUBJECT TO REVISION'
                )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Probability of Precipitation')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = [('b-', 'Seattle/Boeing Field'),
-           ('m-', 'Everett/Paine Field'),
+markers = [('b-', 'Seattle, Boeing Field'),
+           ('m-', 'Everett, Paine Field'),
            ('c-', 'Seattle-Tacoma Airport'),
-           ('r-', 'Tacoma Narrows')
+           ('r-', 'Tacoma Narrows Airport')
            ]
 # Set fontsize for plot
 
@@ -95,7 +95,7 @@ font = {'family' : 'monospace',
 matplotlib.rc('font', **font)  # pass in the font dict as kwargs
 
 # Plot 24-hour probability of precipitation (POP) forecast
-init_plot('Probability of Precipitation in Seattle, Washington & Vicinity')
+init_plot('Probability of Precipitation near Seattle, Washington,')
 data = readfiles(glob.glob('station*.txt'))
 
 for i, d in enumerate(data): # Draw time-series plot of POP for all stations
@@ -235,8 +235,8 @@ disclaimers = ('\n with respect to cumulative precipitation threshold'
                '\n'
                )
 xtext = ('P15: 15-day cumulative precipitation prior to 3-day '
-         'precipitation, inches')
-ytext = ('P3: 3-day cumulative precipitation, inches')
+         'precipitation, in inches')
+ytext = ('P3: 3-day cumulative precipitation, in inches')
 
 # get date of latest data
 upd_path = os.path.normpath('../NWS/data/ThUpdate.txt')
@@ -244,15 +244,15 @@ fin = open(upd_path, 'rt')
 date_text = fin.read()
 fin.close()              
 
-markers = { '01':('v', 'b', 'Seattle/Boeing Field, current conditions'),
-            '02':('s', 'm', 'Everett/Paine Field, current conditions'),
+markers = { '01':('v', 'b', 'Seattle, Boeing Field, current conditions'),
+            '02':('s', 'm', 'Everett, Paine Field, current conditions'),
             '03':('h', 'c', 'Seattle-Tacoma Airport, current conditions'),
-            '04':('o', 'r', 'Tacoma Narrows, current conditions')
+            '04':('o', 'r', 'Tacoma Narrows Airport, current conditions')
             }
-markers1 = {'01':('v', 'b', 'Seattle/Boeing Field, 24-hour-forecast'),
-            '02':('s', 'm', 'Everett/Paine Field, 24-hour-forecast'),
+markers1 = {'01':('v', 'b', 'Seattle, Boeing Field, 24-hour-forecast'),
+            '02':('s', 'm', 'Everett, Paine Field, 24-hour-forecast'),
             '03':('h', 'c', 'Seattle-Tacoma Airport, 24-hour-forecast'),
-            '04':('o', 'r', 'Tacoma Narrows, 24-hour-forecast')
+            '04':('o', 'r', 'Tacoma Narrows Airport, 24-hour-forecast')
             }
 
 
@@ -309,13 +309,13 @@ def end_plot(name=None, cols=5): # Set plot legend and output
 disclaimers =('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Hourly Precipitation, in')
 
-markers = [('b-', 'Seattle/Boeing Field'),
-           ('m-', 'Everett/Paine Field'),
+markers = [('b-', 'Seattle, Boeing Field'),
+           ('m-', 'Everett, Paine Field'),
            ('c-', 'Seattle-Tacoma Airport'),
-           ('r-', 'Tacoma Narrows')
+           ('r-', 'Tacoma Narrows Airport')
            ]
 
 data01 = readfiles(['data/ThTSplot360hour01.txt'])
@@ -325,7 +325,7 @@ data04 = readfiles(['data/ThTSplot360hour04.txt'])
 data_list = [data01, data02, data03, data04]
 
 #KBFI
-init_plot('Time-Series Plot for Precipitation for Seattle/Boeing Field')
+init_plot('Time-Series Plot for Precipitation for Seattle, Boeing Field')
 i=0
 for d in data_list[i]: # Draw time-series plot of observed and forecasted precipitation
 	x = [dt.datetime.strptime(date,'%H:%M %m/%d/%Y') for date in d[0]]
@@ -338,7 +338,7 @@ plt.axvspan(x[336],x[359],facecolor='yellow', alpha=0.5, label = 'Forecast') # S
 end_plot(name='boeing_f.png')
 
 #KPAE
-init_plot('Time-Series Plot for Precipitation for Everett/Paine Field')
+init_plot('Time-Series Plot for Precipitation for Everett, Paine Field')
 i=1
 for d in data_list[i]: # Draw time-series plot of observed and forecasted precipitation
 	x = [dt.datetime.strptime(date,'%H:%M %m/%d/%Y') for date in d[0]]
@@ -364,7 +364,7 @@ plt.axvspan(x[336],x[359],facecolor='yellow', alpha=0.5, label = 'Forecast') # S
 end_plot(name='seatac_f.png')
 
 #KTIW
-init_plot('Time-Series Plot for Precipitation for Tacoma Narrows')
+init_plot('Time-Series Plot for Precipitation for Tacoma Narrows Airport')
 i=3
 for d in data_list[i]: # Draw time-series plot of observed and forecasted precipitation
 	x = [dt.datetime.strptime(date,'%H:%M %m/%d/%Y') for date in d[0]]
@@ -418,11 +418,11 @@ disclaimers = ('\n with respect to the Antecedent Water Index'
                '\nUSGS PROVISIONAL DATA'
                '\nSUBJECT TO REVISION'
                )
-xtext = ('Date & Time')
-ytest = ('Antecedent Water Index, m')
+xtext = ('Date and time')
+ytest = ('Antecedent Water Index, in meters')
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History and Forecast near Seattle, Washington & vicinity,')
+init_plot('360-hour Precipitation History and Forecast near Seattle, Washington, and Vicinity,')
 
 for i in range(4):
     for d in data_list[i]: # Draw time-series plots of AWI at all stations
@@ -436,7 +436,7 @@ plot_AWI()
 plt.axvspan(x[336],x[359],facecolor='yellow', alpha=0.5, label = 'Forecast') # Shade area of forecast
 end_plot(name='awi_f.png')
 
-init_plot('360-hour Precipitation History and Forecast at Everett Paine Field, KPAE,')
+init_plot('360-hour Precipitation History and Forecast at Everett, Paine Field, KPAE,')
 
 #KPAE
 i=1
@@ -482,10 +482,10 @@ disclamers = ('\n with respect to the Intensity-Duration Index'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Intensity-Duration Index')
 
-init_plot('360-hour Intensity-Duration History and Forecast in Seattle, Washington, & vicinity,')
+init_plot('360-hour Intensity-Duration History and Forecast near Seattle, Washington,,')
 
 for i in range(4): # draw time series of threshold index values, all stations
     for d in data_list[i]:
@@ -499,7 +499,7 @@ plt.axvspan(x[336],x[359],facecolor='yellow', alpha=0.5, label = 'Forecast') # S
 plot_ID()
 end_plot(name='id_index_f.png')
 
-init_plot('360-hour Intensity-Duration History and Forecast at Everett Paine Field, KPAE,')
+init_plot('360-hour Intensity-Duration History and Forecast at Everett, Paine Field, KPAE,')
 
 #KPAE
 i=1

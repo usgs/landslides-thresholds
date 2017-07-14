@@ -47,8 +47,8 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('Extensometer distance, mm')
+xtext = ('Date and time')
+ytext = ('Extensometer distance, in millimeters')
 
 # Set fontsize for plots
 

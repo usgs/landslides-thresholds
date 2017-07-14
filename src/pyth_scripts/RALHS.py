@@ -133,8 +133,8 @@ disclamers = ('\n with respect to cumulative precipitation threshold'
               '\n'
               )
 xtext = ('P15: 15-day cumulative precipitation prior to 3-day'
-         'precipitation, inches')
-ytext = 'P3: 3-day cumulative precipitation, inches'
+         'precipitation, in inches')
+ytext = 'P3: 3-day cumulative precipitation, in inches'
 
 # get date of latest data
 fin = open('data/ThUpdate.txt', 'rt')
@@ -329,8 +329,8 @@ disclamers = ('\n with respect to precipitation intensity and duration threshold
               '\nSUBJECT TO REVISION'
               '\n'
               )
-xtext = ('D: Rainfall duration, hours')
-ytext = ('I: Average intensity, in/hr')
+xtext = ('D: Rainfall duration, in hours')
+ytext = ('I: Average intensity, in inches per hour')
 
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
@@ -412,8 +412,8 @@ disclamers = ('\n with respect to the Antecedent Water Index'
               '\nSUBJECT TO REVISION'
               )
 
-xtext = ('Date & Time')
-ytext = ('Antecedent Water Index, m')
+xtext = ('Date and time')
+ytext = ('Antecedent Water Index, in meters')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
 markers = [ ('b-', 'VH'),
@@ -423,7 +423,7 @@ markers = [ ('b-', 'VH'),
            ]
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History in Mukilteo, Washington, & vicinity,')
+init_plot('360-hour Precipitation History in Mukilteo, Washington, and Vicinity,')
 
 data_list = [data01, data02, data03, data04]
 for i in range(4):
@@ -468,7 +468,7 @@ disclamers = ('\n with respect to the Intensity-Duration Index'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Intensity-Duration Index')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""

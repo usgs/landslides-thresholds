@@ -379,8 +379,8 @@ disclamers = ('\n with respect to cumulative precipitation threshold'
               '\n'
               )
 xtext = ('P15: 15-day cumulative precipitation prior to 3-day '
-         'precipitation, inches')
-ytext = 'P3: 3-day cumulative precipitation, inches'
+         'precipitation, in inches')
+ytext = 'P3: 3-day cumulative precipitation, in inches'
               
 # get date of latest data
 fin = open('data/ThUpdate.txt', 'rt')
@@ -388,10 +388,10 @@ date_text = fin.read()
 fin.close()              
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = { '01':('v', 'b', 'Seattle/Boeing Field'),
-            '02':('s', 'm', 'Everett/Paine Field'),
+markers = { '01':('v', 'b', 'Seattle, Boeing Field'),
+            '02':('s', 'm', 'Everett, Paine Field'),
             '03':('h', 'c', 'Seattle-Tacoma Airport'),
-            '04':('o', 'r', 'Tacoma Narrows')
+            '04':('o', 'r', 'Tacoma Narrows Airport')
             }
 
 # Set fontsize for plot
@@ -476,7 +476,7 @@ init_plot('360-hour precipitation history in Tacoma, Washington')
 #set output 'tacoma.png'
 data04 = readfiles(['data/ThTSplot360hour04.txt'])
 for d in data04: # Trace 15-day history of conditions relative to threshold
-    plt.plot(d[2], d[3], label='Tacoma Narrows, history')
+    plt.plot(d[2], d[3], label='Tacoma Narrows Airport, history')
 
 data = readfiles(['data/ThSta04.txt'])
 for d in data:
@@ -571,15 +571,15 @@ disclamers = ('\n with respect to precipitation intensity and duration threshold
               '\nSUBJECT TO REVISION'
               '\n'
               )
-xtext = ('D: Rainfall duration, hours')
-ytext = ('I: Average intensity, in/hr')
+xtext = ('D: Rainfall duration, in hours')
+ytext = ('I: Average intensity, in inches per hour')
 
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = { '01':('v', 'b', 'Seattle/Boeing Field'),
-            '02':('s', 'm', 'Everett/Paine Field'),
+markers = { '01':('v', 'b', 'Seattle, Boeing Field'),
+            '02':('s', 'm', 'Everett, Paine Field'),
             '03':('h', 'c', 'Seattle-Tacoma Airport'),
-            '04':('o', 'r', 'Tacoma Narrows')
+            '04':('o', 'r', 'Tacoma Narrows Airport')
             }
 
 # Make plots of I-D threshold conditions
@@ -655,18 +655,18 @@ disclamers = ('\n with respect to the Antecedent Water Index'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('Antecedent Water Index, m')
+xtext = ('Date and time')
+ytext = ('Antecedent Water Index, in meters')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = [ ('b-', 'Seattle/Boeing Field'),
-           ('m-', 'Everett/Paine Field'),
+markers = [ ('b-', 'Seattle, Boeing Field'),
+           ('m-', 'Everett, Paine Field'),
            ('c-', 'Seattle-Tacoma Airport'),
-           ('r-', 'Tacoma Narrows')
+           ('r-', 'Tacoma Narrows Airport')
            ]
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History in Seattle, Washington, & vicinity,')
+init_plot('360-hour Precipitation History near Seattle, Washington,,')
 
 data_list = [data01, data02, data03, data04]
 for i in range(4):
@@ -682,7 +682,7 @@ plot_AWI()
 
 end_plot(name='awi.png')
 
-init_plot('360-hour Precipitation History at Everett Paine Field, KPAE,')
+init_plot('360-hour Precipitation History at Everett, Paine Field, KPAE,')
 i = 1
 for d in data_list[i]: # Draw time-series plots of AWI at one station
     x = [dt.datetime.strptime(date,'%H:%M %m/%d/%Y') for date in d[0]]
@@ -726,17 +726,17 @@ disclamers = ('\n with respect to the Intensity-Duration Index'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Intensity-Duration Index')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
-markers = [ ('b-', 'Seattle/Boeing Field'),
-           ('m-', 'Everett/Paine Field'),
+markers = [ ('b-', 'Seattle, Boeing Field'),
+           ('m-', 'Everett, Paine Field'),
            ('c-', 'Seattle-Tacoma Airport'),
-           ('r-', 'Tacoma Narrows')
+           ('r-', 'Tacoma Narrows Airport')
            ]
 
-init_plot('360-hour Intensity-Duration History in Seattle, Washington, & vicinity,')
+init_plot('360-hour Intensity-Duration History near Seattle, Washington,,')
 
 
 for i in range(4):
@@ -752,7 +752,7 @@ plot_ID()
 
 end_plot(name='id_index.png')
 
-init_plot('360-hour Intensity-Duration History at Everett Paine Field, KPAE,')
+init_plot('360-hour Intensity-Duration History at Everett, Paine Field, KPAE,')
 
 i = 1
 for d in data_list[i]: # draw time series of threshold index values, one station

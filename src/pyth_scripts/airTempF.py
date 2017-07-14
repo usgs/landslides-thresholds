@@ -48,7 +48,7 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Air Temperature, deg F')
 
 # Set fontsize for plot

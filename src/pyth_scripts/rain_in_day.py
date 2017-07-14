@@ -68,9 +68,9 @@ def make_plot(title, x1, y1, x2, y2, name=None, cols=5, yMin=0, yMax=0.5, y2Max=
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('15-minute rainfall, inches')
-y2text = ('Daily rainfall, inches')
+xtext = ('Date and time')
+ytext = ('15-minute rainfall, in inches')
+y2text = ('Daily rainfall, in inches')
 
 # Process data for Marine View Drive (Stable Coastal Bluff site)
 # Import data and assign to arrays
