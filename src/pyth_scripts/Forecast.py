@@ -422,7 +422,7 @@ xtext = ('Date and time')
 ytest = ('Antecedent Water Index, in meters')
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History and Forecast near Seattle, Washington, and Vicinity,')
+init_plot('360-hour Precipitation History and Forecast near Seattle, Washington,')
 
 for i in range(4):
     for d in data_list[i]: # Draw time-series plots of AWI at all stations

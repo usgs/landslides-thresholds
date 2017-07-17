@@ -423,7 +423,7 @@ markers = [ ('b-', 'VH'),
            ]
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History in Mukilteo, Washington, and Vicinity,')
+init_plot('360-hour Precipitation History in Mukilteo, Washington,,')
 
 data_list = [data01, data02, data03, data04]
 for i in range(4):
