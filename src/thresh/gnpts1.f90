@@ -64,7 +64,7 @@
    case('ExRA_'); header='Recent & Antecedent'
    case('ExID_'); header='Intensity-Duration'
    case('ExIDA'); header='Int.-Dur. & Ant. Water'
-   case('ExIR_'); header=trim(TavgIntensityF)//'-hr Intensity'
+   case('ExIR_'); header=trim(TavgIntensityF)//'-h Intensity'
    case('ExIRA'); header='Intensity & Cumulative'
    end select
    open(uout,file=outputFile,status='unknown',position='rewind',err=125)
@@ -73,18 +73,18 @@
    write(uout,*) pd,' Times of exceedance for rainfall threshold: '//header
    write(uout,*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation),&
     &' Precipitation units: ', precipUnit
-   write(uout,*) pd,' Time & Date',tb,&
+   write(uout,*) pd,' Time and Date',tb,&
                  'Hourly Precip.',tb,&
-                 Tantecedent,'-hr Precip.',tb,&
-                 Trecent,'-hr Precip.',tb,&
+                 Tantecedent,'-h Precip.',tb,&
+                 Trecent,'-h Precip.',tb,&
                  'Intensity',tb,&
                  'Log10(Intensity)',tb,&
                  'Duration',tb,&
-	         'Log10('//trim(TavgIntensityF)//'-hr Intensity)',tb,&
-                 trim(TavgIntensityF)//'-hr Intensity',tb,&
+	         'Log10('//trim(TavgIntensityF)//'-h Intensity)',tb,&
+                 trim(TavgIntensityF)//'-h Intensity',tb,&
                  'Recent/Antecedent Index',tb,&
                  'Intensity-Duration Index',tb,&
-                 trim(TavgIntensityF),'-hr Intensity Index',tb,&
+                 trim(TavgIntensityF),'-h Intensity Index',tb,&
                  AntecedentHeader,tb,&
                  'Duration Descripton'
 
@@ -179,10 +179,10 @@
    return
 
 ! DISPLAY ERROR MESSAGE
-   125  write(*,*) 'Error opening file ',outputFile	
+   125  write(*,*) 'Error opening file ',trim(outputFile	)
         write(*,*) 'Press Enter key to exit program.'
         read(*,*)
-        write(ulog,*) 'Error opening file ',outputFile		
+        write(ulog,*) 'Error opening file ',trim(outputFile)
         close (ulog)
         stop
    end subroutine gnpts1

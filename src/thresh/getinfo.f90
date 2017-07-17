@@ -233,26 +233,36 @@ contains
               do while (iostatus == 0)
                  if(i>numStations) then ! an error can occur if more files than numStations! {{{
                     if(numStations <= 0) then 
-                       write(*,*) 
-                       write(*,*) 'Number of stations must be greater than zero.'
-                       write(*,*) 'Edit thresh_in.txt and restart thresh.'
-                       write(*,*) 'Press Enter key to exit program.'
-                       read(*,*) 
+                       if(stats) then
+                          write(*,*) 
+                          write(*,*) 'Number of stations must be greater than zero.'
+                          write(*,*) 'Edit thresh_in.txt and restart thresh.'
+                          write(*,*) 'Press Enter key to exit program.'
+                          read(*,*) 
+                       end if
                        write(uout,*) 'Thresh analyzes station info to compute '
                        write(uout,*) 'rainfall totals for analysis of cumulative '
                        write(uout,*) 'precipitation and rainfall intensity-duration '
                        write(uout,*) 'thresholds for landslide occurrence.'
-                       write(uout,*) 'Program uses input data files from rain gauges.'
-                       write(uout,*) 'Number of gauges must be greater than zero.'
+                       write(uout,*) 'Program uses input data files from rain gages.'
+                       write(uout,*) 'Number of gages must be greater than zero.'
+                       write(uout,*) 'Edit thresh_in.txt and restart thresh.'
                        stop                       
                     else
-                       write(*,*) 'Number of input files exceeds number of stations'
-                       write(*,*) 'Edit the initialization file to either &
+                       if(stats) then
+                          write(*,*) 'Number of input files exceeds number of stations'
+                          write(*,*) 'Edit the initialization file to either &
+                          &increase maximum number of stations on 1st line or'
+                          write(*,*) 'delete file names beginning on line ', lineCtr
+                          write(*,*) 'Press Enter key to exit program.'
+                          read(*,*)
+                       end if
+                       write(uout,*) 'Number of input files exceeds number of stations'
+                       write(uout,*) 'Edit the initialization file to either &
                        &increase maximum number of stations on 1st line or'
-                       write(*,*) 'delete file names beginning on line ', lineCtr
-                       write(*,*) 'Press Enter key to exit program.'
-                       read(*,*)
-                       stop 
+                       write(uout,*) 'delete file names beginning on line ', lineCtr
+ 	               write(uout,*) 'Program exited due to this error.'
+                      stop 
                     end if 
                  end if !}}}
                  ! Assign data to its proper index in its proper variable.
@@ -271,13 +281,20 @@ contains
               
               ! if-block to assure that i and numStations have the same value
               if(i < numStations) then
-                 write(*,*) 'Number of expected stations exceeds number of input files.'
-                 write(*,*) 'Edit the initialization file to either &
+                if(stats) then
+                    write(*,*) 'Number of expected stations exceeds number of input files.'
+                    write(*,*) 'Edit the initialization file to either &
+                    &decrease number of stations on the first line or'
+                    write(*,*) 'add file names beginning on line ', lineCtr
+                    write(*,*) 'Press Enter key to exit program.'
+                    read(*,*) 
+                 end if
+                 write(uout,*) 'Number of expected stations exceeds number of input files.'
+                 write(uout,*) 'Edit the initialization file to either &
                  &decrease number of stations on the first line or'
-                 write(*,*) 'add file names beginning on line ', lineCtr
-                 write(*,*) 'Press Enter key to exit program.'
-                 read(*,*) 
-                 stop
+                 write(uout,*) 'add file names beginning on line ', lineCtr
+                 write(uout,*) 'Program exited due to this error.'
+                stop
               end if
 
               
@@ -288,7 +305,7 @@ contains
    		  
    	! temp_maxLines should be greater than zero. Thresh will exit otherwise.
    		if(temp_maxLines <= 0) then 
-                   call error1(uout,'Number_Of_Data_Lines','zero')
+                   call error1(uout,'Number_Of_Data_Lines','zero',stats)
                 else if (temp_maxLines < maxLines) then
                    temp_maxLines=maxLines
                    write(*,*) 'Number_Of_Data_Lines reset to default, ',maxLines
@@ -299,19 +316,23 @@ contains
 	      
 	   !Readings per hour should be between 1 and 60, inclusive. Thresh will exit otherwise
 	      if (rph < 1) then
-	         write(*,*) 'Thresh cannot use data collected on'
-	         write(*,*) 'intervals longer than one hour.'
-	         write(*,*) 'Press Enter key to exit program.'
-	         read(*,*)
+	         if(stats)then
+	            write(*,*) 'Thresh cannot use data collected on'
+	            write(*,*) 'intervals longer than one hour.'
+	            write(*,*) 'Press Enter key to exit program.'
+	            read(*,*)
+                 end if
 	         write(uout,*) 'Thresh cannot use data collected on'
 	         write(uout,*) 'intervals longer than one hour.'
 	         write(uout,*) 'Program exited due to an incompatible value.'
 	         stop
 	      else if(rph > 60) then
-	      	write(*,*) 'Thresh cannot use data collected on'
-	      	write(*,*) 'intervals shorter than one minute.'
-	      	write(*,*) 'Press Enter key to exit program.'
-	      	read(*,*)
+	        if(stats)then
+	      	   write(*,*) 'Thresh cannot use data collected on'
+	      	   write(*,*) 'intervals shorter than one minute.'
+	      	   write(*,*) 'Press Enter key to exit program.'
+	      	   read(*,*)
+                end if
 	      	write(uout,*) 'Thresh cannot use data collected on'
 	      	write(uout,*) 'intervals shorter than one minute.'
 	      	write(uout,*) 'Program exited due to an incompatible value.'
@@ -319,28 +340,28 @@ contains
 	      end if
 	      	         
 	   !minTstormGap should be at least 1 minute.
-	      if(minTstormGap < 1./60.) call error1(uout,'Hours_Between_Storms','zero')
+	      if(minTstormGap < 1./60.) call error1(uout,'Hours_Between_Storms','zero',stats)
 	   
 	   !minTstormGap*rph should be at least 1 and an integer.
 	      tol=3599./3600.; tol_remain=1.d0-tol
 	      test_val=minTstormGap*float(rph)
-	      if(test_val < tol) call error1(uout,'Hours_Between_Storms*Readings_Per_Hour','one')
+	      if(test_val < tol) call error1(uout,'Hours_Between_Storms*Readings_Per_Hour','one',stats)
 	      if(mod(test_val,1.) >= tol_remain) &
-                &call error3(uout,'Hours_Between_Storms*Readings_Per_Hour')
+                &call error3(uout,'Hours_Between_Storms*Readings_Per_Hour',stats)
 	   
 	   !Tintensity*rph should be at least 1 and an integer.
 	      test_val=Tintensity*float(rph)
 	      if(test_val<tol .and. test_val>tol_remain) & ! Allow for Tintensity == 0.
-                &call error1(uout,'Intensity_hours*Readings_Per_Hour','one')
+                &call error1(uout,'Intensity_hours*Readings_Per_Hour','one',stats)
 	      if(mod(test_val,1.) >= tol_remain) &
-                &call error3(uout,'Intensity_hours*Readings_Per_Hour')
+                &call error3(uout,'Intensity_hours*Readings_Per_Hour',stats)
 	   
 	   !TaveIntensity*rph should be at least 1 and an integer.
 	      test_val=TavgIntensity*float(rph)
 	      if(test_val<tol) &
-                &call error1(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour','one')
+                &call error1(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour','one',stats)
 	      if(mod(test_val,1.) >= tol_remain) &
-                &call error3(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour')
+                &call error3(uout,'Running_Average_Intensity_Hours*Readings_Per_Hour',stats)
 	   
 		!maxDataGap should be at least 1   		
 	      if(maxDataGap < 1) maxDataGap = 1
@@ -359,11 +380,14 @@ contains
 	     	 	write(uout,*) 'Slope_Recent_Antecedent_Threshold or Intercept_Recent_Antecedent_Threshold&
 	     		& must be nonzero.'
    			write(uout,*) 'Thresh exited due to an incompatible value.'
-   			write(*,*) 'Slope_Recent_Antecedent_Threshold or Intercept_Recent_Antecedent_Threshold&
-	     		& must be nonzero.'
-   			write(*,*) 'Edit thresh_in.txt and restart thresh.'
-   			write(*,*) 'Press Enter key to exit program.'
-   			read(*,*)
+    			write(uout,*) 'Edit thresh_in.txt and restart thresh.'
+    			if(stats)then
+  			   write(*,*) 'Slope_Recent_Antecedent_Threshold or Intercept_Recent_Antecedent_Threshold&
+	     		   & must be nonzero.'
+   			   write(*,*) 'Edit thresh_in.txt and restart thresh.'
+   			   write(*,*) 'Press Enter key to exit program.'
+   			   read(*,*)
+   			end if
    			stop	 
 	      end if
 	  
@@ -376,7 +400,7 @@ contains
 	      
 	   !Ensuring that resetAntMonth and resetAntDay have meaningful values. Thresh
 	   !will exit otherwise.
-	   	call check_antMonth_antDay(uout,year,resetAntMonth,resetAntDay)
+	   	call check_antMonth_antDay(uout,year,resetAntMonth,resetAntDay,stats)
 	   		  	      
 	   !Setting proper value for midnightVal. Default is midnight = 0
 	      if(midnightVal /= 1) midnightVal = 0
@@ -386,58 +410,68 @@ contains
 	   		plotformat = 'gnp1'	  
 	      end if
 	   !Ensuring there aren't multiple ID thresholds turned on.
-	      call check_switches(uout,powerSwitch,polySwitch,interSwitch)
+	      call check_switches(uout,powerSwitch,polySwitch,interSwitch,stats)
 	      
 	   !Checks and calculations on upLim and lowLim for powerSwitch
 	      if(powerSwitch) then
-	      	call set_power_limits(uout,lowLim,upLim)
+	      	call set_power_limits(uout,lowLim,upLim,stats)
 	      	if(powerCoeff == 0) then
-	      	   write(*,*) "Power coefficient cannot equal zero. This would result"
-	      	   write(*,*) "in division by 0 later in the program. Edit thresh_in.txt"
-	      	   write(*,*) "such that power coefficient is nonzero."
-	      	   write(*,*) 'Press Enter key to exit program.'
-	      	   read(*,*)
+	      	if(stats)then
+	      	      write(*,*) "Power coefficient cannot equal zero. This would result"
+	      	      write(*,*) "in division by 0 later in the program. Edit thresh_in.txt"
+	      	      write(*,*) "such that power coefficient is nonzero."
+	      	      write(*,*) 'Press Enter key to exit program.'
+	      	      read(*,*)
+                   end if
 	      	   write(uout,*) "Power coefficient cannot equal zero. This would result"
-	      	   write(uout,*) "in division by 0 later in the program."
+	      	   write(uout,*) "in division by 0 later in the program. Edit thresh_in.txt"
 	      	   write(uout,*) "Thresh exited due to this error."
 	      	   stop
 	      	end if
 	      else if(polySwitch) then
-	         call set_poly_limits(uout,lowLim,upLim)
+	         call set_poly_limits(uout,lowLim,upLim,stats)
 	      else if(interSwitch) then
 	      	if(intervals == 0) then
 	      		write(uout,*) "Linear interpolating intervals must be greater than &
 	      		&0."
 	      		write(uout,*) "Edit thresh_in.txt and ensure that &
 	      		&Number_of_Interpolating_Intervals attribute is greater than zero"
-	      		write(*,*) "Linear interpolating intervals must be greater than &
-	      		&0."
-	      		write(*,*) "Edit thresh_in.txt and ensure that &
-	      		&Number_of_Interpolating_Intervals attribute is greater than zero"
-	      		write(*,*) 'Press Enter key to exit program.'
-	      		read(*,*)
+	      		if(stats)then
+	      		   write(*,*) "Linear interpolating intervals must be greater than &
+	      		   &0."
+	      		   write(*,*) "Edit thresh_in.txt and ensure that &
+	      		   &Number_of_Interpolating_Intervals attribute is greater than zero"
+	      		   write(*,*) 'Press Enter key to exit program.'
+	      		   read(*,*)
+	      		end if
 	      		stop
 	      	end if
 
 	      end if
 	      
 	   !Verifying that fcUnit and precipUnit are implemented in thresh
-	      if(fcUnit /= 'mt' .and. fcUnit /= 'ft') then 
-	         write(*,*) "The field capacity unit must be either 'ft' or 'mt'."
-	         write(*,*) "Edit thresh_in.txt to ensure this is so."
-	         write(*,*) 'Press Enter key to exit program.'
-	         read(*,*)
-	         write(uout,*) "The field capacity unit must be either 'ft' or 'mt'."
-	         write(uout,*) "edit thresh_in.txt to ensure this is so."
+	      if(fcUnit /= 'm' .and. fcUnit /= 'ft') then 
+	         if(stats)then
+	            write(*,*) "The field capacity unit must be either 'ft' or 'm'."
+	            write(*,*) "Edit thresh_in.txt to ensure this is so."
+	            write(*,*) 'Press Enter key to exit program.'
+	            read(*,*)
+	         end if
+	         write(uout,*) "The field capacity unit must be either 'ft' or 'm'."
+	         write(uout,*) "Edit thresh_in.txt to ensure this is so."
 	         write(*,*) "Thresh exited due to this error."
-	      	 read(*,*)
 	      	 stop
 	      end if
 	      if(precipUnit /= 'mm' .and. precipUnit /= 'in') then
-	      	 write(*,*) "The precipitation input unit must be either 'in' or 'mm'."
-	      	 write(*,*) "Edit thresh_in.txt to ensure this is so."
-	      	 write(*,*) "Press Enter key to exit program."
-	      	 read(*,*)
+	         if(stats)then
+	      	    write(*,*) "The precipitation input unit must be either 'in' or 'mm'."
+	      	    write(*,*) "Edit thresh_in.txt to ensure this is so."
+	      	    write(*,*) "Press Enter key to exit program."
+	      	    read(*,*)
+	      	 end if
+	      	 write(uout,*) "The precipitation input unit must be either 'in' or 'mm'."
+	      	 write(uout,*) "Edit thresh_in.txt to ensure this is so."
+	         write(*,*) "Thresh exited due to this error."
 	         stop
 	      end if
 	   
@@ -560,27 +594,31 @@ contains
          100 write(uout,*) 'Error opening file thresh_in.txt'
              write(uout,*) 'Program exited'
              close(uout)
-             write(*,*) 'Error opening file thresh_in.txt'
-             write(*,*) 'Press Enter key to exit program'
-             read(*,*)
+             if(stats)then
+                write(*,*) 'Error opening file thresh_in.txt'
+                write(*,*) 'Press Enter key to exit program'
+                read(*,*)
+             end if
              stop
 	          
          115 write(uout,*) 'Error in thresh_in.txt at line ', lineCtr
              write(uout,*) 'Program exited'
              close(uout)
-             write(*,*) 'Error in thresh_in.txt at line ', lineCtr
-             write(*,*) 'Press Enter key to exit program.'
-             read(*,*)
+             if(stats)then
+                write(*,*) 'Error in thresh_in.txt at line ', lineCtr
+                write(*,*) 'Press Enter key to exit program.'
+                read(*,*)
+             end if
              stop
       end subroutine read_init
 ! END OF SUBROUTINE}}}
 	
     ! PURPOSE:
     !	   Reads Thlast.txt. This file contains information about ending time
-    !    and state at each station (rain gauge).
+    !    and state at each station (rain gage).
     !	  
       subroutine read_thlast(threshLog,outputFolder,stationNumber,numStations,&
-	   lastStorm,tstormBeg,tstormEnd,AWI_0,timestampHldr)!{{{
+	   lastStorm,tstormBeg,tstormEnd,AWI_0,timestampHldr,stats)!{{{
 	   implicit none
 	   integer,parameter :: double=kind(1d0)
       ! FORMAL ARGUMENTS
@@ -591,6 +629,7 @@ contains
 	      real, intent(out)             :: AWI_0(numStations)
 	      integer, intent(out)          :: timestampHldr(numStations)
 	      integer, intent(in)           :: numStations,threshLog
+	      logical                       ::stats
 		   
       ! LOCAL VARIABLES
     	   character (len=255) :: pathThlast
@@ -661,19 +700,25 @@ contains
     	   end if
     	   return
     	   
-    	   100 write(*,*) 'Error opening file ', pathThlast, '.'
-    	       write(*,*) 'Program exited.'
-    	       write(threshLog,*) 'Error opening file ', pathThlast, '.'
+    	   100 write(threshLog,*) 'Error opening file ', pathThlast, '.'
     	       write(threshLog,*) 'Program exited.'
-    	       write(*,*) 'Press Enter key to exit program.'
-    	       read(*,*) 
+    	       close(threshLog)
+    	       if(stats) then
+                  write(*,*) 'Error opening file ', pathThlast, '.'
+    	          write(*,*) 'Program exited.'
+    	          write(*,*) 'Press Enter key to exit program.'
+    	          read(*,*) 
+    	       end if
     	       stop    	   
-    	   105 write(*,*) 'Error reading file ', pathThlast, '.'
-    	       write(*,*) 'Program exited'
-    	       write(threshLog,*) 'Error reading file ', pathThlast, '.'
+    	   105 write(threshLog,*) 'Error reading file ', pathThlast, '.'
     	       write(threshLog,*) 'Program exited.'
-    	       write(*,*) 'Press Enter key to exit program.'
-    	       read(*,*) 
+    	       close(threshLog)
+    	       if(stats) then
+                  write(*,*) 'Error reading file ', pathThlast, '.'
+    	          write(*,*) 'Program exited'
+    	          write(*,*) 'Press Enter key to exit program.'
+    	          read(*,*) 
+    	       end if
     	       stop
 	end subroutine read_thlast
 ! END OF SUBROUTINE}}}
@@ -681,12 +726,12 @@ contains
    ! PURPOSE:
    !	  Reads from each station's individual data file. Sets stationPtr(i) in
    !    thresh.
-	subroutine read_station_file(file, dataLocation, rph, lgyr, maxLines,&
-	fileName, tyear,month, day, hour, precip, ctr, sysYear, sysMonth,&
-	sysDay, sysHour, sysMinute, stationPtr, year, minute, uout, ctrHolder,&
-	sumTrecent, sumTantecedent, intensity, sumRecent_s, sumAntecedent_s,&
-                intsys, deficit_recent_antecedent_s, sthreshIntensityDuration,&
-                sthreshAvgIntensity, latestMonth, latestDay, latestHour, latestMinute,forecast)!{{{
+        subroutine read_station_file(file, dataLocation, rph, lgyr, maxLines,&
+        fileName, tyear,month, day, hour, precip, ctr, sysYear, sysMonth,&
+        sysDay, sysHour, sysMinute, stationPtr, year, minute, uout, ctrHolder,&
+        sumTrecent, sumTantecedent, intensity, sumRecent_s, sumAntecedent_s,&
+        intsys, deficit_recent_antecedent_s, sthreshIntensityDuration,&
+        sthreshAvgIntensity, latestMonth, latestDay, latestHour, latestMinute,forecast,stats)!{{{
 	implicit none
 
 	! FORMAL ARGUMENTS
@@ -695,7 +740,7 @@ contains
 	   integer, intent(in)  :: sysMinute, year, maxLines, uout
 	   integer, intent(out) :: tyear(maxLines),month(maxLines),day(maxLines),hour(maxLines)
 	   integer, intent(out) :: precip(maxLines),ctr,minute(maxLines),stationPtr
-	   logical, intent(in)  :: forecast
+	   logical, intent(in)  :: forecast,stats
 	   logical :: lgyr
 	   ! Arguments associated only with error statement
 	   real, intent(out)    :: sumTrecent(*), sumTantecedent(*),intensity(*)
@@ -766,10 +811,15 @@ contains
 
            120 return
 
-	   140 write(*,*) 'Error reading file ', fileName
-  	       write(*,*) 'at line ', i
-  	       write(*,*) 'Press Enter key to exit program.'
-  	       read(*,*)
+	   140 write(uout,*) 'Error reading file ', fileName		
+  	       write(uout,*) 'at line ', i
+  	       close (uout)
+  	       if(stats)then
+                  write(*,*) 'Error reading file ', fileName
+  	          write(*,*) 'at line ', i
+  	          write(*,*) 'Press Enter key to exit program.'
+  	          read(*,*)
+  	       end if
   	       write(uout,*) 'Error reading file ', fileName		
   	       write(uout,*) 'at line ', i
   	       close (uout)
@@ -790,19 +840,20 @@ contains
 	       latestDay = -99
 	       latestHour = -99
 	       latestMinute = -99
-  	end subroutine
+  	end subroutine read_station_file
  ! END OF SUBROUTINE}}}
 
    ! PURPOSE:
    !	  Reads interpolating_points.txt. This file contains duration and
    !	  cumulative precipitation pairs. The values from interpolating_points.txt
    !	  are stored in xVal, yVal.
-   subroutine read_interpolating_points(xVal,yVal,intervals) !{{{
+   subroutine read_interpolating_points(xVal,yVal,intervals,stats,ulog) !{{{
    implicit none
    
    ! FORMAL ARGUMENTS
    real 		:: xVal(*), yVal(*)
-   integer 	:: intervals
+   integer 	:: intervals,ulog
+   logical, intent(in):: stats
    ! LOCAL VARIABLES
    character(len=23), parameter :: FILENAME="interpolatingPoints.txt"
    real 		:: m, b
@@ -819,13 +870,22 @@ contains
          xycounter = xycounter + 1
       end do
       
+      close(unit)
+      
       if (intervals+1 /= xycounter) then
-      		write(*,*) "The file ", FILENAME, " has the incorrect number of points."
-      		write(*,*) "The number of data points should be equal to"
-      		write(*,*) "the number of intervals+1."
-      		write(*,*) "Press Enter key to exit program."
-      		read(*,*)
-      		stop
+         if(stats)then
+      	    write(*,*) "The file ", FILENAME, " has the incorrect number of points."
+      	    write(*,*) "The number of data points should be equal to"
+      	    write(*,*) "the number of intervals+1."
+      	    write(*,*) "Press Enter key to exit program."
+      	    read(*,*)
+         end if
+      	 write(ulog,*) "The file ", FILENAME, " has the incorrect number of points."
+      	 write(ulog,*) "The number of data points should be equal to"
+      	 write(ulog,*) "the number of intervals+1."
+      	 write(ulog,*) 'Program exited due to this error.'
+      	 close(ulog)
+      	 stop
       end if
       
       !Extending lower bound.
@@ -843,16 +903,27 @@ contains
       return
 	! Error statement needed for incorrect number of intervals in interpolatingPoints.txt
       
-      100 write(*,*)"The file ", FILENAME, " could not be opened."
-      	 write(*,*)"Ensure that the file exists in the same directory as"
-      	 write(*,*)"Thresh."
-      	 write(*,*)'Press Enter key to exit program.'
-      	 read(*,*)
+      100 write(ulog,*)"The file ", FILENAME, " could not be opened."
+      	 write(ulog,*)"Ensure that the file exists in the same directory as"
+      	 write(ulog,*)"thresh_in.txt.  Program exited due to this error."
+      	 close(ulog)
+      	 if(stats)then
+            write(*,*)"The file ", FILENAME, " could not be opened."
+      	    write(*,*)"Ensure that the file exists in the same directory as"
+      	    write(*,*)"thresh_in.txt"
+      	    write(*,*)'Press Enter key to exit program.'
+      	    read(*,*)
+      	 end if
       	 stop
       110 write(*,*) "Error reading ", FILENAME, "at line ", xycounter
-      	  write(*,*)"Press Enter key to exit program."
-      	  read(*,*)
-      	  stop
+      	 write(ulog,*)"Program exited due to this error."
+      	 close(ulog)
+      	 if(stats)then
+             write(*,*) "Error reading ", FILENAME, "at line ", xycounter
+      	     write(*,*)"Press Enter key to exit program."
+      	     read(*,*)
+      	 end if
+      	 stop
    end subroutine read_interpolating_points !}}}
  			
 end module

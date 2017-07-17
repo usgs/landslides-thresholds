@@ -45,7 +45,7 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Temperature, deg F')
 
 # Import data and assign to arrays

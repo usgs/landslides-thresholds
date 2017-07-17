@@ -55,8 +55,8 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('15-minute rainfall, mm')
+xtext = ('Date and time')
+ytext = ('15-minute rainfall, in millimeters')
 
 # --------------****************-----------------------
 # Import data, scale and plot; repeat for each station

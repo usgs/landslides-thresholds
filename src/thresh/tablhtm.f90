@@ -46,12 +46,12 @@ contains
 !Writing HTML headers and column names
      	write (unitNumber,*) '<center><table border=1 width=90%>'
 	write (unitNumber,*) '<caption>Current Conditions by Station</caption>'
-	write(unitNumber,*) r1,h1,'Rain Gauge',h2,h1,&
-	  'Vicinity of <br>Rain Gauge',h2,h1,&
-          Tantecedent,'-hr Antecedent Total<br>(',precipUnit,')',h2,h1,&
-          Trecent,'-hr RecentTotal<br>(',precipUnit,')',h2,h1,&
+	write(unitNumber,*) r1,h1,'Rain Gage',h2,h1,&
+	  'Vicinity of <br>Rain Gage',h2,h1,&
+          Tantecedent,'-h Antecedent Total<br>(',precipUnit,')',h2,h1,&
+          Trecent,'-h RecentTotal<br>(',precipUnit,')',h2,h1,&
           'Average<br>Intensity<br>(',precipUnit,'/hour)',h2,&
-          h1,'Duration of<br>Current Storm<br>(hours)',h2,h1,'Time & Date',h2,r2
+          h1,'Duration of<br>Current Storm<br>(hours)',h2,h1,'Time and Date',h2,r2
 
 ! Assign proper values to each variable. Used to fill the table.
 	do i=1,numStations
@@ -107,11 +107,8 @@ contains
 	write(*,*) 'Finished current condtions HTML table'
 	return
 	
-! DISPLAYS ERROR MESSAGE
-  125	write(*,*) 'Error opening file ',outputFile	
-  	write(*,*) 'Press Enter key to exit program.'
-  	read(*,*)
-  	write(u1,*) 'Error opening file ',outputFile		
+! SAVES ERROR MESSAGE TO LOG FILE
+  125	write(u1,*) 'Error opening file ',trim(outputFile)
   	close (u1)
 	stop
 	end subroutine tablhtm
@@ -120,7 +117,7 @@ contains
 !	  Provides the user with an option to choose colors for tablhtm
 !	  
 !
-subroutine read_colors(hexColors,colors,div,ndiv)
+subroutine read_colors(hexColors,colors,div,ndiv,uout)
 implicit none
 
 !FORMAL ARGUMENTS
@@ -128,6 +125,7 @@ character (len=22), allocatable, intent(out)  :: hexColors(:)
 character (len=6), allocatable, intent(out) :: colors(:)	
 real, allocatable, intent(out) :: div(:)
 integer, intent(out) :: ndiv
+integer, intent(in)  :: uout
 
 ! LOCAL VARIABLES
 character(len=10), parameter :: FILENAME="Colors.txt"
@@ -151,10 +149,10 @@ do i=1,ndiv+1
 end do
 
 if (colorcounter /= ndiv+1) then
-	write(*,*) "The file ", FILENAME, " has the incorrect number of colors."
-	write(*,*) "The number of colors should be equal to the number of divisions"
-	write(*,*) "plus one. Press Enter key to exit program."
-	read(*,*)
+	write(uout,*) "The file ", FILENAME, " has the incorrect number of colors."
+	write(uout,*) "The number of colors should be equal to the number of divisions"
+	write(uout,*) "plus one."
+	close(uout)
 	stop
 end if
 
@@ -164,11 +162,10 @@ do i=1,ndiv
 end do
 
 if (divcounter /= ndiv) then
-	write(*,*) "The file ", FILENAME, " has the incorrect number of divisions."
-	write(*,*) "The number of divisions should be equal to the number entered"
-	write(*,*) "At the beginning of Colors.txt."
-	write(*,*) "Press Enter key to exit program."
-	read(*,*)
+	write(uout,*) "The file ", FILENAME, " has the incorrect number of divisions."
+	write(uout,*) "The number of divisions should be equal to the number entered"
+	write(uout,*) "at the beginning of Colors.txt."
+	close(uout)
 	stop
 end if
 	
@@ -176,11 +173,10 @@ close(unit)
 return
 
 !DISPLAYS ERROR MESSAGE
-100 write(*,*)"The file ", FILENAME, " could not be opened."
-    write(*,*)"Ensure that the file exists in the same directory as"
-    write(*,*)"Thresh."
-    write(*,*)'Press Enter key to exit program.'
-    read(*,*)
+100 write(uout,*)"The file ", FILENAME, " could not be opened."
+    write(uout,*)"Ensure that the file exists in the same directory as"
+    write(uout,*)"the file thresh_in.txt."
+    close(uout)
     stop
 end subroutine read_colors
 end module

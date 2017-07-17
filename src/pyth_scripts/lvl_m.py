@@ -84,8 +84,8 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('Water Level, m')
+xtext = ('Date and time')
+ytext = ('Water Level, in meters')
 
 # Import raw data and assign to arrays
 data = readfiles(['waMVD116_14d.txt'],17,18,19,20) # 17,18,19,20

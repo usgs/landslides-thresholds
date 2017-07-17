@@ -54,8 +54,8 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('15-minute rainfall, inches')
+xtext = ('Date and time')
+ytext = ('15-minute rainfall, in inches')
 
 # Import data and assign to arrays
 data = readfiles(['waMVD116_14d.txt'],5)

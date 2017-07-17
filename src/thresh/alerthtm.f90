@@ -104,9 +104,9 @@
 	write (unitNumber,*) '<caption>',&
 	' Current Alert Levels by Station and Threshold ',&
 	'</caption>'
-	write (unitNumber,*) r1,h1,'Rain gauge',h2,h1,'Vicinity',h2,h1,&
-        'Time & Date',h2,h1,'Recent/Antecedent',h2,h1,'Intensity-Duration',&
-        h2,h1,trim(TavgIntensityF),'-hr Running Average Intensity',h2,r2
+	write (unitNumber,*) r1,h1,'Rain Gage',h2,h1,'Vicinity',h2,h1,&
+        'Time and Date',h2,h1,'Recent/Antecedent',h2,h1,'Intensity-Duration',&
+        h2,h1,trim(TavgIntensityF),'-h Running Average Intensity',h2,r2
 	do i=1,numStations
 	  write(unitNumber,*) &
           r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
@@ -120,11 +120,8 @@
 	write(*,*) 'Finished alert status HTML page'
 	return
 	
-! DISPLAYS ERROR MESSAGE
-  125	write(*,*) 'Error opening file ',outputFile	
-  	write(*,*) 'Press Enter key to exit program.'
-  	read(*,*)
-  	write(ulog,*) 'Error opening file ',outputFile		
+! WRITES ERROR MESSAGE TO LOG FILE
+  125	write(ulog,*) 'Error opening file ',trim(outputFile)		
   	close (ulog)
 	stop
 	end subroutine alerthtm

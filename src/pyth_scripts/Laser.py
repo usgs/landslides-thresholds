@@ -46,8 +46,8 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('Laser distance, m')
+xtext = ('Date and time')
+ytext = ('Laser distance, in meters')
 
 # Set fontsize for plots
 

@@ -446,35 +446,43 @@ contains
 
    ! PURPOSE:
    !		 Ensures that multiple *Switch flags aren't enabled
-   	  subroutine check_switches(uout,powerSwitch,polySwitch,interSwitch) !{{{
+   	  subroutine check_switches(uout,powerSwitch,polySwitch,interSwitch,stats) !{{{
    	  implicit none
    	  
    	  !FORMAL ARGUMENTS
    	  integer, intent(in) :: uout
-   	  logical, intent(in) :: powerSwitch, polySwitch, interSwitch
+   	  logical, intent(in) :: powerSwitch, polySwitch, interSwitch, stats
    	  !--------------------------
-   	  	   if( .not. powerSwitch .and. .not. polySwitch .and. .not. interSwitch) then !{{{
-   	  	      write(uout,*) "There is no intensity-duration threshold defined."
+   	     if( .not. powerSwitch .and. .not. polySwitch .and. .not. interSwitch) then !{{{
+                   write(uout,*) "There is no intensity-duration threshold defined."
 	      	   write(uout,*) "Edit thresh_in.txt and change one ID flag to '.TRUE.'"
-	      	   write(*,*) "There is no intensity-duration threshold defined."
-	      	   write(*,*) "Edit thresh_in.txt and change one ID flag to '.TRUE.'"
-	      	   write(*,*) 'Press Enter key to exit program.'
-	      	   read(*,*)
+	      	   write(uout,*) "Program exited due to this error."
+	      	   close(uout)
+	      	   if(stats)then
+	      	      write(*,*) "There is no intensity-duration threshold defined."
+	      	      write(*,*) "Edit thresh_in.txt and change one ID flag to '.TRUE.'"
+	      	      write(*,*) 'Press Enter key to exit program.'
+	      	      read(*,*)
+	      	   end if
 	      	   stop	  
-   	  	   end if !}}}
+   	     end if !}}}
    	      if(powerSwitch .and. polySwitch .and. interSwitch) then !{{{
+   		     write(uout,*) "All three Intensity-Duration flags are &
+   		     &set to define the ID function."
+   		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
+  		     &ID flag is set to .TRUE."
+  		     close(uout)
+  		     if(stats)then
 	   		     write(*,*) "All three Intensity-Duration flags are &
 	   		     &set to define the ID function."
 	   		     write(*,*) "Edit thresh_in.txt and ensure that only one &
 	   		     &ID flag is set to .TRUE."
-	   		     write(uout,*) "All three Intensity-Duration flags are &
-	   		     &set to define the ID function."
-	   		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
-	   		     &ID flag is set to .TRUE."
 	   		     write(*,*) 'Press Enter key to exit program.'
 	   		     read(*,*)
+   		     end if
 	   		     stop !}}}
 	   	   else if(powerSwitch .and. polySwitch) then !{{{
+	   	      if(stats)then
 	   		     write(*,*) "Power law and polynomial interpolation"
 	   		     write(*,*) "Intensity-Duration flags are both set to"
 	   		     write(*,*) "define the ID function."
@@ -482,59 +490,68 @@ contains
 	   		     write(*,*) "Edit thresh_in.txt and ensure that only one"
 	   		     write(*,*) "ID flag is set to .TRUE."
 	   		     write(*,*)
-	   		     write(uout,*) "Power law and polynomial interpolation &
-	   		     				 	 &Intensity-Duration flags are both &
-	   		     				 	 &set to define the ID function."
-	   		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
-	   		     					 &ID flag is set to .TRUE."
 	   		     write(*,*) 'Press Enter key to exit program.'
 	   		     read(*,*)
+                      end if   
+	   		     write(uout,*) "Power law and polynomial interpolation &
+        	                                    &Intensity-Duration flags are both &
+                                            &set to define the ID function."
+                             write(uout,*) "Edit thresh_in.txt and ensure that only one &
+                                            &ID flag is set to .TRUE."
+                             close(uout)
 	   		     stop !}}}
 	         else if(powerSwitch .and. interSwitch) then !{{{
-	      	     write(*,*) "Power law and linear interpolation"
-	      	     write(*,*) "Intensity-Duration flags are both set to"
-	      	     write(*,*) "define the ID function."
-	      	     write(*,*)
-	   		     write(*,*) "Edit thresh_in.txt and ensure that only one"
-	   		     write(*,*) "ID flag is set to .TRUE."
-	   		     write(*,*)
-	   		     write(uout,*) "Power law and linear interpolation &
-	      	     				 	 &Intensity-Duration flags are both &
-	      	     				 	 &set to define the ID function."
-	   		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
-	   		     					 &ID flag is set to .TRUE."
-	   		     write(*,*) 'Press Enter key to exit program.'
-	   		     read(*,*)
-	   		     stop  !}}}
+	            if(stats)then
+	      	        write(*,*) "Power law and linear interpolation"
+	      	        write(*,*) "Intensity-Duration flags are both set to"
+	      	        write(*,*) "define the ID function."
+	      	        write(*,*)
+   		        write(*,*) "Edit thresh_in.txt and ensure that only one"
+   		        write(*,*) "ID flag is set to .TRUE."
+   		        write(*,*)
+   		        write(*,*) 'Press Enter key to exit program.'
+   		        read(*,*)
+                     end if
+   		     write(uout,*) "Power law and linear interpolation &
+      	     				 	 &Intensity-Duration flags are both &
+      	     				 	 &set to define the ID function."
+   		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
+   		     					 &ID flag is set to .TRUE."
+                     close(uout)
+   		     stop  !}}}
 	         else if (polySwitch .and. interSwitch) then !{{{
-	              write(*,*) "Polynomial interpolation and linear interpolation"
-	              write(*,*) "Intensity-Duration flags are both set to"
-	              write(*,*) "define the ID function."
-	              write(*,*)
-	   		     write(*,*) "Edit thresh_in.txt and ensure that only one"
-	   		     write(*,*) "ID flag is set to .TRUE."
-	   		     write(*,*)
-	   		     write(uout,*) "Polynomial interpolation and linear interpolation &
-	              				 	 &Intensity-Duration flags are both&
-	              				 	 &set to define the ID function."
-	   		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
-	   		     					 &ID flag is set to .TRUE."
-	   		     write(*,*) 'Press Enter key to exit program.'
-	   		     read(*,*)
-	   		     stop !}}}
+	            if(stats)then
+                      write(*,*) "Polynomial interpolation and linear interpolation"
+                      write(*,*) "Intensity-Duration flags are both set to"
+                      write(*,*) "define the ID function."
+                      write(*,*)
+                      write(*,*) "Edit thresh_in.txt and ensure that only one"
+                      write(*,*) "ID flag is set to .TRUE."
+                      write(*,*)
+                      write(*,*) 'Press Enter key to exit program.'
+                      read(*,*)
+                    end if
+                      write(uout,*) "Polynomial interpolation and linear interpolation &
+                                     &Intensity-Duration flags are both&
+                                     &set to define the ID function."
+                      write(uout,*) "Edit thresh_in.txt and ensure that only one &
+                                     &ID flag is set to .TRUE."
+                      close(uout)
+                      stop !}}}
 	   	   end if
    	  end subroutine check_switches !}}}
    
    ! PURPOSE:
    		    !Ensures resetAntMonth and resetAntDay have meaningful values
-   	  subroutine check_antMonth_antDay(uout,year,resetAntMonth,resetAntDay) !{{{
+   	  subroutine check_antMonth_antDay(uout,year,resetAntMonth,resetAntDay,stats) !{{{
    	  implicit none
    	  
    	     !FORMAL ARGUMENTS
    	     integer, intent(in) :: uout, year, resetAntMonth, resetAntDay
+   	     logical, intent(in) :: stats
    	     !-----------------------------------
    	     if(resetAntMonth > 12) then
-	   		  call error2(uout,"Reset_antecedent_month_&_day","month",12,0)
+	   		  call error2(uout,"Reset_antecedent_month_&_day","month",12,0,stats)
 	   	  end if
 	   	  if(resetAntMonth == 1 .or. &
 	   		  resetAntMonth == 3 .or. &
@@ -544,44 +561,48 @@ contains
 	   		  resetAntMonth == 10 .or. &
 	   		  resetAntMonth == 12) then
 	   			  if(resetAntDay > 31 ) then 
-	   			     call error2(uout,"Reset_antecedent_month_&_day","day",31,resetAntMonth)
+	   			     call error2(uout,"Reset_antecedent_month_&_day","day",31,resetAntMonth,stats)
 	   			  end if
 	   	  else if (resetAntMonth == 4 .or. &
 	   				  resetAntMonth == 6 .or. &
 	   				  resetAntMonth == 9 .or. &
 	   				  resetAntMonth == 11) then
 	   				     if(resetAntDay > 30) then
-	   				        call error2(uout,"Reset_antecedent_month_&_day","day",30,resetAntMonth)
+	   				        call error2(uout,"Reset_antecedent_month_&_day","day",30,resetAntMonth,stats)
 	   				     end if
 	   	  else if (resetAntMonth == 2) then
 	   	     if(((mod(year,4) == 0 .and. mod(year,100) /= 0) .or. mod(year,400) == 0)&
 	   			  .and. resetAntDay > 29) then
-	   			  call error2(uout,"Reset_antecedent_month_&_day","day",29,resetAntMonth)
+	   			  call error2(uout,"Reset_antecedent_month_&_day","day",29,resetAntMonth,stats)
 	   		  else if(resetAntDay > 28) then
-	   			  call error2(uout,"Reset_antecedent_month_&_day","day",28,resetAntMonth)		
+	   			  call error2(uout,"Reset_antecedent_month_&_day","day",28,resetAntMonth,stats)		
 	   		  end if
 	   	  end if
 	     end subroutine check_antMonth_antDay !}}}
    	  
    ! PURPOSE:
    !			 Adjusts values of limits when powerSwitch is set to true
-   	  subroutine set_power_limits(uout,lowLim,upLim) !{{{
+   	  subroutine set_power_limits(uout,lowLim,upLim,stats) !{{{
    	  implicit none
    	  
    	  ! FORMAL ARGUMENTS
    	  real, intent(inout) :: lowLim, upLim
    	  integer, intent(in) :: uout
+   	  logical, intent(in) :: stats
    	  !----------------------------------
    	  			 
    	  !If lower bound is greater than upper bound, end program, write to log
 	        	if(upLim < lowLim .and. upLim /= 0) then
-	            write(*,*) "The lower limit on the duration interval is greater than the upper"
-	            write(*,*) "limit. Adjust values in thresh_in.txt and restart thresh."
-	            write(*,*) 'Press Enter key to exit program.'
-	            read(*,*)
+	        	   if(stats)then
+                      write(*,*) "The lower limit on the duration interval is greater than the upper"
+                      write(*,*) "limit. Adjust values in thresh_in.txt and restart thresh."
+                      write(*,*) 'Press Enter key to exit program.'
+                      read(*,*)
+	            end if
 	            write(uout,*)"The lower limit on the duration interval is greater than the upper"
 	            write(uout,*)"limit. Adjust values in thresh_in.txt and restart thresh."
 	            write(*,*) "Thresh exited due to this error."
+	            close(uout)
 	            stop
 	         else !Checking to see if values should be set to +,- infinity		  
 			      if(lowLim == 0 .and. upLim == 0) then
@@ -602,23 +623,27 @@ contains
    	  
    !PURPOSE:
    !			Adjusts values of limits when polySwitch is set to true
-   	  subroutine set_poly_limits(uout,lowLim,upLim) !{{{
+   	  subroutine set_poly_limits(uout,lowLim,upLim,stats) !{{{
    	  implicit none
    	  
    	  !FORMAL ARGUMENTS
    	  real, intent(inout) :: lowLim, upLim
    	  integer, intent(in) :: uout
+   	  logical, intent(in) :: stats
    	  !----------------------------
    	  			 
    	  !if lower bound is greater than upper bound, end program, write to log
    	     if(upLim < lowLim) then
-   	        write(*,*) "The lower limit on the duration interval is greater than the upper"
-   	        write(*,*) "limit. Adjust values in thresh_in.txt and restart thresh."
-   	        write(*,*) 'Press Enter key to exit program.'
-   	        read(*,*)
+   	        if(stats)then
+                   write(*,*) "The lower limit on the duration interval is greater than the upper"
+                   write(*,*) "limit. Adjust values in thresh_in.txt and restart thresh."
+                   write(*,*) 'Press Enter key to exit program.'
+                   read(*,*)
+   	        end if
    	        write(uout,*) "The lower limit on the duration interval is greater than the upper"
    	        write(uout,*) "limit. Adjust values in thresh_in.txt and restart thresh."
    	        write(uout,*) "Thresh exited due to this error."
+   	        close(uout)
    	        stop
    	     end if
    	  end subroutine set_poly_limits !}}}
@@ -627,70 +652,82 @@ contains
    		    !message that will print and exit thresh from within.
    		    !Used primarily when a value from thresh_in.txt is different from
    		    !what the program expects.
-   	  subroutine error1(uout,var,val) !{{{
+     subroutine error1(uout,var,val,stats) !{{{
    	  implicit none
    	     !FORMAL ARGUMENTS
    	     integer, intent(in) :: uout
    	     character(*), intent(in) :: var, val
+             logical, intent(in) :: stats
    	     !------------------------------------------
    	      write(uout,*) var,' must be greater than ',val,'.'
-   			write(uout,*) 'Thresh exited due to an incompatible value.'
-   			write(*,*) var,' must be greater than ',val,'.'
-   			write(*,*) 'Edit thresh_in.txt and restart thresh.'
-   			write(*,*) 'Press Enter key to exit program.'
-   			read(*,*)
-   			stop
+              if(stats)then
+                 write(*,*) var,' must be greater than ',val,'.'
+                 write(*,*) 'Edit thresh_in.txt and restart thresh.'
+                 write(*,*) 'Press Enter key to exit program.'
+                 read(*,*)
+              end if
+              write(uout,*) 'Thresh exited due to an incompatible value.'
+              write(uout,*) var,' must be greater than ',val,'.'
+              write(uout,*) 'Edit thresh_in.txt and restart thresh.'
+              stop
    	     
-   	  end subroutine error1!}}}
+     end subroutine error1!}}}
    
    ! PURPOSE:
    		  	 !Condenses code in getinfo.f90, this is a standard error
    		  	 !message that will print and exit thresh from within.
    		  	 !Used specifically for resetAntMonth and resetAntDay errors.
-   	  subroutine error2(uout,var1,var2,val1,val2) !{{{
+     subroutine error2(uout,var1,var2,val1,val2,stats) !{{{
    	  implicit none
    	  
    	  !FORMAL ARGUMENTS
    	  integer, intent(in)   :: uout, val1, val2
    	  character(*), intent(in) :: var1, var2
+          logical, intent(in) :: stats
    	  !-------------------------------------
    	  	 
-   	  	  write(uout,"(A,A,A,A,I2)") var1, " has a ",var2," value that is greater than ",val1,"."
-   	  	  if(var2 == "day") then 
-   	  	     write(uout,*) "The reset month, ", val2, ", only has ", val1," days." 
-   	  	  end if
-	   	  write(uout,*) "Thresh exited due to this error."
-	   	  write(uout,*) "Edit thresh_in.txt and ensure the value of the ,",var2 &
-	   	  ,"is less than",val1 + 1,"."
-	   	  
-	   	  write(*,*) var1," has a ",var2," value that is greater than ",val1,"."
-	   	  if(var2 == "day") then 
-   	  	     write(*,*) "The reset month, ", val2, ", only has ", val1," days." 
-   	  	  end if
-	   	  write(*,*) "Edit thresh_in.txt and ensure the value of the reset day &
-	   	  &is less than", val1 + 1,"."
-	   	  write(*,*) 'Press Enter key to exit program.'
-	   	  read(*,*)
-	   	  stop
-   	  end subroutine error2 !}}}
+          write(uout,"(A,A,A,A,I2)") var1, " has a ",var2," value that is greater than ",val1,"."
+          if(var2 == "day") then 
+             write(uout,*) "The reset month, ", val2, ", only has ", val1," days." 
+          end if
+          write(uout,*) "Thresh exited due to this error."
+          write(uout,*) "Edit thresh_in.txt and ensure the value of the ,",var2 &
+          ,"is less than",val1 + 1,"."
+          close(uout)
+          if(stats)then
+             write(*,*) var1," has a ",var2," value that is greater than ",val1,"."
+             if(var2 == "day") then 
+                write(*,*) "The reset month, ", val2, ", only has ", val1," days." 
+              end if
+             write(*,*) "Edit thresh_in.txt and ensure the value of the reset day &
+             &is less than", val1 + 1,"."
+             write(*,*) 'Press Enter key to exit program.'
+             read(*,*)
+          end if
+          stop
+     end subroutine error2 !}}}
    ! PURPOSE:
-   		    !Condenses code in getinfo.f90, this is a standard error
-   		    !message that will print and exit thresh from within.
-   		    !Used primarily when a value from thresh_in.txt is different from
-   		    !what the program expects.
-   	  subroutine error3(uout,var) !{{{
-   	  implicit none
-   	     !FORMAL ARGUMENTS
-   	     integer, intent(in) :: uout
-   	     character(*), intent(in) :: var
-   	     !------------------------------------------
-   	      write(uout,*) var,' must be an integer.'
-   			write(uout,*) 'Thresh exited due to an incompatible value.'
-   			write(*,*) var,' must be an integer.'
-   			write(*,*) 'Edit thresh_in.txt and restart thresh.'
-   			write(*,*) 'Press Enter key to exit program.'
-   			read(*,*)
-   			stop
+       !Condenses code in getinfo.f90, this is a standard error
+       !message that will print and exit thresh from within.
+       !Used primarily when a value from thresh_in.txt is different from
+       !what the program expects.
+     subroutine error3(uout,var,stats) !{{{
+     implicit none
+        !FORMAL ARGUMENTS
+        integer, intent(in) :: uout
+        character(*), intent(in) :: var
+        logical, intent(in) :: stats
+        !------------------------------------------
+         write(uout,*) var,' must be an integer.'
+         write(uout,*) 'Thresh exited due to an incompatible value.'
+         write(uout,*) 'Edit thresh_in.txt and restart thresh.'
+         if(stats)then
+            write(*,*) var,' must be an integer.'
+            write(*,*) 'Edit thresh_in.txt and restart thresh.'
+            write(*,*) 'Press Enter key to exit program.'
+            read(*,*)
+         end if
+         stop
    	     
-   	  end subroutine error3!}}}
+     end subroutine error3!}}}
 end module 

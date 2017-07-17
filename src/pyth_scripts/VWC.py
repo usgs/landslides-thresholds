@@ -46,7 +46,7 @@ def end_plot(name=None, cols=5): # Set legend and output target
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Volumetric Water content')
 
 # Set fontsize for plots
@@ -175,7 +175,7 @@ def end_plot(name=None, cols=5):
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
+xtext = ('Date and time')
 ytext = ('Volumetric Water content')
 
 # Plot and save graph of volumetric water content at all stations

@@ -68,9 +68,9 @@ def make_plot(title, x1, y1, x2, y2, name=None, cols=5, yMin=0, yMax=0.5, y2Max=
 disclamers = ('\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
-xtext = ('Date & Time')
-ytext = ('15-minute rainfall, inches')
-y2text = ('Daily rainfall, inches')
+xtext = ('Date and time')
+ytext = ('15-minute rainfall, in inches')
+y2text = ('Daily rainfall, in inches')
 
 # Process data for Marine View Drive (Stable Coastal Bluff site)
 # Import data and assign to arrays
@@ -84,7 +84,8 @@ rain_in_mvd = rain_tipCount * 0.01
 # Create series and resample to obtain daily rainfall amounts
 tstamp = num2date(column_0_mvd, tz=None)
 ts = Series(rain_in_mvd, index=tstamp)
-daily_in_mvd = ts.resample('d', how='sum')
+daily_in_mvd = ts.resample('d', how='sum') # Old syntax for pandas pre 18.0.
+# daily_in_mvd = ts.resample('d').sum() # New syntax for pandas 18.0 (March 13, 2016)
 
 make_plot('Rainfall at VH', column_0_mvd, rain_in_mvd, daily_in_mvd.index, daily_in_mvd.values, name='MVD116_rain_in_day.png')
 #
@@ -101,7 +102,8 @@ rain_in_mlp = rain_tipCount * 0.01
 # Create series and resample to obtain daily rainfall amounts
 tstamp = num2date(column_0_mlp, tz=None)
 ts = Series(rain_in_mlp, index=tstamp)
-daily_in_mlp = ts.resample('d', how='sum')
+daily_in_mlp = ts.resample('d', how='sum') # Old syntax for pandas pre 18.0.
+# daily_in_mlp = ts.resample('d').sum() # New syntax for pandas 18.0 (March 13, 2016)
 #
 make_plot('Rainfall at M1', column_0_mlp, rain_in_mlp, daily_in_mlp.index, daily_in_mlp.values, name='MLP_rain_in_day.png')
 #
@@ -118,7 +120,8 @@ rain_in_mwwd = rain_tipCount * 0.01
 # Create series and resample to obtain daily rainfall amounts
 tstamp = num2date(column_0_mwwd, tz=None)
 ts = Series(rain_in_mwwd, index=tstamp)
-daily_in_mwwd = ts.resample('d', how='sum')
+daily_in_mwwd = ts.resample('d', how='sum') # Old syntax for pandas pre 18.0.
+daily_in_mwwd = ts.resample('d').sum() # New syntax for pandas 18.0 (March 13, 2016)
 #
 make_plot('Rainfall at M2', column_0_mwwd, rain_in_mwwd, daily_in_mwwd.index, daily_in_mwwd.values, name='MWWD_rain_in_day.png')
 #
@@ -135,7 +138,8 @@ rain_in_wca = rain_tipCount * 0.01
 # Create series and resample to obtain daily rainfall amounts
 tstamp = num2date(column_0_wca, tz=None)
 ts = Series(rain_in_wca, index=tstamp)
-daily_in_wca = ts.resample('d', how='sum')
+daily_in_wca = ts.resample('d', how='sum') # Old syntax for pandas pre 18.0.
+daily_in_wca = ts.resample('d').sum() # New syntax for pandas 18.0 (March 13, 2016)
 #
 make_plot('Rainfall at LS-a', column_0_wca, rain_in_wca, daily_in_wca.index, daily_in_wca.values, name='MWatA_rain_in_day.png')
 #
