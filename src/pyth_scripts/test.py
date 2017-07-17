@@ -137,7 +137,7 @@ plot_threshold()
 end_plot(name='cmtrsea.png')
 
 #Plot Precipitation History for Recent-Antecedent Threshold at Boeing field 
-init_plot('360-hour precipitation history near Seattle, Washington')
+init_plot('360-hour precipitation history near Seattle, Washington,')
 
 #set output 'boeing.png'
 data01 = readfiles(['data/ThTSplot360hour01.txt'])
@@ -156,7 +156,7 @@ plot_threshold()
 end_plot(name='boeing.png', cols=3)
 
 #Plot Precipitation History for Recent-Antecedent Threshold at SeaTac
-init_plot('360-hour precipitation history near Seattle, Washington')
+init_plot('360-hour precipitation history near Seattle, Washington,')
 
 #set output 'seatac.png'
 data03 = readfiles(['data/ThTSplot360hour03.txt'])
@@ -175,7 +175,7 @@ plot_threshold()
 end_plot(name='seatac.png', cols=3)
 
 # Plot Precipitation history for Recent-Antecedent Threshold at Everett
-init_plot('360-hour precipitation history in Everett, Washington')
+init_plot('360-hour precipitation history in Everett, Washington,')
 
 #set output 'paine.png'
 data02 = readfiles(['data/ThTSplot360hour02.txt'])
@@ -194,7 +194,7 @@ plot_threshold()
 end_plot(name='paine.png', cols=3)
 
 # Plot Precipitation history for Recent-Antecedent Threshold at Tacoma Narrows Airport
-init_plot('360-hour precipitation history in Tacoma, Washington')
+init_plot('360-hour precipitation history in Tacoma, Washington,')
 
 #set output 'tacoma.png'
 data04 = readfiles(['data/ThTSplot360hour04.txt'])
@@ -370,7 +370,7 @@ markers = [ ('b-', 'Seattle, Boeing Field'),
            ('r-', 'Tacoma Narrows Airport')
            ]
 
-init_plot('360-hour Precipitation History near Seattle, Washington,,')
+init_plot('360-hour Precipitation History near Seattle, Washington,')
 import datetime as dt
 
 import matplotlib.dates as mdates
@@ -443,7 +443,7 @@ markers = [ ('b-', 'Seattle, Boeing Field'),
            ('r-', 'Tacoma Narrows Airport')
            ]
 
-init_plot('360-hour Intensity-Duration History near Seattle, Washington,,')
+init_plot('360-hour Intensity-Duration History near Seattle, Washington,')
 
 
 for i in range(4):

@@ -485,7 +485,7 @@ disclamers = ('\n with respect to the Intensity-Duration Index'
 xtext = ('Date and time')
 ytext = ('Intensity-Duration Index')
 
-init_plot('360-hour Intensity-Duration History and Forecast near Seattle, Washington,,')
+init_plot('360-hour Intensity-Duration History and Forecast near Seattle, Washington,')
 
 for i in range(4): # draw time series of threshold index values, all stations
     for d in data_list[i]:

@@ -173,7 +173,7 @@ end_plot(name='Muk_cmtr.png')
 # ------------------------
 
 #Plot Precipitation History for 3-Day/Prior 15-Day Threshold
-init_plot('360-hour precipitation history in Mukilteo, Washington')
+init_plot('360-hour precipitation history in Mukilteo, Washington,')
 
 data01 = readfiles(['data/ThTSplot360hour01.txt'])
 for d in data01: # Trace 15-day history of conditions relative to threshold
@@ -192,7 +192,7 @@ end_plot(name='MVD116_CT_hist.png', cols=3)
 
 # ------------------------
 
-init_plot('360-hour precipitation history in Mukilteo, Washington')
+init_plot('360-hour precipitation history in Mukilteo, Washington,')
 
 data02 = readfiles(['data/ThTSplot360hour02.txt'])
 for d in data02: # Trace 15-day history of conditions relative to threshold
@@ -211,7 +211,7 @@ end_plot(name='MWatA_CT_hist.png', cols=3)
 
 # ------------------------
 
-init_plot('360-hour precipitation history in Mukilteo, Washington')
+init_plot('360-hour precipitation history in Mukilteo, Washington,')
 
 data03 = readfiles(['data/ThTSplot360hour03.txt'])
 for d in data03: # Trace 15-day history of conditions relative to threshold
@@ -230,7 +230,7 @@ end_plot(name='MLP_CT_hist.png', cols=3)
 
 # ------------------------
 
-init_plot('360-hour precipitation history in Mukilteo, Washington')
+init_plot('360-hour precipitation history in Mukilteo, Washington,')
 
 data04 = readfiles(['data/ThTSplot360hour04.txt'])
 for d in data04: # Trace 15-day history of conditions relative to threshold
@@ -423,7 +423,7 @@ markers = [ ('b-', 'VH'),
            ]
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History in Mukilteo, Washington,,')
+init_plot('360-hour Precipitation History in Mukilteo, Washington,')
 
 data_list = [data01, data02, data03, data04]
 for i in range(4):
@@ -478,7 +478,7 @@ markers = [ ('b-', 'VH'),
            ('r-', 'M2')
            ]
 
-init_plot('360-hour Intensity-Duration History in Mukilteo, Washington')
+init_plot('360-hour Intensity-Duration History in Mukilteo, Washington,')
 
 for i in range(4): # draw time series of threshold index values, all stations
     for d in data_list[i]:

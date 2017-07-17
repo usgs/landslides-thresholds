@@ -417,7 +417,7 @@ plot_threshold()
 end_plot(name='cmtrsea.png')
 
 #Plot Precipitation Histories for 3-Day/Prior 15-Day Threshold
-init_plot('360-hour precipitation history near Seattle, Washington')
+init_plot('360-hour precipitation history near Seattle, Washington,')
 
 #set output 'boeing.png'
 data01 = readfiles(['data/ThTSplot360hour01.txt'])
@@ -435,7 +435,7 @@ plot_threshold()
 
 end_plot(name='boeing.png', cols=3)
 
-init_plot('360-hour precipitation history near Seattle, Washington')
+init_plot('360-hour precipitation history near Seattle, Washington,')
 
 #set output 'seatac.png'
 data03 = readfiles(['data/ThTSplot360hour03.txt'])
@@ -453,7 +453,7 @@ plot_threshold()
 
 end_plot(name='seatac.png', cols=3)
 
-init_plot('360-hour precipitation history in Everett, Washington')
+init_plot('360-hour precipitation history in Everett, Washington,')
 
 #set output 'paine.png'
 data02 = readfiles(['data/ThTSplot360hour02.txt'])
@@ -471,7 +471,7 @@ plot_threshold()
 
 end_plot(name='paine.png', cols=3)
 
-init_plot('360-hour precipitation history in Tacoma, Washington')
+init_plot('360-hour precipitation history in Tacoma, Washington,')
 
 #set output 'tacoma.png'
 data04 = readfiles(['data/ThTSplot360hour04.txt'])
@@ -666,7 +666,7 @@ markers = [ ('b-', 'Seattle, Boeing Field'),
            ]
 
 # Make plots of AWI
-init_plot('360-hour Precipitation History near Seattle, Washington,,')
+init_plot('360-hour Precipitation History near Seattle, Washington,')
 
 data_list = [data01, data02, data03, data04]
 for i in range(4):
@@ -736,7 +736,7 @@ markers = [ ('b-', 'Seattle, Boeing Field'),
            ('r-', 'Tacoma Narrows Airport')
            ]
 
-init_plot('360-hour Intensity-Duration History near Seattle, Washington,,')
+init_plot('360-hour Intensity-Duration History near Seattle, Washington,')
 
 
 for i in range(4):
