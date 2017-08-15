@@ -464,7 +464,7 @@ contains
 	      	      write(*,*) 'Press Enter key to exit program.'
 	      	      read(*,*)
 	      	   end if
-	      	   stop	  
+	      	   stop 'no ID'  
    	     end if !}}}
    	      if(powerSwitch .and. polySwitch .and. interSwitch) then !{{{
    		     write(uout,*) "All three Intensity-Duration flags are &
@@ -480,7 +480,7 @@ contains
 	   		     write(*,*) 'Press Enter key to exit program.'
 	   		     read(*,*)
    		     end if
-	   		     stop !}}}
+	   		     stop 'ID flags' !}}}
 	   	   else if(powerSwitch .and. polySwitch) then !{{{
 	   	      if(stats)then
 	   		     write(*,*) "Power law and polynomial interpolation"
@@ -499,7 +499,7 @@ contains
                              write(uout,*) "Edit thresh_in.txt and ensure that only one &
                                             &ID flag is set to .TRUE."
                              close(uout)
-	   		     stop !}}}
+	   		     stop 'ID power-law vs polynomial flags'!}}}
 	         else if(powerSwitch .and. interSwitch) then !{{{
 	            if(stats)then
 	      	        write(*,*) "Power law and linear interpolation"
@@ -518,7 +518,7 @@ contains
    		     write(uout,*) "Edit thresh_in.txt and ensure that only one &
    		     					 &ID flag is set to .TRUE."
                      close(uout)
-   		     stop  !}}}
+   		     stop 'ID power-law vs linear flags' !}}}
 	         else if (polySwitch .and. interSwitch) then !{{{
 	            if(stats)then
                       write(*,*) "Polynomial interpolation and linear interpolation"
@@ -537,7 +537,7 @@ contains
                       write(uout,*) "Edit thresh_in.txt and ensure that only one &
                                      &ID flag is set to .TRUE."
                       close(uout)
-                      stop !}}}
+                      stop 'ID polynomial vs linear flags'!}}}
 	   	   end if
    	  end subroutine check_switches !}}}
    
@@ -603,7 +603,7 @@ contains
 	            write(uout,*)"limit. Adjust values in thresh_in.txt and restart thresh."
 	            write(*,*) "Thresh exited due to this error."
 	            close(uout)
-	            stop
+	            stop 'duration limits'
 	         else !Checking to see if values should be set to +,- infinity		  
 			      if(lowLim == 0 .and. upLim == 0) then
 				      lowLim = 0-huge(lowLim)
@@ -644,7 +644,7 @@ contains
    	        write(uout,*) "limit. Adjust values in thresh_in.txt and restart thresh."
    	        write(uout,*) "Thresh exited due to this error."
    	        close(uout)
-   	        stop
+   	        stop 'duration limits 2'
    	     end if
    	  end subroutine set_poly_limits !}}}
    ! PURPOSE:
@@ -669,7 +669,7 @@ contains
               write(uout,*) 'Thresh exited due to an incompatible value.'
               write(uout,*) var,' must be greater than ',val,'.'
               write(uout,*) 'Edit thresh_in.txt and restart thresh.'
-              stop
+              stop 'incompatible values'
    	     
      end subroutine error1!}}}
    
@@ -704,7 +704,7 @@ contains
              write(*,*) 'Press Enter key to exit program.'
              read(*,*)
           end if
-          stop
+          stop 'antecedent date'
      end subroutine error2 !}}}
    ! PURPOSE:
        !Condenses code in getinfo.f90, this is a standard error
@@ -727,7 +727,7 @@ contains
             write(*,*) 'Press Enter key to exit program.'
             read(*,*)
          end if
-         stop
+         stop 'integer type'
    	     
      end subroutine error3!}}}
 end module 

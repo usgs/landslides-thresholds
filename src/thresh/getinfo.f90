@@ -388,7 +388,7 @@ contains
    			   write(*,*) 'Press Enter key to exit program.'
    			   read(*,*)
    			end if
-   			stop	 
+            stop 'RA threshold' 
 	      end if
 	  
 	   !Ensuring year has a meaningful value
@@ -676,7 +676,7 @@ contains
     	                  	   unused(k) = unused(unusedSize)
     	                  	   unused(unusedSize) = temp
     	                  		unusedSize = unusedSize - 1
-    	                  		!stop trying fo find a match, return control flow to do j = 1... loop
+    	                  		!stop trying to find a match, return control flow to do j = 1... loop
     	                  		exit
     	                  	end if
     	                  end do
