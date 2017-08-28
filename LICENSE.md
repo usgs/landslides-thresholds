@@ -14,8 +14,3 @@ Sample shell scripts are included to demonstrate how the Python scripts and Fort
 
 The Python and Shell scripts in this distribution make calls to a number of Unix/Linux commands for text filtering and file retrieval.  Using this distribution under the Windows operating system requires installation of Cygwin (http://cygwin.com) and a package of Unix commands that have been ported to Windows and are available at http://unxutils.sourceforge.net/.
 
-Disclaimer
-==========
-
-This software is preliminary or provisional and is subject to revision. It is being provided to meet the need for timely best science. The software has not received final approval by the U.S. Geological Survey (USGS). No warranty, expressed or implied, is made by the USGS or the U.S. Government as to the functionality of the software and related material nor shall the fact of release constitute any such warranty. The software is provided on the condition that neither the USGS nor the U.S. Government shall be held liable for any damages resulting from the authorized or unauthorized use of the software.
-

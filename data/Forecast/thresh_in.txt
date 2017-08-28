@@ -26,7 +26,7 @@ Reset_antecedent_month_&_day,0,0
 Seasonal_Antecedent_Threshold,0,in
 Run_Ave_Int_Threshold,0.12
 AWI_Threshold,0.02
-Ant_Water_Index_Field_Cap,0.18, mt
+Ant_Water_Index_Field_Cap,0.18, m
 AWI_drainage_Constant,0.01
 Monthly_Evap_Consts, 0.054,0.11,0.2,0.43,0.54,0.68,0.72,0.71,0.47,0.17,0.076,0.045
 Time_Zone_Offset,0

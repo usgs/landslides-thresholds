@@ -50,8 +50,8 @@ contains
 	  'Vicinity of <br>Rain Gage',h2,h1,&
           Tantecedent,'-h Antecedent Total<br>(',precipUnit,')',h2,h1,&
           Trecent,'-h RecentTotal<br>(',precipUnit,')',h2,h1,&
-          'Average<br>Intensity<br>(',precipUnit,'/hour)',h2,&
-          h1,'Duration of<br>Current Storm<br>(hours)',h2,h1,'Time and Date',h2,r2
+          'Average<br>Intensity<br>(',precipUnit,'/h)',h2,&
+          h1,'Duration of<br>Current Storm<br>(h)',h2,h1,'Time and Date',h2,r2
 
 ! Assign proper values to each variable. Used to fill the table.
 	do i=1,numStations
