@@ -31,4 +31,4 @@ The basic command is `python setup.py install`.  For example, if the xmltodict f
 	cd ~/anaconda
 	./bin/python ~/Desktop/xmltodict-0.10.2/setup.py install
 
-Note that it might be necessary to copy the files xmltodict.py and xmltodict.pyc to the folder ~/anaconda/lib/python2.7/site-packages/ after running setup.
+Note that it might be necessary to copy the files *xmltodict.py* and *xmltodict.pyc* to the folder *~/anaconda/lib/python2.7/site-packages/* after running setup.
