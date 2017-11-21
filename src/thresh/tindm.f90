@@ -65,12 +65,12 @@
 	  write(un(k),*) pd,' Maximum Daily Values for Thresholds '
 	  write(un(k),*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation),&
             &' Precipitation units: ', precipUnit
-	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-h Precip.',&
-            tb,Trecent,'-h Precip.',tb,'Rec./Antec. Index',tb,&
+	  write(un(k),*) pd,' Station ',tb,' Date',tb,Tantecedent,'-h precip.',&
+            tb,Trecent,'-h precip.',tb,'RA Index',tb,&
 	    'Intensity',tb,'Log10(Intensity)',tb,&
-	    'Duration',tb,'Intensity-Duration Index',tb,&
-	    AntecedentHeader,tb,trim(TavgIntensityF),'-h Intensity',tb,&
-	    'Combined Rec./Antec. & Intensity Index'
+	    'Duration',tb,'ID Index',tb,&
+	    AntecedentHeader,tb,trim(TavgIntensityF),'-h intensity',tb,&
+	    'Combined RA and intensity index'
 	  end do
 	  
 ! find maximum daily value of threshold index & associated values	

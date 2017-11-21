@@ -66,18 +66,18 @@
 	write(uout,*) pd,' Time-Series Plot File for Rainfall Thresholds'
 	write(uout,*) pd,' Station ',trim(stationNumber),': ', trim(stationLocation),&
           &' Precipitation units: ', precipUnit
-	write(uout,*) pd,' Time and Date',tb,&
-	              'Hourly Precip.',tb,&
-	              Tantecedent,'-h Precip.',tb,&
-	              Trecent,'-h Precip.',tb,&
+	write(uout,*) pd,' Time and date',tb,&
+	              'Hourly precip.',tb,&
+	              Tantecedent,'-h precip.',tb,&
+	              Trecent,'-h precip.',tb,&
 	              'Intensity',tb,&
 	              'Log10(Intensity)',tb,&
 	              'Duration',tb,&
-	              'Log10('//trim(TavgIntensityF)//'-h Intensity)',tb,&
-	              trim(TavgIntensityF)//'-h Intensity',tb,&
-	              'Recent/Antecedent Index',tb,&
-	              'Intensity-Duration Index',tb,&
-	              trim(TavgIntensityF),'-h Intensity Index',tb,&
+	              'Log10('//trim(TavgIntensityF)//'-h intensity)',tb,&
+	              trim(TavgIntensityF)//'-h intensity',tb,&
+	              'RA Index',tb,&
+	              'ID Index',tb,&
+	              trim(TavgIntensityF),'-h intensity index',tb,&
 	              AntecedentHeader
 	  
 	do j=(1+stationPtr-ctrHolder*rph),stationPtr

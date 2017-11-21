@@ -61,11 +61,11 @@
    write(TavgIntensityF,'(F8.3)') TavgIntensity
    TavgIntensityF=adjustl(TavgIntensityF)
    select case (trim(adjustl(xid)))
-   case('ExRA_'); header='Recent & Antecedent'
-   case('ExID_'); header='Intensity-Duration'
-   case('ExIDA'); header='Int.-Dur. & Ant. Water'
-   case('ExIR_'); header=trim(TavgIntensityF)//'-h Intensity'
-   case('ExIRA'); header='Intensity & Cumulative'
+   case('ExRA_'); header='Recent-antecedent'
+   case('ExID_'); header='Intensity-duration'
+   case('ExIDA'); header='ID and AWI'
+   case('ExIR_'); header=trim(TavgIntensityF)//'-h intensity'
+   case('ExIRA'); header='Intensity-cumulative'
    end select
    open(uout,file=outputFile,status='unknown',position='rewind',err=125)
 	
@@ -73,20 +73,20 @@
    write(uout,*) pd,' Times of exceedance for rainfall threshold: '//header
    write(uout,*) pd,' Station ',trim(stationNumber),': ',trim(stationLocation),&
     &' Precipitation units: ', precipUnit
-   write(uout,*) pd,' Time and Date',tb,&
-                 'Hourly Precip.',tb,&
-                 Tantecedent,'-h Precip.',tb,&
-                 Trecent,'-h Precip.',tb,&
+   write(uout,*) pd,' Time and date',tb,&
+                 'Hourly precip.',tb,&
+                 Tantecedent,'-h precip.',tb,&
+                 Trecent,'-h precip.',tb,&
                  'Intensity',tb,&
                  'Log10(Intensity)',tb,&
                  'Duration',tb,&
-	         'Log10('//trim(TavgIntensityF)//'-h Intensity)',tb,&
-                 trim(TavgIntensityF)//'-h Intensity',tb,&
-                 'Recent/Antecedent Index',tb,&
-                 'Intensity-Duration Index',tb,&
-                 trim(TavgIntensityF),'-h Intensity Index',tb,&
+	         'Log10('//trim(TavgIntensityF)//'-h intensity)',tb,&
+                 trim(TavgIntensityF)//'-h intensity',tb,&
+                 'RA index',tb,&
+                 'ID Index',tb,&
+                 trim(TavgIntensityF),'-h intensity Index',tb,&
                  AntecedentHeader,tb,&
-                 'Duration Descripton'
+                 'Duration descripton'
 
 ! Read data and write time-series plot file
    tptrm1=pt(1)-1
