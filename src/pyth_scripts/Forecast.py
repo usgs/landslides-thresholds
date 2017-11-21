@@ -145,7 +145,7 @@ data_merge('KPAE', '02', 2)
 data_merge('KSEA', '03', 3)
 data_merge('KTIW', '04', 4)
 
-#Run thresh to compute Precipitation Thresholds
+#Run thresh to compute Precipitation thresholds
 # If os.name returns "nt' then use a Windows-specific path name
 sys_name = os.name
 if sys_name == 'nt':
@@ -189,7 +189,7 @@ def plot_threshold(): # Draw and label threshold line
 #     ex_hi_prob = Extrapolated_threshold(x,hip_ra_intercept,hip_ra_slope)
 #     plt.plot(ex_hi_prob[0], ex_hi_prob[1], 'm:')
    
-# Set Threshold parameters
+# Set threshold parameters
 ra_x_min = 0.5
 ra_x_max = 4.75
 ra_intercept = 3.5
@@ -387,7 +387,7 @@ def AWI(numbers): # Define threshold value
 def plot_AWI(): # Draw threshold line
     slide = AWI(x)
     plt.plot(slide[0], slide[1], 'k-',
-             linewidth=2, label='Wet Antecedent Conditions: AWI=0.02')
+             linewidth=2, label='Wet Antecedent conditions: AWI=0.02')
 
 def readfiles(file_list):# Import data from text files
     data=[]
@@ -413,13 +413,13 @@ def end_plot(name=None, cols=3): # Set legend and output
     if name:
         plt.savefig(name, bbox_inches='tight')
 
-disclaimers = ('\n with respect to the Antecedent Water Index'
+disclaimers = ('\n with respect to the Antecedent water index'
                ' for the occurrence of landslides'
                '\nUSGS PROVISIONAL DATA'
                '\nSUBJECT TO REVISION'
                )
 xtext = ('Date and time')
-ytest = ('Antecedent Water Index, in meters')
+ytest = ('Antecedent water index, in meters')
 
 # Make plots of AWI
 init_plot('360-hour Precipitation History and Forecast near Seattle, Washington,')
@@ -451,7 +451,7 @@ plot_AWI()
 plt.axvspan(x[336],x[359],facecolor='yellow', alpha=0.5, label = 'Forecast') # Shade area of forecast
 end_plot(name='awi_f_KPAE.png')
 
-# Plot Time Series I-D Threshold index for each station
+# Plot Time Series I-D threshold index for each station
 godt_id_label = 'I=3.257*D^(-1.13)'
 
 def ID(numbers): # Define threshold for ID-threshold index plot (threshold index = 1.0)
@@ -466,7 +466,7 @@ def plot_ID(): # Draw and label threshold index
     """ plot Threshold(Black)"""
     slide= ID(x)
     plt.plot(slide[0], slide[1], 'k-',
-             linewidth=2, label='I-D Threshold, ' + godt_id_label)
+             linewidth=2, label='I-D threshold, ' + godt_id_label)
 
 def init_plot(title, yMin=0., yMax=2.): # Set plot parameters and dimensions
     """ Init plot """
@@ -477,15 +477,15 @@ def init_plot(title, yMin=0., yMax=2.): # Set plot parameters and dimensions
     plt.ylim(yMin,yMax)
     plt.grid()
 
-disclamers = ('\n with respect to the Intensity-Duration Index'
+disclamers = ('\n with respect to the Intensity-duration index'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date and time')
-ytext = ('Intensity-Duration Index')
+ytext = ('Intensity-duration index')
 
-init_plot('360-hour Intensity-Duration History and Forecast near Seattle, Washington,')
+init_plot('360-hour Intensity-duration History and Forecast near Seattle, Washington,')
 
 for i in range(4): # draw time series of threshold index values, all stations
     for d in data_list[i]:
@@ -499,7 +499,7 @@ plt.axvspan(x[336],x[359],facecolor='yellow', alpha=0.5, label = 'Forecast') # S
 plot_ID()
 end_plot(name='id_index_f.png')
 
-init_plot('360-hour Intensity-Duration History and Forecast at Everett, Paine Field, KPAE,')
+init_plot('360-hour Intensity-duration History and Forecast at Everett, Paine Field, KPAE,')
 
 #KPAE
 i=1

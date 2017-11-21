@@ -329,7 +329,7 @@ def plot_threshold():  # Draw and label threshold line
 #     ex_hi_prob = Extrapolated_threshold(x,hip_ra_intercept,hip_ra_slope)
 #     plt.plot(ex_hi_prob[0], ex_hi_prob[1], 'm:')
    
-# Set Threshold parameters
+# Set threshold parameters
 ra_x_min = 0.5
 ra_x_max = 4.75
 ra_intercept = 3.5
@@ -489,7 +489,7 @@ plot_threshold()
 
 end_plot(name='tacoma.png', cols=3)
 
-#Plot Precipitation Intensity and Duration
+#Plot Precipitation Intensity and duration
 def intensdur(numbers,dur_min,dur_max,coeff,expon): # Compute values of I-D threshold curve within defined limits
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
@@ -522,7 +522,7 @@ def plot_intensdur(): # Draw threshold curve
     ex_g_slide = Extrapolated_intensdur(x,godt_coeff,godt_expon)
     plt.plot(ex_g_slide[0], ex_g_slide[1], 'r:')
 
-# Set Threshold parameters
+# Set threshold parameters
 # dur_min = 12.
 # dur_max = 60.
 # coeff = 0.193
@@ -606,7 +606,7 @@ plt.gca().xaxis.set_minor_locator(minorLocator)
 
 end_plot(name='idtrsea.png')
 
-#Plot Antecedent Water Index
+#Plot Antecedent water index
 def AWI(numbers): # Define threshold value
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
@@ -619,7 +619,7 @@ def plot_AWI(): # Draw threshold line
     """ plot Threshold(Black)"""
     slide= AWI(x)
     plt.plot(slide[0], slide[1], 'k-',
-             linewidth=2, label='Wet Antecedent Conditions: AWI=0.02')
+             linewidth=2, label='Wet antecedent conditions: AWI=0.02')
 
 def readfiles(file_list): # Import data from text files
     """ read <TAB> delemited files as strings
@@ -650,13 +650,13 @@ def end_plot(name=None, cols=3): # Set legend and output
     if name:
         plt.savefig(name, bbox_inches='tight')
 
-disclamers = ('\n with respect to the Antecedent Water Index'
+disclamers = ('\n with respect to the Antecedent water index'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date and time')
-ytext = ('Antecedent Water Index, in meters')
+ytext = ('Antecedent water index, in meters')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
 markers = [ ('b-', 'Seattle, Boeing Field'),
@@ -696,7 +696,7 @@ plot_AWI()
 
 end_plot(name='awi_KPAE.png')
 
-# Plot Time Series I-D Threshold index for each station
+# Plot Time Series I-D threshold index for each station
 def ID(numbers): # Define threshold for ID-threshold index plot (threshold index = 1.0)
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
@@ -709,7 +709,7 @@ def plot_ID(): # Draw and label threshold index
     """ plot Threshold(Black)"""
     slide= ID(x)
     plt.plot(slide[0], slide[1], 'k-',
-             linewidth=2, label='I-D Threshold, ' + godt_id_label)
+             linewidth=2, label='I-D threshold, ' + godt_id_label)
 
 def init_plot(title, yMin=0., yMax=2.): # Set plot parameters and dimensions
     """ Init plot """
@@ -721,13 +721,13 @@ def init_plot(title, yMin=0., yMax=2.): # Set plot parameters and dimensions
     plt.ylim(yMin,yMax)
     plt.grid()
 
-disclamers = ('\n with respect to the Intensity-Duration Index'
+disclamers = ('\n with respect to the Intensity-duration index'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date and time')
-ytext = ('Intensity-Duration Index')
+ytext = ('Intensity-duration index')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
 markers = [ ('b-', 'Seattle, Boeing Field'),
@@ -736,7 +736,7 @@ markers = [ ('b-', 'Seattle, Boeing Field'),
            ('r-', 'Tacoma Narrows Airport')
            ]
 
-init_plot('360-hour Intensity-Duration History near Seattle, Washington,')
+init_plot('360-hour Intensity-duration History near Seattle, Washington,')
 
 
 for i in range(4):
@@ -752,7 +752,7 @@ plot_ID()
 
 end_plot(name='id_index.png')
 
-init_plot('360-hour Intensity-Duration History at Everett, Paine Field, KPAE,')
+init_plot('360-hour Intensity-duration History at Everett, Paine Field, KPAE,')
 
 i = 1
 for d in data_list[i]: # draw time series of threshold index values, one station

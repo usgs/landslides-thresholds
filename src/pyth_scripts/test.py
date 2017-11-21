@@ -24,7 +24,7 @@ import glob
 from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 sys_name = os.name
-# Run thresh to compute Precipitation Thresholds
+# Run thresh to compute Precipitation thresholds
 # If os.name returns "nt' then use a Windows-specific path name
 if sys_name == 'nt':
     thresh_path=os.path.normpath('../../bin/thresh.exe')
@@ -136,7 +136,7 @@ plot_threshold()
 
 end_plot(name='cmtrsea.png')
 
-#Plot Precipitation History for Recent-Antecedent Threshold at Boeing field 
+#Plot Precipitation History for Recent-Antecedent threshold at Boeing field 
 init_plot('360-hour precipitation history near Seattle, Washington,')
 
 #set output 'boeing.png'
@@ -155,7 +155,7 @@ plot_threshold()
 
 end_plot(name='boeing.png', cols=3)
 
-#Plot Precipitation History for Recent-Antecedent Threshold at SeaTac
+#Plot Precipitation History for Recent-Antecedent threshold at SeaTac
 init_plot('360-hour precipitation history near Seattle, Washington,')
 
 #set output 'seatac.png'
@@ -174,7 +174,7 @@ plot_threshold()
 
 end_plot(name='seatac.png', cols=3)
 
-# Plot Precipitation history for Recent-Antecedent Threshold at Everett
+# Plot Precipitation history for Recent-Antecedent threshold at Everett
 init_plot('360-hour precipitation history in Everett, Washington,')
 
 #set output 'paine.png'
@@ -193,7 +193,7 @@ plot_threshold()
 
 end_plot(name='paine.png', cols=3)
 
-# Plot Precipitation history for Recent-Antecedent Threshold at Tacoma Narrows Airport
+# Plot Precipitation history for Recent-Antecedent threshold at Tacoma Narrows Airport
 init_plot('360-hour precipitation history in Tacoma, Washington,')
 
 #set output 'tacoma.png'
@@ -212,7 +212,7 @@ plot_threshold()
 
 end_plot(name='tacoma.png', cols=3)
 
-#Plot Precipitation Intensity and Duration
+#Plot Precipitation Intensity and duration
 def intensdur(numbers):
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
@@ -310,7 +310,7 @@ plt.gca().xaxis.set_minor_locator(minorLocator)
 
 end_plot(name='idtrsea.png')
 
-#Plot Antecedent Water Index
+#Plot Antecedent water index
 def AWI(numbers):
     """ list of lists [[x's], [y's]]"""
     ret = [[], []]
@@ -324,7 +324,7 @@ def plot_AWI():
         Extrapolated_intensdur(Black)"""
     slide= AWI(x)
     plt.plot(slide[0], slide[1], 'k-',
-             linewidth=2, label='Wet Antecedent Conditions: AWI=0.02')
+             linewidth=2, label='Wet antecedent conditions: AWI=0.02')
 
 def readfiles(file_list):
     """ read <TAB> delemited files as strings
@@ -355,13 +355,13 @@ def end_plot(name=None, cols=3):
     if name:
         plt.savefig(name, bbox_inches='tight')
 
-disclamers = ('\n with respect to the Antecedent Water Index'
+disclamers = ('\n with respect to the Antecedent water index'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date and time')
-ytext = ('Antecedent Water Index, in meters')
+ytext = ('Antecedent water index, in meters')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
 markers = [ ('b-', 'Seattle, Boeing Field'),
@@ -416,7 +416,7 @@ def plot_ID():
         Extrapolated_intensdur(Black)"""
     slide= ID(x)
     plt.plot(slide[0], slide[1], 'k-',
-             linewidth=2, label='Intensity-duration Threshold')
+             linewidth=2, label='Intensity-duration threshold')
 
 def init_plot(title, yMin=0., yMax=2.):
     """ Init plot """
@@ -428,13 +428,13 @@ def init_plot(title, yMin=0., yMax=2.):
     plt.ylim(yMin,yMax)
     plt.grid()
 
-disclamers = ('\n with respect to the Intensity-Duration Index'
+disclamers = ('\n with respect to the Intensity-duration index'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
               )
 xtext = ('Date and time')
-ytext = ('Intensity-Duration Index, in meters')
+ytext = ('Intensity-duration index, in meters')
 
 """ Marker Dictionary Station : (MarkerStyle, Color, Title)"""
 markers = [ ('b-', 'Seattle, Boeing Field'),
@@ -443,7 +443,7 @@ markers = [ ('b-', 'Seattle, Boeing Field'),
            ('r-', 'Tacoma Narrows Airport')
            ]
 
-init_plot('360-hour Intensity-Duration History near Seattle, Washington,')
+init_plot('360-hour Intensity-duration History near Seattle, Washington,')
 
 
 for i in range(4):
@@ -459,7 +459,7 @@ plot_ID()
 
 end_plot(name='id_index.png')
 
-init_plot('360-hour Intensity-Duration History at Everett, Paine Field, KPAE,')
+init_plot('360-hour Intensity-duration History at Everett, Paine Field, KPAE,')
 
 i = 1
 for d in data_list[i]:
