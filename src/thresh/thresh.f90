@@ -8,7 +8,7 @@
 !  January 3 & 4, 2002 with subsequent revisions through 2008.
 ! Updated and revised by Jacob Vigil and Rex Baum, 2013 & 2014.
 ! Additional revisions by Sarah Fischer and Rex Baum, summer 2015.
-! Latest revisions by Rex Baum, February 2017.
+! Latest revisions by Rex Baum, November 2017.
 ! 		  
 ! VARIABLE NAMING CONVENTIONS
 !	These conventions are consistent throughout all files related to 
@@ -125,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='15 Aug 2017'; vrsn=' 1.0.023'
+     	revdate='21 Nov 2017'; vrsn=' 1.0.024'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)

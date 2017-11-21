@@ -34,8 +34,8 @@
 	write (unitNumber,*) 'Current Conditions by Station'
 	write(unitNumber,*) 'Precipitation units: ',precipUnit
 	write(unitNumber,'(a10,12x,i3,a14,12x,i2,a10,12x,a9,12x,a8,12x,a11)')&
-          'Rain Gage',Tantecedent,'-h Antecedent',Trecent,'-h Recent',&
-          'Intensity','Duration','Time and Date'
+          'Rain gage',Tantecedent,'-h antecedent',Trecent,'-h recent',&
+          'Intensity','Duration','Time and date'
           
 	do i=1,numStations
 	  if (trim(stationNumber(i))=='0') cycle

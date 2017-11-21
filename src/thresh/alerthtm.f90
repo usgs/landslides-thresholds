@@ -104,9 +104,9 @@
 	write (unitNumber,*) '<caption>',&
 	' Current Alert Levels by Station and Threshold ',&
 	'</caption>'
-	write (unitNumber,*) r1,h1,'Rain Gage',h2,h1,'Vicinity',h2,h1,&
-        'Time and Date',h2,h1,'Recent/Antecedent',h2,h1,'Intensity-Duration',&
-        h2,h1,trim(TavgIntensityF),'-h Running Average Intensity',h2,r2
+	write (unitNumber,*) r1,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
+        'Time and Date',h2,h1,'Recent-antecedent',h2,h1,'Intensity-duration',&
+        h2,h1,trim(TavgIntensityF),'-h running average intensity',h2,r2
 	do i=1,numStations
 	  write(unitNumber,*) &
           r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
