@@ -1,5 +1,5 @@
 8
-ffffff2
+ffffff
 d3d3d3
 e6e6fa
 00ffff
