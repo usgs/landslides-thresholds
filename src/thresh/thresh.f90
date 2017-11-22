@@ -125,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='21 Nov 2017'; vrsn=' 1.0.024'
+     	revdate='22 Nov 2017'; vrsn=' 1.0.025'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)

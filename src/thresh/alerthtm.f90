@@ -104,9 +104,15 @@
 	write (unitNumber,*) '<caption>',&
 	' Current Alert Levels by Station and Threshold ',&
 	'</caption>'
-	write (unitNumber,*) r1,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
-        'Time and Date',h2,h1,'Recent-antecedent',h2,h1,'Intensity-duration',&
-        h2,h1,trim(TavgIntensityF),'-h running average intensity',h2,r2
+        if(checkA .and. .not. checkS) then
+	   write (unitNumber,*) r1,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
+           'Time and Date',h2,h1,'Recent-antecedent',h2,h1,'Intensity-duration and AWI',&
+           h2,h1,trim(TavgIntensityF),'-h running average intensity',h2,r2
+        else
+	   write (unitNumber,*) r1,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
+           'Time and Date',h2,h1,'Recent-antecedent',h2,h1,'Intensity-duration',&
+           h2,h1,trim(TavgIntensityF),'-h running average intensity',h2,r2
+        end if
 	do i=1,numStations
 	  write(unitNumber,*) &
           r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
@@ -115,6 +121,12 @@
           hexColor(1+alertConditionID(i)),alert_lev(1+alertConditionID(i)),&
           d2,hexColor(1+alertConditionIA(i)),alert_lev(1+alertConditionIA(i)),d2,r2
 	end do
+	write (unitNumber,*) '</table></center>'
+    	write (unitNumber,*) '<center><table border=1 width=90%>'
+	write (unitNumber,*) '<caption>',&
+	' Explanation of Alert Level Color Codes ','</caption>'
+	write (unitNumber,*) r1,hexColor(1),alert_lev(1),d2,hexColor(2),alert_lev(2),d2,&
+        hexColor(3),alert_lev(3),d2,hexColor(4),alert_lev(4),d2,r2
 	write (unitNumber,*) '</table></center>'
   	close(unitNumber)
 	write(*,*) 'Finished alert status HTML page'
