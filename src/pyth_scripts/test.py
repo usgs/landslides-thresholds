@@ -92,7 +92,7 @@ def end_plot(name=None, cols=3): # Set legend parameters and output target
     if name:
     	plt.savefig(name, bbox_inches='tight')
 
-disclamers = ('\n with respect to cumulative precipitation threshold'
+disclamers = ('\n with respect to recent-antecedent precipitation threshold'
               ' for the occurrence of landslides'
               '\nUSGS PROVISIONAL DATA'
               '\nSUBJECT TO REVISION'
