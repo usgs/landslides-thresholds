@@ -52,6 +52,6 @@ References cited
 
 *   Chleborad, A.F., Baum, R.L., and Godt, J.W., 2008, A prototype system for forecasting landslides in the Seattle, Washington, Area, in Baum, R.L., Godt, J.W., and Highland, L.M., eds., Engineering geology and landslides of the Seattle, Washington, area: Geological Society of America Reviews in Engineering Geology v. XX, p. 103-120, doi: 10.1130/2008.4020(06).
 
-*   Chleborad, A.F., Baum, R.L., and Godt, J.W., 2006, Rainfall thresholds for forecasting landslides in the Seattle, Washington, Area--Exceedance and Probability: U.S. Geological Survey Open-File Report 2006-1064, online at http://pubs.usgs.gov/of/2006/1064.
+*   Chleborad, A.F., Baum, R.L., and Godt, J.W., 2006, Rainfall thresholds for forecasting landslides in the Seattle, Washington, Area -- Exceedance and Probability: U.S. Geological Survey Open-File Report 2006-1064, online at http://pubs.usgs.gov/of/2006/1064.
 
 *   Scheevel, C.R., Baum, R.L., Mirus, B.B., and Smith, J.B., 2017, Precipitation thresholds for landslide occurrence near Seattle, Mukilteo, and Everett, Washington: U.S. Geological Survey Open-File Report 2017-1039, 51 p., https://doi.org/10.3133/ofr20171039.
