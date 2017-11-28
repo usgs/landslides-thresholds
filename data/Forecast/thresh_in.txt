@@ -37,7 +37,7 @@ Statistics?,.FALSE.
 Forecast?,.TRUE.
 Name_Of_OutputFolder,'./data/'
 List_Of_Station_Numbers_Localities_InputFiles
-01,'Seattle/Boeing Field','./KBFI_ft.txt'
-02,'Everett/Paine Field','./KPAE_ft.txt'
+01,'Seattle, Boeing Field','./KBFI_ft.txt'
+02,'Everett, Paine Field','./KPAE_ft.txt'
 03,'Seattle-Tacoma Airport','./KSEA_ft.txt'
-04,'Tacoma Narrows','./KTIW_ft.txt'
+04,'Tacoma Narrows Airport','./KTIW_ft.txt'
