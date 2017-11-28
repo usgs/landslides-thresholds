@@ -128,7 +128,7 @@
           hexColor(1+alertConditionID(i)),trim(adjustl(alert_lev(1+alertConditionID(i)))),&
           d2,hexColor(1+alertConditionIA(i)),trim(adjustl(alert_lev(1+alertConditionIA(i)))),d2,r2
 	end do
-	write (unitNumber,*) '</table></center>'
+	write (unitNumber,*) '</table>'
 	write (unitNumber,*) '<p>'
     	write (unitNumber,*) '<table style="width:70%; margin:auto;">'
 	write (unitNumber,*) '<caption>',' EXPLANATION ','</caption>'
