@@ -72,7 +72,7 @@
 	character (len=17), allocatable:: datim(:)	
 	character (len=8), allocatable:: stationNumber(:)
 	character (len=6), allocatable :: colors(:)
-	character (len=22), allocatable :: hexColors(:)
+	character (len=38), allocatable :: hexColors(:)
 
 	character (len=255) :: outputFile,pathThlast
 	character (len=255) :: outputFolder
@@ -125,7 +125,7 @@
      	call date_and_time(sysDate,sysTime)
      	
 ! date of latest revision & version number (added 05/18/2006)	
-     	revdate='22 Nov 2017'; vrsn=' 1.0.025'
+     	revdate='27 Nov 2017'; vrsn=' 1.0.026'
      	
 ! extract system month, day, year, hour, minute, and second from "sysDate" and "sysTime"
   	sysMonth=imid(sysDate,5,6)

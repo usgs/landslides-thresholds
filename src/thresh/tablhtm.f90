@@ -15,7 +15,7 @@ contains
 ! FORMAL ARGUMENTS
 	character (len=50), intent(in) :: stationLocation(numStations)
 	character (len=20), intent(in) :: dateTime(numStations)
-	character (len=22), allocatable, intent(in) :: hexColors(:)
+	character (len=38), allocatable, intent(in) :: hexColors(:)
 	character (len=6), allocatable, intent(in) :: colors(:)
 	real, allocatable, intent(in)  :: div(:)
 	character(*), intent(in)       :: stationNumber(numStations)
@@ -28,7 +28,7 @@ contains
 	
 ! LOCAL VARIABLES
 	character (len=255) :: outputFile = 'ThCurrTabl.htm'
-	character (len=17)  :: r1='<tr align=center>'
+	character (len=31)  :: r1='<tr style="text-align:center;">'
 	character (len=7)   :: recent,anteced,mintensity,mduration
 	character (len=4)   ::  h1='<th>',d1='<td>'
 	character (len=5)   ::  r2='</tr>',h2='</th>',d2='</td>'
@@ -44,7 +44,7 @@ contains
   	open(unitNumber,file=outputFile,status='unknown',position='rewind',err=125)
 
 !Writing HTML headers and column names
-     	write (unitNumber,*) '<center><table border=1 width=90%>'
+     	write (unitNumber,*) '<table style="width:90%; border: 1px solid black; margin:auto;">'
 	write (unitNumber,*) '<caption>Current Conditions by Station</caption>'
 	write(unitNumber,*) r1,h1,'Rain gage',h2,h1,&
 	  'Vicinity of <br>rain gage',h2,h1,&
@@ -102,7 +102,7 @@ contains
 	end do
 	
 ! Closing HTML tags to finish the table
-	write (unitNumber,*) '</table></center>'
+	write (unitNumber,*) '</table>'
   	close(unitNumber)	
 	write(*,*) 'Finished current condtions HTML table'
 	return
@@ -121,7 +121,7 @@ subroutine read_colors(hexColors,colors,div,ndiv,uout)
 implicit none
 
 !FORMAL ARGUMENTS
-character (len=22), allocatable, intent(out)  :: hexColors(:)
+character (len=38), allocatable, intent(out)  :: hexColors(:)
 character (len=6), allocatable, intent(out) :: colors(:)	
 real, allocatable, intent(out) :: div(:)
 integer, intent(out) :: ndiv
@@ -144,7 +144,7 @@ divcounter = 0
       
 do i=1,ndiv+1
     read(unit,*) colors(i)
-    hexColors(i) = '<td bgcolor=#'//colors(i)//'>'
+    hexColors(i) = '<td style="background-color:#'//colors(i)//';">'
     colorcounter = colorcounter + 1
 end do
 

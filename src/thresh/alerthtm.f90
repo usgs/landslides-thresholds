@@ -21,13 +21,14 @@
         logical, intent(in)            :: checkS,checkA	
 	
 ! LOCAL VARIABLES
-	character (len=22)	     :: hexColor(4)
+	character (len=57)	     :: hexColorCenter(4)
+	character (len=38)	     :: hexColor(4)
 	character (len=7) 	     :: alert_lev(4) !,color(4) 
 	character 		     :: tb = char(9)
 	character (len=255) 	     :: outputFile='ThAlert.htm'
 	character (len=8)            :: TavgIntensityF 
-	character (len=17),parameter :: r1='<tr align=center>'
-	character (len=4),parameter  :: h1='<th>',d1='<td>'
+	character (len=31),parameter :: r1c='<tr style="text-align:center;">'
+	character (len=4),parameter  :: h1='<th>',d1='<td>', r1='<tr>'
 	character (len=5),parameter  :: r2='</tr>',h2='</th>',d2='</td>'
 	real			     :: avgToRunning,AWI_low
 	integer 		     :: i,alertConditionRecentAntecedent(numStations)
@@ -37,9 +38,15 @@
 !------------------------------	
 ! alert levels 0="Null", 1="Outlook", 2="Watch", 3="Warning"	
 ! Color names corresponding to hexColor: color=(/'Grey',' Yellow ','Orange ','  Red  '/)
-       alert_lev=(/' Null  ','Outlook',' Watch ','Warning'/)
-	hexColor=(/'<td bgcolor=#cccccc>','<td bgcolor=#ffff33>',&
-	&'<td bgcolor=#ff6600>','<td bgcolor=#ff0000>'/)
+       alert_lev=(/'Null   ','Outlook','Watch  ','Warning'/)
+       hexColorCenter=(/'<td style="text-align:center; background-color:#cccccc;">',&
+       '<td style="text-align:center; background-color:#ffff33;">',&
+       '<td style="text-align:center; background-color:#ff6600;">',&
+       '<td style="text-align:center; background-color:#ff0000;">'/)
+       hexColor=(/'<td style="background-color:#cccccc;">',&
+       '<td style="background-color:#ffff33;">',&
+       '<td style="background-color:#ff6600;">',&
+       '<td style="background-color:#ff0000;">'/)
 
 ! determine alert condition for Cumulative Recent & Antecedent threshold
 	do i=1,numStations	
@@ -100,34 +107,39 @@
   	outputFile=trim(outputFolder)//trim(outputFile)
   	open(unitNumber,file=outputFile,status='unknown',&
      	position='rewind',err=125)
-     	write (unitNumber,*) '<center><table border=1 width=90%>'
+     	write (unitNumber,*) '<table style="width:90%; border: 1px solid black; margin:auto;">'
 	write (unitNumber,*) '<caption>',&
 	' Current Alert Levels by Station and Threshold ',&
 	'</caption>'
         if(checkA .and. .not. checkS) then
-	   write (unitNumber,*) r1,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
+	   write (unitNumber,*) r1c,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
            'Time and Date',h2,h1,'Recent-antecedent',h2,h1,'Intensity-duration and AWI',&
            h2,h1,trim(TavgIntensityF),'-h running average intensity',h2,r2
         else
-	   write (unitNumber,*) r1,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
+	   write (unitNumber,*) r1c,h1,'Rain gage',h2,h1,'Vicinity',h2,h1,&
            'Time and Date',h2,h1,'Recent-antecedent',h2,h1,'Intensity-duration',&
            h2,h1,trim(TavgIntensityF),'-h running average intensity',h2,r2
         end if
 	do i=1,numStations
 	  write(unitNumber,*) &
-          r1,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
+          r1c,d1,trim(stationNumber(i)),d2,d1,trim(stationLocation(i)),d2,&
           d1,datimb(i),d2,hexColor(1+alertConditionRecentAntecedent(i)),&
-          alert_lev(1+alertConditionRecentAntecedent(i)),d2,&
-          hexColor(1+alertConditionID(i)),alert_lev(1+alertConditionID(i)),&
-          d2,hexColor(1+alertConditionIA(i)),alert_lev(1+alertConditionIA(i)),d2,r2
+          trim(adjustl(alert_lev(1+alertConditionRecentAntecedent(i)))),d2,&
+          hexColor(1+alertConditionID(i)),trim(adjustl(alert_lev(1+alertConditionID(i)))),&
+          d2,hexColor(1+alertConditionIA(i)),trim(adjustl(alert_lev(1+alertConditionIA(i)))),d2,r2
 	end do
 	write (unitNumber,*) '</table></center>'
-    	write (unitNumber,*) '<center><table border=1 width=90%>'
-	write (unitNumber,*) '<caption>',&
-	' Explanation of Alert Level Color Codes ','</caption>'
-	write (unitNumber,*) r1,hexColor(1),alert_lev(1),d2,hexColor(2),alert_lev(2),d2,&
-        hexColor(3),alert_lev(3),d2,hexColor(4),alert_lev(4),d2,r2
-	write (unitNumber,*) '</table></center>'
+	write (unitNumber,*) '<p>'
+    	write (unitNumber,*) '<table style="width:70%; margin:auto;">'
+	write (unitNumber,*) '<caption>',' EXPLANATION ','</caption>'
+	write (unitNumber,*) r1,hexColorCenter(1),trim(adjustl(alert_lev(1))),d2,d1,&
+        '&emsp; Landslides very unlikely',d2,r2,&
+        r1,hexColorCenter(2),trim(adjustl(alert_lev(2))),d2,d1,&
+        '&emsp; Landslides might occur with additional rainfall',d2,r2,&
+        r1,hexColorCenter(3),trim(adjustl(alert_lev(3))),d2,d1,&
+        '&emsp; Landslides likely with additional rainfall',d2,r2,&
+        r1,hexColorCenter(4),trim(adjustl(alert_lev(4))),d2,d1,'&emsp; Landslides very likely',d2,r2
+	write (unitNumber,*) '</table>'
   	close(unitNumber)
 	write(*,*) 'Finished alert status HTML page'
 	return
