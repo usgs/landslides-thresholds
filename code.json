@@ -4,22 +4,22 @@
     "organization": "U.S. Geological Survey",
     "description": "Software for tracking rainfall thresholds for landslide and debris-flow occurrence (A collection of Fortran programs, Python scripts, shell scripts and Windows batch files along with sample data)",
     "version": "1.0.0",
-    "status": "Approved",
+    "status": "Production",
 
     "permissions": {
       "usageType": "openSource",
       "licenses": [
         {
           "name": "Public Domain, CC0-1.0",
-          "URL": "https://github.com/usgs/landslides-thresholds/blob/master/LICENSE.md"
+          "URL": "https://my.usgs.gov/bitbucket/users/baum_usgs.gov/repos/landslides-thresholds/browse/LICENSE.md"
         }
       ]
     },
 
-    "homepageURL": "https://github.com/usgs/landslides-thresholds/",
-    "downloadURL": "https://github.com/usgs/landslides-thresholds/archive/master.zip",
-    "disclaimerURL": "https://github.com/usgs/landslides-thresholds/blob/master/LICENSE.md",
-    "repositoryUrl": "https://github.com/usgs/landslides-thresholds.git",
+    "homepageURL": "https://my.usgs.gov/bitbucket/users/baum_usgs.gov/repos/landslides-thresholds/browse",
+    "downloadURL": "https://my.usgs.gov/bitbucket/rest/api/latest/projects/~BAUM_USGS.GOV/repos/landslides-thresholds/archive?format=zip",
+    "disclaimerURL": "https://my.usgs.gov/bitbucket/users/baum_usgs.gov/repos/landslides-thresholds/browse/DISCLAIMER.md",
+    "repositoryUrl": "https://my.usgs.gov/bitbucket/scm/~baum_usgs.gov/landslides-thresholds.git",
     "vcs": "git",
 
     "laborHours": null,
@@ -33,7 +33,7 @@
 
     "languages": [
       "Fortran 90",
-      "Python"
+      "Python 2.7"
     ],
 
     "contact": {
@@ -42,7 +42,7 @@
     },
 
     "date": {
-      "metadataLastUpdated": "2017-08-28"
+      "metadataLastUpdated": "2018-03-02"
     }
   }
 ]
