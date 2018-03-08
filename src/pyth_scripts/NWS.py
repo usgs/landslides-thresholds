@@ -32,7 +32,7 @@ time_now=calendar.timegm(time.gmtime())
 def get_weather_xml(stationName):
     file_stat = os.path.exists(stationName+'.xml')
     user_agent = ' -A "Mozilla/4.0" '
-    url = 'http://www.wrh.noaa.gov/mesowest/getobextXml.php'
+    url = 'https://www.wrh.noaa.gov/mesowest/getobextXml.php'
     values1 = ' -c - -js -d sid=' + stationName
     values2 = ' -c - -js -d sid=' + stationName + ' -d num=' + '24'
     values3 = ' -c - -js -d sid=' + stationName + ' -d num=' + '168'
