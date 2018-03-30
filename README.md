@@ -48,7 +48,7 @@ References cited
 
 *   Baum, R. L. and Godt, J. W., 2010, Early warning of rainfall-induced shallow landslides and debris flows in the USA: Landslides, v. 7 no. 3, p. 259-272. doi: 10.1007/s10346-009-0177-0
 
-*   Baum, R.L., Fischer, S.J., and Vigil, J.C., 2018, THRESHÑSoftware for tracking rainfall thresholds for landslide and debris-flow occurrence, user manual: U.S. Geological Survey Techniques and Methods, book 14, chap. A2, 33 p., https://doi.org/10.3133/tm14A2.
+*   Baum, R.L., Fischer, S.J., and Vigil, J.C., 2018, THRESH -- Software for tracking rainfall thresholds for landslide and debris-flow occurrence, user manual: U.S. Geological Survey Techniques and Methods, book 14, chap. A2, 33 p., https://doi.org/10.3133/tm14A2.
 
 *   Chleborad, A.F., Baum, R.L., and Godt, J.W., 2008, A prototype system for forecasting landslides in the Seattle, Washington, Area, in Baum, R.L., Godt, J.W., and Highland, L.M., eds., Engineering geology and landslides of the Seattle, Washington, area: Geological Society of America Reviews in Engineering Geology v. XX, p. 103-120, doi: 10.1130/2008.4020(06).
 
